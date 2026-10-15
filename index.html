@@ -1,1054 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SchoolSys | Modern School Management</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-            background: #f8fafc;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
-            overflow-x: hidden;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-header {
-            padding: 2rem 1.5rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .sidebar-nav {
-            padding: 1rem 0;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 0.875rem 1.5rem;
-            margin: 0.25rem 0.75rem;
-            border-radius: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            gap: 0.75rem;
-            border: 1px solid transparent;
-        }
-
-        .sidebar-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .sidebar-link.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-link i {
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .sidebar-upgrade {
-            margin: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Main Content Area */
-        .main-wrapper {
-            flex: 1;
-            margin-left: 280px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            width: calc(100% - 280px);
-        }
-
-        /* Navbar */
-        .navbar {
-            background: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .navbar-title h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.25rem;
-        }
-
-        .navbar-title p {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        .navbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .notification-btn {
-            position: relative;
-            padding: 0.5rem;
-            border-radius: 12px;
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-
-        .notification-btn:hover {
-            background: #f1f5f9;
-            transform: translateY(-2px);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ef4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            border-radius: 12px;
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            background: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .stat-info h3 {
-            font-size: 0.875rem;
-            color: #6b7280;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-info .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .stat-icon {
-            padding: 0.75rem;
-            border-radius: 12px;
-            background: #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-trend {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .trend-up {
-            color: #10b981;
-        }
-
-        .trend-down {
-            color: #ef4444;
-        }
-
-        /* Charts Section */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
-        }
-
-        .chart-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-header h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .chart-container {
-            height: 300px;
-            position: relative;
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-            color: white;
-            padding: 3rem 0 1.5rem;
-            margin-top: auto;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1.5fr;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-brand h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .footer-brand p {
-            color: #d1d5db;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #d1d5db;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .social-link:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .footer-section h4 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            position: relative;
-        }
-
-        .footer-section h4::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -8px;
-            width: 40px;
-            height: 3px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 2px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links a {
-            color: #d1d5db;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .footer-links a i {
-            width: 16px;
-            font-size: 0.875rem;
-        }
-
-        .contact-info {
-            list-style: none;
-        }
-
-        .contact-info li {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            color: #d1d5db;
-        }
-
-        .contact-info i {
-            width: 20px;
-            color: #667eea;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1.5rem;
-            text-align: center;
-        }
-
-        .footer-bottom p {
-            color: #9ca3af;
-            font-size: 0.875rem;
-        }
-
-        /* Mobile Styles */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: #6b7280;
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn:hover {
-            background: #f1f5f9;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 999;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-wrapper {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .navbar {
-                padding: 1rem;
-            }
-
-            .navbar-content {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-
-            .navbar-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .footer-content {
-                padding: 0 1rem;
-            }
-
-            /* Fix for horizontal scroll on mobile */
-            body,
-            .app-container,
-            .main-wrapper,
-            .main-content {
-                max-width: 100vw;
-                overflow-x: hidden;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stat-card {
-                padding: 1.25rem;
-            }
-
-            .stat-info .value {
-                font-size: 1.75rem;
-            }
-
-            .chart-card {
-                padding: 1.25rem;
-            }
-
-            .footer {
-                padding: 2rem 0 1rem;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-card {
-                min-width: 0;
-            }
-        }
-
-        /* Animation Classes */
-        .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Custom Scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-    </style>
-</head>
-
-<body>
-    <div class="app-container">
-        <!-- Mobile Overlay -->
-        <div class="overlay" id="overlay"></div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>
-                    <i class="fas fa-graduation-cap"></i>
-                    SchoolSys
-                </h1>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="index.html" class="sidebar-link active">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="expenses.html" class="sidebar-link">
-                    <i class="fas fa-wallet"></i>
-                    <span>Expenses</span>
-                </a>
-                <a href="reports.html" class="sidebar-link">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Reports</span>
-                </a>
-                <a href="categories.html" class="sidebar-link">
-                    <i class="fas fa-tags"></i>
-                    <span>Categories</span>
-                </a>
-                <a href="settings.html" class="sidebar-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-upgrade">
-                <h4 class="font-semibold mb-2">Upgrade to Pro</h4>
-                <p class="text-sm opacity-80 mb-3">Unlock advanced features and analytics</p>
-                <button
-                    class="w-full bg-white text-indigo-600 py-2 px-4 rounded-lg font-semibold text-sm hover:bg-opacity-90 transition-all">
-                    Upgrade Now
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Wrapper -->
-        <div class="main-wrapper">
-            <!-- Navbar -->
-            <header class="navbar">
-                <div class="navbar-content">
-                    <div class="flex items-center gap-4">
-                        <button class="mobile-menu-btn" id="mobileToggle">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <div class="navbar-title">
-                            <h2>Dashboard Overview</h2>
-                            <p>Welcome back, Administrator</p>
-                        </div>
-                    </div>
-
-                    <div class="navbar-actions">
-                        <button class="notification-btn">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-badge">3</span>
-                        </button>
-
-                        <div class="user-profile">
-                            <div class="user-avatar">A</div>
-                            <div class="hidden sm:block">
-                                <div class="font-semibold text-sm">Admin User</div>
-                                <div class="text-xs text-gray-500">Administrator</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card fade-in">
-                        <div class="stat-header">
-                            <div class="stat-info">
-                                <h3>Total Students</h3>
-                                <div class="value">1,248</div>
-                            </div>
-                            <div class="stat-icon">
-                                <i class="fas fa-users text-blue-600 text-xl"></i>
-                            </div>
-                        </div>
-                        <div class="stat-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>5.2% from last month</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card fade-in">
-                        <div class="stat-header">
-                            <div class="stat-info">
-                                <h3>Total Staff</h3>
-                                <div class="value">84</div>
-                            </div>
-                            <div class="stat-icon">
-                                <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
-                            </div>
-                        </div>
-                        <div class="stat-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>2 new hires</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card fade-in">
-                        <div class="stat-header">
-                            <div class="stat-info">
-                                <h3>Monthly Expenses</h3>
-                                <div class="value">$24,580</div>
-                            </div>
-                            <div class="stat-icon">
-                                <i class="fas fa-wallet text-purple-600 text-xl"></i>
-                            </div>
-                        </div>
-                        <div class="stat-trend trend-down">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>12% from last month</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card fade-in">
-                        <div class="stat-header">
-                            <div class="stat-info">
-                                <h3>Attendance Rate</h3>
-                                <div class="value">94.2%</div>
-                            </div>
-                            <div class="stat-icon">
-                                <i class="fas fa-user-check text-yellow-600 text-xl"></i>
-                            </div>
-                        </div>
-                        <div class="stat-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>1.5% from last week</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="charts-grid">
-                    <div class="chart-card fade-in">
-                        <div class="chart-header">
-                            <h3>Expense Trends</h3>
-                            <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-700">
-                                View Details
-                            </button>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="expenseChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card fade-in">
-                        <div class="chart-header">
-                            <h3>Category Distribution</h3>
-                            <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-700">
-                                View Details
-                            </button>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activities -->
-                <div class="chart-card fade-in">
-                    <div class="chart-header">
-                        <h3>Recent Activities</h3>
-                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-700">
-                            View All
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <div
-                            class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div class="bg-blue-100 p-3 rounded-full">
-                                <i class="fas fa-user-plus text-blue-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-800">New student enrolled</p>
-                                <p class="text-sm text-gray-600">Sarah Johnson in Grade 5</p>
-                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
-                            </div>
-                        </div>
-
-                        <div
-                            class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div class="bg-green-100 p-3 rounded-full">
-                                <i class="fas fa-money-bill-wave text-green-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-800">Fee payment received</p>
-                                <p class="text-sm text-gray-600">From Michael Brown - $450.00</p>
-                                <p class="text-xs text-gray-400 mt-1">Yesterday</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="footer">
-                <div class="footer-content">
-                    <div class="footer-grid">
-                        <!-- Brand Section -->
-                        <div class="footer-brand">
-                            <h3>SchoolSys</h3>
-                            <p>Modern school management system designed to streamline educational administration and
-                                enhance learning experiences.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Quick Links -->
-                        <div class="footer-section">
-                            <h4>Quick Links</h4>
-                            <ul class="footer-links">
-                                <li><a href="index.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
-                                <li><a href="expenses.html"><i class="fas fa-chevron-right"></i> Expenses</a></li>
-                                <li><a href="reports.html"><i class="fas fa-chevron-right"></i> Reports</a></li>
-                                <li><a href="categories.html"><i class="fas fa-chevron-right"></i> Categories</a></li>
-                            </ul>
-                        </div>
-
-                        <!-- Resources -->
-                        <div class="footer-section">
-                            <h4>Resources</h4>
-                            <ul class="footer-links">
-                                <li><a href="#"><i class="fas fa-chevron-right"></i> Documentation</a></li>
-                                <li><a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a></li>
-                                <li><a href="#"><i class="fas fa-chevron-right"></i> Support</a></li>
-                                <li><a href="#"><i class="fas fa-chevron-right"></i> API</a></li>
-                            </ul>
-                        </div>
-
-                        <!-- Contact Info -->
-                        <div class="footer-section">
-                            <h4>Contact Info</h4>
-                            <ul class="contact-info">
-                                <li>
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>123 Education Street, Learning City</span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-phone"></i>
-                                    <span>+1 (555) 123-4567</span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-envelope"></i>
-                                    <span>info@schoolsys.com</span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-clock"></i>
-                                    <span>Mon - Fri: 8:00 - 17:00</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="footer-bottom">
-                        <p>&copy; 2024 SchoolSys. All rights reserved. | Designed with ❤️ for better education</p>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <script>
-        // Mobile sidebar functionality
-        document.addEventListener("DOMContentLoaded", function () {
-            const mobileToggle = document.getElementById("mobileToggle");
-            const sidebar = document.querySelector(".sidebar");
-            const overlay = document.getElementById("overlay");
-
-            function openSidebar() {
-                sidebar.classList.add("active");
-                overlay.classList.add("active");
-                document.body.style.overflow = "hidden";
-            }
-
-            function closeSidebarFunc() {
-                sidebar.classList.remove("active");
-                overlay.classList.remove("active");
-                document.body.style.overflow = "auto";
-            }
-
-            if (mobileToggle) {
-                mobileToggle.addEventListener("click", openSidebar);
-            }
-            if (overlay) {
-                overlay.addEventListener("click", closeSidebarFunc);
-            }
-
-            // Close sidebar when clicking on a link (mobile)
-            const sidebarLinks = document.querySelectorAll(".sidebar-link");
-            sidebarLinks.forEach((link) => {
-                link.addEventListener("click", () => {
-                    if (window.innerWidth < 1024) {
-                        closeSidebarFunc();
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        primary: '#667eea',
+                        secondary: '#764ba2',
                     }
-                });
-            });
-
-            // Initialize Charts
-            initializeCharts();
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function () {
-            if (window.innerWidth >= 1024) {
-                const sidebar = document.querySelector('.sidebar');
-                const overlay = document.getElementById('overlay');
-                if (sidebar) sidebar.classList.remove('active');
-                if (overlay) overlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
+                }
             }
-        });
-
-        // Chart initialization
-        function initializeCharts() {
-            // Expense Trends Chart
-            const expenseCtx = document.getElementById("expenseChart").getContext("2d");
-            const expenseChart = new Chart(expenseCtx, {
-                type: "line",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                    datasets: [
-                        {
-                            label: "Expenses",
-                            data: [3200, 4500, 3800, 5200, 4800, 6100],
-                            borderColor: "#4f46e5",
-                            backgroundColor: "rgba(79, 70, 229, 0.1)",
-                            tension: 0.4,
-                            fill: true,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false,
-                            },
-                        },
-                        x: {
-                            grid: {
-                                display: false,
-                            },
-                        },
-                    },
-                },
-            });
-
-            // Category Distribution Chart
-            const categoryCtx = document.getElementById("categoryChart").getContext("2d");
-            const categoryChart = new Chart(categoryCtx, {
-                type: "doughnut",
-                data: {
-                    labels: ["Materials", "Food", "Transport", "Maintenance", "Technology"],
-                    datasets: [
-                        {
-                            data: [25, 35, 15, 15, 10],
-                            backgroundColor: [
-                                "#3b82f6",
-                                "#10b981",
-                                "#8b5cf6",
-                                "#ef4444",
-                                "#f59e0b",
-                                "#f0543r",
-                                "#f05fff",
-                            ],
-                            borderWidth: 0,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                        },
-                    },
-                },
-            });
         }
     </script>
-</body>
+</head>
+<body class="font-sans bg-gray-50 overflow-hidden h-screen flex">
 
+    <!-- Mobile Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
+        <div class="p-6 border-b border-white/10 flex items-center gap-3">
+            <i class="fas fa-graduation-cap text-2xl"></i>
+            <h1 class="text-xl font-bold">SchoolSys</h1>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all">
+                <i class="fas fa-home w-5"></i><span>Dashboard</span>
+            </a>
+            <a href="pages/expenses.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/20 transition-all hover:translate-x-1">
+                <i class="fas fa-wallet w-5"></i><span>Expenses</span>
+            </a>
+            <a href="pages/reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/20 transition-all hover:translate-x-1">
+                <i class="fas fa-chart-pie w-5"></i><span>Reports</span>
+            </a>
+            <a href="pages/categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/20 transition-all hover:translate-x-1">
+                <i class="fas fa-tags w-5"></i><span>Categories</span>
+            </a>
+            <a href="pages/settings.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/20 transition-all hover:translate-x-1">
+                <i class="fas fa-cog w-5"></i><span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="p-6 m-4 bg-white/10 rounded-2xl border border-white/20 backdrop-blur-sm">
+            <h4 class="font-semibold mb-1">Upgrade to Pro</h4>
+            <p class="text-xs text-white/70 mb-3">Unlock advanced features and analytics</p>
+            <button class="w-full bg-white text-indigo-600 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">Upgrade Now</button>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden lg:ml-72 w-full">
+        
+        <!-- Navbar -->
+        <header class="bg-white shadow-sm z-10 sticky top-0">
+            <div class="flex items-center justify-between px-4 sm:px-6 py-4">
+                <div class="flex items-center gap-4">
+                    <button id="mobileToggle" class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none text-xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-gray-800">Dashboard Overview</h2>
+                        <p class="text-xs sm:text-sm text-gray-500 hidden sm:block">Welcome back, Administrator</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <button class="relative p-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-bell text-gray-600"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 p-1 sm:pr-4 rounded-xl bg-gray-50 border border-gray-200 cursor-pointer">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">A</div>
+                        <div class="hidden md:block text-left">
+                            <div class="font-semibold text-sm text-gray-800">Admin User</div>
+                            <div class="text-xs text-gray-500">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+            
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                <!-- Stat Card 1 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-sm text-gray-500 font-medium mb-1">Total Students</h3>
+                            <div class="text-2xl font-bold text-gray-800" id="stat-students">1,248</div>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-xl"><i class="fas fa-users text-blue-600 text-xl"></i></div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500">
+                        <i class="fas fa-arrow-up"></i><span>5.2% from last month</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-sm text-gray-500 font-medium mb-1">Total Staff</h3>
+                            <div class="text-2xl font-bold text-gray-800" id="stat-staff">84</div>
+                        </div>
+                        <div class="p-3 bg-green-50 rounded-xl"><i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i></div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500">
+                        <i class="fas fa-arrow-up"></i><span>2 new hires</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-sm text-gray-500 font-medium mb-1">Monthly Expenses</h3>
+                            <div class="text-2xl font-bold text-gray-800" id="stat-expenses">$24,580</div>
+                        </div>
+                        <div class="p-3 bg-purple-50 rounded-xl"><i class="fas fa-wallet text-purple-600 text-xl"></i></div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-red-500">
+                        <i class="fas fa-arrow-up"></i><span>12% from last month</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-sm text-gray-500 font-medium mb-1">Attendance Rate</h3>
+                            <div class="text-2xl font-bold text-gray-800" id="stat-attendance">94.2%</div>
+                        </div>
+                        <div class="p-3 bg-yellow-50 rounded-xl"><i class="fas fa-user-check text-yellow-600 text-xl"></i></div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500">
+                        <i class="fas fa-arrow-up"></i><span>1.5% from last week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Expense Trends</h3>
+                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View Details</button>
+                    </div>
+                    <!-- Fixed height container ensures Chart.js renders responsively -->
+                    <div class="h-72 w-full relative">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Category Distribution</h3>
+                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View Details</button>
+                    </div>
+                    <div class="h-72 w-full relative">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Recent Activities</h3>
+                    <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View All</button>
+                </div>
+                <div class="space-y-3" id="activity-container">
+                    <!-- Populated by main.js -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Link to external JS file -->
+    <script src="main.js"></script>
+</body>
 </html>
