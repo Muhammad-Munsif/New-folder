@@ -8,40 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#667eea', secondary: '#764ba2' } } }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#667eea', secondary: '#764ba2' } } } }
     </script>
 </head>
 <body class="font-sans bg-gray-50 overflow-hidden h-screen flex">
-
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity"></div>
-
-    <!-- Sidebar -->
+    
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
-        <div class="p-6 border-b border-white/10 flex items-center gap-3">
-            <i class="fas fa-graduation-cap text-2xl"></i><h1 class="text-xl font-bold">SchoolSys</h1>
-        </div>
+        <div class="p-6 border-b border-white/10 flex items-center gap-3"><i class="fas fa-graduation-cap text-2xl"></i><h1 class="text-xl font-bold">SchoolSys</h1></div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
-                <i class="fas fa-home w-5"></i><span>Dashboard</span>
-            </a>
-            <a href="expenses.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
-                <i class="fas fa-wallet w-5"></i><span>Expenses</span>
-            </a>
-            <a href="reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
-                <i class="fas fa-chart-pie w-5"></i><span>Reports</span>
-            </a>
-            <a href="categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
-                <i class="fas fa-tags w-5"></i><span>Categories</span>
-            </a>
-            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all">
-                <i class="fas fa-cog w-5"></i><span>Settings</span>
-            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-home w-5"></i><span>Dashboard</span></a>
+            <a href="expenses.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-wallet w-5"></i><span>Expenses</span></a>
+            <a href="reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-chart-pie w-5"></i><span>Reports</span></a>
+            <a href="categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-tags w-5"></i><span>Categories</span></a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all"><i class="fas fa-cog w-5"></i><span>Settings</span></a>
         </nav>
     </aside>
 
-    <!-- Main Wrapper -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden lg:ml-72 w-full">
         <header class="bg-white shadow-sm z-10 sticky top-0">
             <div class="flex items-center justify-between px-4 sm:px-6 py-4">
@@ -54,8 +37,6 @@
 
         <main class="flex-1 overflow-y-auto p-4 sm:p-6">
             <div class="max-w-4xl mx-auto space-y-6">
-                
-                <!-- General Settings -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">General Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +55,6 @@
                     </div>
                 </div>
 
-                <!-- Preferences -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Preferences</h3>
                     <div class="space-y-4">
@@ -101,7 +81,6 @@
                     </div>
                 </div>
 
-                <!-- Security -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Security</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -116,17 +95,12 @@
                     </div>
                 </div>
 
-                <!-- Save Button -->
                 <div class="flex justify-end">
-                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors shadow-md flex items-center gap-2">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors shadow-md flex items-center gap-2"><i class="fas fa-save"></i> Save Changes</button>
                 </div>
-
             </div>
         </main>
     </div>
-
     <script src="../main.js"></script>
 </body>
 </html>
