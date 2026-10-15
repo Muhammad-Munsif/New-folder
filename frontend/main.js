@@ -7,14 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.getElementById("overlay");
 
     function openSidebar() {
-        if(sidebar) sidebar.classList.remove("-translate-x-full");
-        if(overlay) overlay.classList.remove("hidden");
+        if (sidebar) sidebar.classList.remove("-translate-x-full");
+        if (overlay) overlay.classList.remove("hidden");
         document.body.style.overflow = "hidden";
     }
 
     function closeSidebar() {
-        if(sidebar) sidebar.classList.add("-translate-x-full");
-        if(overlay) overlay.classList.add("hidden");
+        if (sidebar) sidebar.classList.add("-translate-x-full");
+        if (overlay) overlay.classList.add("hidden");
         document.body.style.overflow = "auto";
     }
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle window resize (reset sidebar state if resizing from mobile to desktop)
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
-            if(overlay) overlay.classList.add("hidden");
+            if (overlay) overlay.classList.add("hidden");
             document.body.style.overflow = "auto";
         }
     });
@@ -68,10 +68,10 @@ async function fetchDashboardData() {
     }
 
     // Update Stats Cards (with safety checks to prevent JS errors if elements don't exist)
-    if(document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
-    if(document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
-    if(document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
-    if(document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
+    if (document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
+    if (document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
+    if (document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
+    if (document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
 
     // Update Recent Activities
     const activityContainer = document.getElementById("activity-container");
@@ -104,24 +104,24 @@ function initializeCharts(chartData) {
         type: "line",
         data: {
             labels: chartData.expenseTrends.labels,
-            datasets: [{ 
-                label: "Expenses", 
-                data: chartData.expenseTrends.data, 
-                borderColor: "#4f46e5", 
-                backgroundColor: "rgba(79, 70, 229, 0.1)", 
-                tension: 0.4, 
-                fill: true, 
-                borderWidth: 2 
+            datasets: [{
+                label: "Expenses",
+                data: chartData.expenseTrends.data,
+                borderColor: "#4f46e5",
+                backgroundColor: "rgba(79, 70, 229, 0.1)",
+                tension: 0.4,
+                fill: true,
+                borderWidth: 2
             }],
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { legend: { display: false } }, 
-            scales: { 
-                y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f3f4f6' } }, 
-                x: { grid: { display: false } } 
-            } 
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f3f4f6' } },
+                x: { grid: { display: false } }
+            }
         },
     });
 
@@ -131,20 +131,20 @@ function initializeCharts(chartData) {
         type: "doughnut",
         data: {
             labels: chartData.categoryDistribution.labels,
-            datasets: [{ 
-                data: chartData.categoryDistribution.data, 
-                backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6", "#ef4444", "#f59e0b"], 
-                borderWidth: 0, 
-                hoverOffset: 4 
+            datasets: [{
+                data: chartData.categoryDistribution.data,
+                backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6", "#ef4444", "#f59e0b"],
+                borderWidth: 0,
+                hoverOffset: 4
             }],
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            cutout: '65%', 
-            plugins: { 
-                legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8, padding: 20 } } 
-            } 
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8, padding: 20 } }
+            }
         },
     });
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,43 +8,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#667eea', secondary: '#764ba2' } } }
         }
     </script>
 </head>
+
 <body class="font-sans bg-gray-50 overflow-hidden h-screen flex">
 
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
         <div class="p-6 border-b border-white/10 flex items-center gap-3">
-            <i class="fas fa-graduation-cap text-2xl"></i><h1 class="text-xl font-bold">SchoolSys</h1>
+            <i class="fas fa-graduation-cap text-2xl"></i>
+            <h1 class="text-xl font-bold">SchoolSys</h1>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all">
                 <i class="fas fa-home w-5"></i><span>Dashboard</span>
             </a>
-            <a href="pages/expenses.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
+            <a href="pages/expenses.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
                 <i class="fas fa-wallet w-5"></i><span>Expenses</span>
             </a>
-            <a href="pages/reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
+            <a href="pages/reports.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
                 <i class="fas fa-chart-pie w-5"></i><span>Reports</span>
             </a>
-            <a href="pages/categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
+            <a href="pages/categories.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
                 <i class="fas fa-tags w-5"></i><span>Categories</span>
             </a>
-            <a href="pages/settings.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
+            <a href="pages/settings.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1">
                 <i class="fas fa-cog w-5"></i><span>Settings</span>
             </a>
         </nav>
         <div class="p-6 m-4 bg-white/10 rounded-2xl border border-white/20 backdrop-blur-sm">
             <h4 class="font-semibold mb-1">Upgrade to Pro</h4>
             <p class="text-xs text-white/70 mb-3">Unlock advanced features and analytics</p>
-            <button class="w-full bg-white text-indigo-600 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">Upgrade Now</button>
+            <button
+                class="w-full bg-white text-indigo-600 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors">Upgrade
+                Now</button>
         </div>
     </aside>
 
@@ -52,19 +64,26 @@
         <header class="bg-white shadow-sm z-10 sticky top-0">
             <div class="flex items-center justify-between px-4 sm:px-6 py-4">
                 <div class="flex items-center gap-4">
-                    <button id="mobileToggle" class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none text-xl"><i class="fas fa-bars"></i></button>
+                    <button id="mobileToggle"
+                        class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none text-xl"><i
+                            class="fas fa-bars"></i></button>
                     <div>
                         <h2 class="text-lg sm:text-xl font-bold text-gray-800">Dashboard Overview</h2>
                         <p class="text-xs sm:text-sm text-gray-500 hidden sm:block">Welcome back, Administrator</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 sm:gap-4">
-                    <button class="relative p-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
+                    <button
+                        class="relative p-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
                         <i class="fas fa-bell text-gray-600"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                        <span
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">3</span>
                     </button>
-                    <div class="flex items-center gap-3 p-1 sm:pr-4 rounded-xl bg-gray-50 border border-gray-200 cursor-pointer">
-                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">A</div>
+                    <div
+                        class="flex items-center gap-3 p-1 sm:pr-4 rounded-xl bg-gray-50 border border-gray-200 cursor-pointer">
+                        <div
+                            class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">
+                            A</div>
                         <div class="hidden md:block text-left">
                             <div class="font-semibold text-sm text-gray-800">Admin User</div>
                             <div class="text-xs text-gray-500">Administrator</div>
@@ -77,7 +96,8 @@
         <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-6">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                <div
+                    class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
@@ -86,40 +106,50 @@
                         </div>
                         <div class="p-3 bg-blue-50 rounded-xl"><i class="fas fa-users text-blue-600 text-xl"></i></div>
                     </div>
-                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i class="fas fa-arrow-up"></i><span>5.2% from last month</span></div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i
+                            class="fas fa-arrow-up"></i><span>5.2% from last month</span></div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                <div
+                    class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-sm text-gray-500 font-medium mb-1">Total Staff</h3>
                             <div class="text-2xl font-bold text-gray-800" id="stat-staff">Loading...</div>
                         </div>
-                        <div class="p-3 bg-green-50 rounded-xl"><i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i></div>
+                        <div class="p-3 bg-green-50 rounded-xl"><i
+                                class="fas fa-chalkboard-teacher text-green-600 text-xl"></i></div>
                     </div>
-                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i class="fas fa-arrow-up"></i><span>2 new hires</span></div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i
+                            class="fas fa-arrow-up"></i><span>2 new hires</span></div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                <div
+                    class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-sm text-gray-500 font-medium mb-1">Monthly Expenses</h3>
                             <div class="text-2xl font-bold text-gray-800" id="stat-expenses">Loading...</div>
                         </div>
-                        <div class="p-3 bg-purple-50 rounded-xl"><i class="fas fa-wallet text-purple-600 text-xl"></i></div>
+                        <div class="p-3 bg-purple-50 rounded-xl"><i class="fas fa-wallet text-purple-600 text-xl"></i>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 text-sm font-medium text-red-500"><i class="fas fa-arrow-up"></i><span>12% from last month</span></div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-red-500"><i
+                            class="fas fa-arrow-up"></i><span>12% from last month</span></div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
+                <div
+                    class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-sm text-gray-500 font-medium mb-1">Attendance Rate</h3>
                             <div class="text-2xl font-bold text-gray-800" id="stat-attendance">Loading...</div>
                         </div>
-                        <div class="p-3 bg-yellow-50 rounded-xl"><i class="fas fa-user-check text-yellow-600 text-xl"></i></div>
+                        <div class="p-3 bg-yellow-50 rounded-xl"><i
+                                class="fas fa-user-check text-yellow-600 text-xl"></i></div>
                     </div>
-                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i class="fas fa-arrow-up"></i><span>1.5% from last week</span></div>
+                    <div class="flex items-center gap-2 text-sm font-medium text-green-500"><i
+                            class="fas fa-arrow-up"></i><span>1.5% from last week</span></div>
                 </div>
             </div>
 
@@ -128,14 +158,16 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Expense Trends</h3>
-                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View Details</button>
+                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View
+                            Details</button>
                     </div>
                     <div class="h-72 w-full relative"><canvas id="expenseChart"></canvas></div>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Category Distribution</h3>
-                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View Details</button>
+                        <button class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View
+                            Details</button>
                     </div>
                     <div class="h-72 w-full relative"><canvas id="categoryChart"></canvas></div>
                 </div>
@@ -153,4 +185,5 @@
     </div>
     <script src="main.js"></script>
 </body>
+
 </html>
