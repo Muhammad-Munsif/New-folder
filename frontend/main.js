@@ -166,7 +166,7 @@ function applyPermissions() {
     // Check every element with a data-role-required attribute
     document.querySelectorAll('[data-role-required]').forEach(el => {
         const allowedRoles = el.getAttribute('data-role-required').split(',');
-        
+
         if (currentRole === 'admin' || allowedRoles.includes(currentRole)) {
             el.classList.remove('hidden');
         } else {
@@ -189,9 +189,9 @@ function applyPermissions() {
 }
 
 // Global function so the HTML onclick can access it
-window.changeRole = function(role) {
+window.changeRole = function (role) {
     localStorage.setItem('userRole', role);
-    window.location.reload(); 
+    window.location.reload();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -287,10 +287,10 @@ async function fetchDashboardData() {
         };
     }
 
-    if(document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
-    if(document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
-    if(document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
-    if(document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
+    if (document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
+    if (document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
+    if (document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
+    if (document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
 
     const activityContainer = document.getElementById("activity-container");
     if (activityContainer) {
