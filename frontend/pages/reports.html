@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports | SchoolSys</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = { theme: { extend: { fontFamily: { sans: ['Poppins', 'sans-serif'] }, colors: { primary: '#667eea', secondary: '#764ba2' } } } }
     </script>
 </head>
+
 <body class="font-sans bg-gray-50 overflow-hidden h-screen flex">
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity"></div>
-    
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
-        <div class="p-6 border-b border-white/10 flex items-center gap-3"><i class="fas fa-graduation-cap text-2xl"></i><h1 class="text-xl font-bold">SchoolSys</h1></div>
+
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-primary to-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-xl">
+        <div class="p-6 border-b border-white/10 flex items-center gap-3"><i class="fas fa-graduation-cap text-2xl"></i>
+            <h1 class="text-xl font-bold">SchoolSys</h1>
+        </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-home w-5"></i><span>Dashboard</span></a>
-            <a href="expenses.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-wallet w-5"></i><span>Expenses</span></a>
-            <a href="reports.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all"><i class="fas fa-chart-pie w-5"></i><span>Reports</span></a>
-            <a href="categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-tags w-5"></i><span>Categories</span></a>
-            <a href="settings.html" data-role-required="admin" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i class="fas fa-cog w-5"></i><span>Settings</span></a>
+            <a href="../index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i
+                    class="fas fa-home w-5"></i><span>Dashboard</span></a>
+            <a href="expenses.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i
+                    class="fas fa-wallet w-5"></i><span>Expenses</span></a>
+            <a href="reports.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white border border-white/20 shadow-md transition-all"><i
+                    class="fas fa-chart-pie w-5"></i><span>Reports</span></a>
+            <a href="categories.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i
+                    class="fas fa-tags w-5"></i><span>Categories</span></a>
+            <a href="settings.html" data-role-required="admin"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10 hover:text-white border border-transparent transition-all hover:translate-x-1"><i
+                    class="fas fa-cog w-5"></i><span>Settings</span></a>
         </nav>
     </aside>
 
@@ -29,10 +45,13 @@
         <header class="bg-white shadow-sm z-30 sticky top-0">
             <div class="flex items-center justify-between px-4 sm:px-6 py-4">
                 <div class="flex items-center gap-4">
-                    <button id="mobileToggle" class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none text-xl"><i class="fas fa-bars"></i></button>
+                    <button id="mobileToggle"
+                        class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none text-xl"><i
+                            class="fas fa-bars"></i></button>
                     <h2 class="text-lg sm:text-xl font-bold text-gray-800">Financial Reports</h2>
                 </div>
-                <button data-modal-target="generate-report-modal" data-role-required="admin,staff" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                <button data-modal-target="generate-report-modal" data-role-required="admin,staff"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
                     <i class="fas fa-file-export"></i> <span class="hidden sm:inline">Generate Report</span>
                 </button>
             </div>
@@ -40,13 +59,24 @@
 
         <main class="flex-1 p-4 sm:p-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-sm text-gray-500 mb-1">Total Income (YTD)</p><h3 class="text-2xl font-bold text-gray-800">$145,200</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-sm text-gray-500 mb-1">Total Expenses (YTD)</p><h3 class="text-2xl font-bold text-gray-800">$98,450</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-sm text-gray-500 mb-1">Net Balance</p><h3 class="text-2xl font-bold text-green-600">+$46,750</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 mb-1">Total Income (YTD)</p>
+                    <h3 class="text-2xl font-bold text-gray-800">$145,200</h3>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 mb-1">Total Expenses (YTD)</p>
+                    <h3 class="text-2xl font-bold text-gray-800">$98,450</h3>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 mb-1">Net Balance</p>
+                    <h3 class="text-2xl font-bold text-green-600">+$46,750</h3>
+                </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-5 border-b border-gray-100"><h3 class="text-lg font-bold text-gray-800">Recent Generated Reports</h3></div>
+                <div class="p-5 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">Recent Generated Reports</h3>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
@@ -61,8 +91,12 @@
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="p-4 font-medium text-gray-800">Q3 Financial Summary</td>
                                 <td class="p-4">Oct 01, 2026</td>
-                                <td class="p-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-semibold">Ready</span></td>
-                                <td class="p-4 text-right"><button class="text-indigo-600 hover:text-indigo-800 font-semibold"><i class="fas fa-download"></i> Download</button></td>
+                                <td class="p-4"><span
+                                        class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-semibold">Ready</span>
+                                </td>
+                                <td class="p-4 text-right"><button
+                                        class="text-indigo-600 hover:text-indigo-800 font-semibold"><i
+                                            class="fas fa-download"></i> Download</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -72,12 +106,15 @@
 
         <!-- FOOTER -->
         <footer class="bg-gray-900 text-white pt-12 pb-6 mt-auto">
-            <div class="text-center text-sm text-gray-500"><p>&copy; 2026 SchoolSys. All rights reserved.</p></div>
+            <div class="text-center text-sm text-gray-500">
+                <p>&copy; 2026 SchoolSys. All rights reserved.</p>
+            </div>
         </footer>
     </div>
 
     <!-- MODAL -->
-    <div id="generate-report-modal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/50 backdrop-blur-sm transition-opacity">
+    <div id="generate-report-modal"
+        class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/50 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
             <div class="flex justify-between items-center p-5 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800">Generate New Report</h3>
@@ -92,12 +129,15 @@
                     </select>
                 </div>
                 <div class="pt-4 flex gap-3">
-                    <button type="button" data-modal-close class="flex-1 px-4 py-2 border text-gray-700 rounded-lg font-semibold hover:bg-gray-50">Cancel</button>
-                    <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700">Generate</button>
+                    <button type="button" data-modal-close
+                        class="flex-1 px-4 py-2 border text-gray-700 rounded-lg font-semibold hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700">Generate</button>
                 </div>
             </form>
         </div>
     </div>
     <script src="../main.js"></script>
 </body>
+
 </html>
