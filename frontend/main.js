@@ -3,7 +3,7 @@ const currentRole = localStorage.getItem('userRole') || 'admin';
 function applyPermissions() {
     document.querySelectorAll('.user-role-display').forEach(el => el.innerText = currentRole.charAt(0).toUpperCase() + currentRole.slice(1));
     document.querySelectorAll('.user-avatar-display').forEach(el => el.innerText = currentRole.charAt(0).toUpperCase());
-    
+
     document.querySelectorAll('[data-role-required]').forEach(el => {
         const allowedRoles = el.getAttribute('data-role-required').split(',');
         if (currentRole === 'admin' || allowedRoles.includes(currentRole)) el.classList.remove('hidden');
@@ -21,9 +21,9 @@ function applyPermissions() {
     }
 }
 
-window.changeRole = function(role) {
+window.changeRole = function (role) {
     localStorage.setItem('userRole', role);
-    window.location.reload(); 
+    window.location.reload();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.modal-form').forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formId = form.closest('.modal-overlay').id;
             let endpoint = '';
             let payload = {};
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 form.closest('.modal-overlay').classList.add('hidden');
                 document.body.style.overflow = 'auto';
                 alert('Action completed successfully!');
-                return; 
+                return;
             }
 
             try {
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 form.closest('.modal-overlay').classList.add('hidden');
                 document.body.style.overflow = 'auto';
-                
+
                 if (document.getElementById("expenseChart")) {
                     fetchDashboardData(); // Refresh dashboard if on it
                 } else {
@@ -130,10 +130,10 @@ async function fetchDashboardData() {
         };
     }
 
-    if(document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
-    if(document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
-    if(document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
-    if(document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
+    if (document.getElementById("stat-students")) document.getElementById("stat-students").innerText = data.stats.totalStudents.toLocaleString();
+    if (document.getElementById("stat-staff")) document.getElementById("stat-staff").innerText = data.stats.totalStaff;
+    if (document.getElementById("stat-expenses")) document.getElementById("stat-expenses").innerText = `$${data.stats.monthlyExpenses.toLocaleString()}`;
+    if (document.getElementById("stat-attendance")) document.getElementById("stat-attendance").innerText = `${data.stats.attendanceRate}%`;
 
     const activityContainer = document.getElementById("activity-container");
     if (activityContainer) {
