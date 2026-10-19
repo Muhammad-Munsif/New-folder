@@ -9,7 +9,6 @@ function applyPermissions() {
         if (currentRole === 'admin' || allowedRoles.includes(currentRole)) el.classList.remove('hidden');
         else el.classList.add('hidden');
     });
-
     const settingsContent = document.getElementById('settings-content');
     const accessDenied = document.getElementById('access-denied');
     if (settingsContent && accessDenied) {
@@ -20,12 +19,10 @@ function applyPermissions() {
         }
     }
 }
-
 window.changeRole = function (role) {
     localStorage.setItem('userRole', role);
     window.location.reload();
 };
-
 document.addEventListener("DOMContentLoaded", () => {
     applyPermissions();
 
@@ -58,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modals.forEach(modal => {
         modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; } });
     });
-
     // --- REAL FORM SUBMISSION TO BACKEND ---
     document.querySelectorAll('.modal-form').forEach(form => {
         form.addEventListener('submit', async (e) => {
@@ -111,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (document.getElementById("expenseChart")) fetchDashboardData();
 });
-
 async function fetchDashboardData() {
     let data;
     try {
