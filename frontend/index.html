@@ -1,1 +1,178 @@
 
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-theme-mode="system" data-accent="indigo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Lumora</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='13' fill='%236366f1'/%3E%3Ccircle cx='20' cy='20' r='8.5' fill='none' stroke='white' stroke-width='2.2'/%3E%3Cpath d='M20 11.5a8.5 8.5 0 0 0 0 17z' fill='white'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- Notice the ../ for relative paths -->
+<link rel="stylesheet" href="../style.css">
+
+<script>
+(function () {
+  var root = document.documentElement;
+  try {
+    var mode = localStorage.getItem('lumora-theme-mode') || 'system';
+    var resolved = mode;
+    if (mode === 'system') resolved = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', resolved);
+    root.setAttribute('data-theme-mode', mode);
+    var a = localStorage.getItem('lumora-accent'); if (a) root.setAttribute('data-accent', a);
+  } catch (e) {}
+})();
+</script>
+</head>
+<body style="padding-top: 90px; padding-bottom: 40px;">
+
+<header class="nav-wrap" id="navbar">
+  <nav class="nav-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="8.5" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M20 11.5a8.5 8.5 0 0 0 0 17z" fill="#fff"/></svg></span>
+      <span class="brand-name">Lumora</span>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a class="nav-link" href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+      <li><a class="nav-link" href="dashboard.html"><i class="fa-solid fa-chart-pie"></i>Dashboard</a></li>
+      <li><a class="nav-link" href="categories.html"><i class="fa-solid fa-layer-group"></i>Categories</a></li>
+      <li><a class="nav-link" href="expenses.html"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" type="button">
+        <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
+        <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
+        <span class="tt-thumb"></span>
+      </button>
+      <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+</header>
+
+<main class="shell">
+  <div class="dash reveal">
+    <!-- SIDEBAR -->
+    <aside class="dash-side">
+      <div class="dash-brand">
+        <span class="dash-brand-mark"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="8.5" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M20 11.5a8.5 8.5 0 0 0 0 17z" fill="#fff"/></svg></span>
+        <span class="dash-brand-name">Lumora</span>
+      </div>
+      <nav class="dash-nav">
+        <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+        <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
+        <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
+        <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
+        <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
+      </nav>
+      <div class="dash-upgrade">
+        <h4><i class="fa-solid fa-crown" style="color:var(--warning);"></i> Pro plan</h4>
+        <p>Unlock advanced analytics.</p>
+        <button class="btn btn-primary">Upgrade</button>
+      </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div class="dash-main">
+      <div class="dash-topbar">
+        <div class="dash-title-wrap">
+          <h3 class="dash-title">Overview</h3>
+          <p class="dash-subtitle">Welcome back, Ada</p>
+        </div>
+        <div class="dash-actions">
+          <button class="dash-icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <button class="dash-avatar">AM</button>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <!-- KPIs -->
+        <div class="dash-kpis">
+          <div class="kpi">
+            <div class="kpi-head"><span class="kpi-label">Revenue</span><span class="kpi-icon"><i class="fa-solid fa-dollar-sign"></i></span></div>
+            <div class="kpi-value" data-count="48392" data-suffix="">$0</div>
+            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i>12.4%</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><span class="kpi-label">Users</span><span class="kpi-icon"><i class="fa-solid fa-users"></i></span></div>
+            <div class="kpi-value" data-count="2847">0</div>
+            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i>8.1%</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="dash-charts">
+          <div class="chart-card">
+            <div class="chart-head">
+              <div class="chart-title">Revenue over time</div>
+              <div class="chart-range">
+                <button data-range="7">7d</button>
+                <button data-range="30" class="active">30d</button>
+              </div>
+            </div>
+            <div class="line-chart-wrap">
+              <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                <defs><linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--primary)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/></linearGradient></defs>
+                <path id="lineArea" class="line-area" d=""/>
+                <path id="linePath" class="line-path" d=""/>
+                <g id="linePoints"></g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-head"><div class="chart-title">Traffic sources</div></div>
+            <div class="donut-wrap">
+              <div class="donut">
+                <svg viewBox="0 0 120 120" id="donutChart">
+                  <circle class="donut-seg" cx="60" cy="60" r="48" stroke="#6366f1"/>
+                  <circle class="donut-seg" cx="60" cy="60" r="48" stroke="#ec4899"/>
+                  <circle class="donut-seg" cx="60" cy="60" r="48" stroke="#10b981"/>
+                </svg>
+                <div class="donut-center"><div><div class="donut-value">12.4k</div><div class="donut-label">Visitors</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-card">
+          <div class="table-head">
+            <div class="table-title">Recent transactions</div>
+            <div class="table-filters">
+              <button class="table-filter active" data-filter="all">All</button>
+              <button class="table-filter" data-filter="paid">Paid</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table" id="dashTable">
+              <thead><tr><th>Customer</th><th>Product</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Shared Modals -->
+<div class="panel-scrim" id="panelScrim"></div>
+<aside class="panel" id="customizerPanel" role="dialog" aria-hidden="true">
+  <div class="panel-head">
+    <h3><i class="fa-solid fa-sliders"></i> Customize</h3>
+    <button class="panel-close" id="closeCustomizer"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="cust-actions">
+    <button class="btn btn-primary" id="closeCustomizer2">Done</button>
+  </div>
+</aside>
+<button class="fab" id="fabCustomizer"><i class="fa-solid fa-sliders"></i></button>
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- Link to the shared JS file -->
+<script src="../main.js"></script>
+</body>
+</html>
