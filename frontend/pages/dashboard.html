@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-theme-mode="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Lumora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="nav-wrap">
+    <nav class="nav-inner">
+      <a href="../index.html" class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
+        <span class="brand-name">Lumora.</span>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="categories.html">Categories</a></li>
+        <li><a class="nav-link" href="expenses.html">Expenses</a></li>
+        <li><a class="nav-link" href="reports.html">Reports</a></li>
+        <li><a class="nav-link" href="settings.html">Settings</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle">
+          <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
+          <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
+          <span class="tt-thumb"></span>
+        </button>
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <div class="dash">
+      <!-- Sidebar -->
+      <aside class="dash-side">
+        <div class="dash-brand">
+          <span class="dash-brand-mark"><i class="fa-solid fa-chart-pie" style="color:#fff;font-size:12px;"></i></span>
+          <span class="dash-brand-name">Workspace</span>
+        </div>
+        <nav class="dash-nav">
+          <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+          <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
+          <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
+          <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
+          <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="dash-main">
+        <div class="dash-topbar">
+          <div>
+            <h3 class="dash-title">Overview</h3>
+            <p class="dash-subtitle">Welcome back, Ada</p>
+          </div>
+          <div class="dash-actions">
+            <button class="icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <button class="dash-avatar">AM</button>
+          </div>
+        </div>
+
+        <div class="dash-body">
+          <!-- KPIs -->
+          <div class="dash-kpis">
+            <div class="kpi">
+              <div class="kpi-label">Total Revenue</div>
+              <div class="kpi-value" data-count="48392">0</div>
+              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 12.4%</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Active Users</div>
+              <div class="kpi-value" data-count="2847">0</div>
+              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 8.1%</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Expenses</div>
+              <div class="kpi-value" data-count="12450">0</div>
+              <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> 2.3%</div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="chart-card">
+            <div class="chart-title">Revenue over time</div>
+            <div class="line-chart-wrap">
+              <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--primary)" stop-opacity=".35"/>
+                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path id="lineArea" class="line-area" d=""/>
+                <path id="linePath" class="line-path" d=""/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-card">
+            <div class="table-head">
+              <div class="chart-title" style="margin:0;">Recent Transactions</div>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table" id="dashTable">
+                <thead>
+                  <tr>
+                    <th>Customer</th><th>Product</th><th>Date</th><th>Amount</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="../main.js"></script>
+</body>
+</html>
