@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-theme-mode="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reports — Lumora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="nav-wrap">
+    <nav class="nav-inner">
+      <a href="../index.html" class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
+        <span class="brand-name">Lumora.</span>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="categories.html">Categories</a></li>
+        <li><a class="nav-link" href="expenses.html">Expenses</a></li>
+        <li><a class="nav-link" href="reports.html">Reports</a></li>
+        <li><a class="nav-link" href="settings.html">Settings</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle">
+          <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
+          <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
+          <span class="tt-thumb"></span>
+        </button>
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <div class="dash">
+      <aside class="dash-side">
+        <div class="dash-brand">
+          <span class="dash-brand-mark"><i class="fa-solid fa-chart-pie" style="color:#fff;font-size:12px;"></i></span>
+          <span class="dash-brand-name">Workspace</span>
+        </div>
+        <nav class="dash-nav">
+          <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+          <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
+          <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
+          <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
+          <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
+        </nav>
+      </aside>
+
+      <div class="dash-main">
+        <div class="dash-topbar">
+          <div>
+            <h3 class="dash-title">Reports</h3>
+            <p class="dash-subtitle">Export your data</p>
+          </div>
+        </div>
+
+        <div class="dash-body">
+          <div class="grid-cards">
+            <div class="card">
+              <h3><i class="fa-solid fa-file-pdf" style="color:var(--danger); margin-right:8px;"></i> Monthly Summary</h3>
+              <p style="color:var(--text-muted); font-size:.85rem; margin-top:8px; margin-bottom:16px;">Complete breakdown of October 2025 revenue and expenses.</p>
+              <button class="btn btn-ghost btn-block btn-sm">Download PDF</button>
+            </div>
+            <div class="card">
+              <h3><i class="fa-solid fa-file-csv" style="color:var(--success); margin-right:8px;"></i> Raw Data Export</h3>
+              <p style="color:var(--text-muted); font-size:.85rem; margin-top:8px; margin-bottom:16px;">Export all transactions and categories into a CSV file.</p>
+              <button class="btn btn-ghost btn-block btn-sm">Export CSV</button>
+            </div>
+            <div class="card">
+              <h3><i class="fa-solid fa-chart-bar" style="color:var(--primary); margin-right:8px;"></i> Tax Report</h3>
+              <p style="color:var(--text-muted); font-size:.85rem; margin-top:8px; margin-bottom:16px;">Generate a formatted report for your accountant.</p>
+              <button class="btn btn-ghost btn-block btn-sm">Generate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="../main.js"></script>
+</body>
+</html>
