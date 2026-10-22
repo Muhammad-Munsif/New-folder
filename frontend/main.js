@@ -107,7 +107,6 @@
       linePath.setAttribute('d', d);
       if (lineArea) lineArea.setAttribute('d', d + ' L ' + (W - pad) + ' ' + H + ' L ' + pad + ' ' + H + ' Z');
     }
-
     // 3. Populate Data Table
     var transactions = [
       { name: 'Elena Martinez', product: 'Pro plan', date: 'Oct 14', amount: 49, status: 'paid', color: '#6366f1' },
@@ -115,7 +114,6 @@
       { name: 'Sofia Reyes', product: 'Pro plan', date: 'Oct 13', amount: 49, status: 'pending', color: '#10b981' },
       { name: 'Marcus Kim', product: 'Enterprise', date: 'Oct 13', amount: 99, status: 'paid', color: '#0ea5e9' }
     ];
-
     var tbody = document.getElementById('tableBody');
     tbody.innerHTML = transactions.map(function (t) {
       return `<tr>
@@ -127,7 +125,6 @@
       </tr>`;
     }).join('');
   }
-
   // --- EXPENSES PAGE SPECIFIC ---
   var expensesTable = document.getElementById('expensesTable');
   if (expensesTable) {
@@ -138,7 +135,6 @@
       { merchant: 'Adobe CC', category: 'Software', date: 'Oct 12, 2025', amount: 54.99, status: 'paid' },
       { merchant: 'Uber', category: 'Travel', date: 'Oct 11, 2025', amount: 24.00, status: 'paid' }
     ];
-
     var expBody = document.getElementById('expensesBody');
     expBody.innerHTML = expenses.map(function (e) {
       return `<tr>
@@ -150,7 +146,6 @@
       </tr>`;
     }).join('');
   }
-
   // --- SETTINGS SPECIFIC ---
   document.querySelectorAll('.switch').forEach(function (sw) {
     sw.addEventListener('click', function () {
@@ -158,5 +153,4 @@
       sw.setAttribute('aria-checked', !isChecked);
     });
   });
-
 })();
