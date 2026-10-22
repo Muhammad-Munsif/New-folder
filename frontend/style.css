@@ -1753,7 +1753,6 @@ h6 {
   gap: 8px;
   animation: toastIn .3s ease forwards;
 }
-
 @keyframes toastIn {
   from {
     opacity: 0;
