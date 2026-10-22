@@ -1,8 +1,6 @@
 (function () {
   'use strict';
-
   var root = document.documentElement;
-
   // Helpers
   function savePref(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
   function readPref(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -16,7 +14,6 @@
     stack.appendChild(el);
     setTimeout(function () { el.style.opacity = '0'; setTimeout(function () { el.remove() }, 300); }, 3000);
   }
-
   // --- THEME ENGINE ---
   var THEME_KEY = 'lumora-theme-mode', ACCENT_KEY = 'lumora-accent';
   var mq = matchMedia('(prefers-color-scheme: dark)');
@@ -26,7 +23,6 @@
     if (mode === 'system') return mq.matches ? 'dark' : 'light';
     return mq.matches ? 'dark' : 'light';
   }
-
   function applyThemeMode(mode, persist) {
     if (persist) savePref(THEME_KEY, mode);
     var resolved = resolveTheme(mode);
@@ -36,18 +32,15 @@
     var toggle = document.getElementById('themeToggle');
     if (toggle) toggle.setAttribute('aria-pressed', String(resolved === 'dark'));
   }
-
   function toggleTheme() {
     var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyThemeMode(next, true);
     showToast(next === 'dark' ? 'Dark mode enabled' : 'Light mode enabled');
   }
-
   function applyAccent(accent, persist) {
     if (persist) savePref(ACCENT_KEY, accent);
     root.setAttribute('data-accent', accent);
   }
-
   // Init Theme
   applyThemeMode(readPref(THEME_KEY) || 'system', false);
   applyAccent(readPref(ACCENT_KEY) || 'indigo', false);
@@ -58,7 +51,6 @@
     var el = document.getElementById(id);
     if (el) el.addEventListener('click', toggleTheme);
   });
-
   // --- MOBILE MENU ---
   var menuBtn = document.getElementById('menuBtn');
   var navMenu = document.getElementById('navMenu');
@@ -82,7 +74,6 @@
       link.classList.add('active');
     }
   });
-
   // --- DASHBOARD SPECIFIC (Only runs if ID exists) ---
   var dashTable = document.getElementById('dashTable');
   if (dashTable) {
@@ -98,7 +89,6 @@
       }
       requestAnimationFrame(frame);
     });
-
     // 2. Line Chart Drawing
     var linePath = document.getElementById('linePath');
     var lineArea = document.getElementById('lineArea');
