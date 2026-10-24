@@ -6,17 +6,17 @@
   <title>Settings — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
   <header class="nav-wrap">
     <nav class="nav-inner">
-      <a href="index.html" class="brand">
+      <a href="../index.html" class="brand">
         <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
         <span class="brand-name">Lumora.</span>
       </a>
       <ul class="nav-menu" id="navMenu">
-        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="../index.html">Home</a></li>
         <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
         <li><a class="nav-link" href="categories.html">Categories</a></li>
         <li><a class="nav-link" href="expenses.html">Expenses</a></li>
@@ -60,7 +60,6 @@
 
         <div class="dash-body">
           <div class="grid-cards">
-            <!-- Profile Card -->
             <div class="card" style="grid-column: 1 / -1;">
               <h3 style="margin-bottom:16px;">Profile Information</h3>
               <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
@@ -73,7 +72,6 @@
               </div>
             </div>
 
-            <!-- Preferences Card -->
             <div class="card">
               <h3 style="margin-bottom:16px;">Notifications</h3>
               <div class="settings-row">
@@ -92,7 +90,6 @@
               </div>
             </div>
 
-            <!-- Danger Zone -->
             <div class="card">
               <h3 style="margin-bottom:16px; color:var(--danger);">Danger Zone</h3>
               <p style="font-size:.85rem; color:var(--text-muted); margin-bottom:16px;">Once you delete your account, there is no going back. Please be certain.</p>
@@ -105,6 +102,6 @@
   </main>
 
   <div class="toast-stack" id="toastStack"></div>
-  <script src="./main.js"></script>
+  <script src="../main.js"></script>
 </body>
 </html>
