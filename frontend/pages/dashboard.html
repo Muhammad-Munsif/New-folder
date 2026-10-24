@@ -6,7 +6,7 @@
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <!-- Correct path: go up one folder to find style.css -->
+  <!-- GO UP ONE FOLDER -->
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -37,7 +37,6 @@
 
   <main class="shell">
     <div class="dash">
-      <!-- Sidebar -->
       <aside class="dash-side">
         <div class="dash-brand">
           <span class="dash-brand-mark"><i class="fa-solid fa-chart-pie" style="color:#fff;font-size:12px;"></i></span>
@@ -52,7 +51,6 @@
         </nav>
       </aside>
 
-      <!-- Main Content -->
       <div class="dash-main">
         <div class="dash-topbar">
           <div>
@@ -66,7 +64,6 @@
         </div>
 
         <div class="dash-body">
-          <!-- KPIs -->
           <div class="dash-kpis">
             <div class="kpi">
               <div class="kpi-label">Total Revenue</div>
@@ -85,7 +82,6 @@
             </div>
           </div>
 
-          <!-- Chart -->
           <div class="chart-card">
             <div class="chart-title">Revenue over time</div>
             <div class="line-chart-wrap">
@@ -102,7 +98,6 @@
             </div>
           </div>
 
-          <!-- Table -->
           <div class="table-card">
             <div class="table-head">
               <div class="chart-title" style="margin:0;">Recent Transactions</div>
@@ -110,9 +105,7 @@
             <div class="table-scroll">
               <table class="data-table" id="dashTable">
                 <thead>
-                  <tr>
-                    <th>Customer</th><th>Product</th><th>Date</th><th>Amount</th><th>Status</th>
-                  </tr>
+                  <tr><th>Customer</th><th>Product</th><th>Date</th><th>Amount</th><th>Status</th></tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
               </table>
@@ -124,7 +117,7 @@
   </main>
 
   <div class="toast-stack" id="toastStack"></div>
-  <!-- Correct path: go up one folder to find main.js -->
+  <!-- GO UP ONE FOLDER -->
   <script src="../main.js"></script>
 </body>
 </html>
