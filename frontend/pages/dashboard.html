@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light" data-theme-mode="system">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <!-- GO UP ONE FOLDER -->
   <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
   <header class="nav-wrap">
     <nav class="nav-inner">
@@ -88,12 +92,12 @@
               <svg viewBox="0 0 400 180" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--primary)" stop-opacity=".35"/>
-                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="var(--primary)" stop-opacity=".35" />
+                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0" />
                   </linearGradient>
                 </defs>
-                <path id="lineArea" class="line-area" d=""/>
-                <path id="linePath" class="line-path" d=""/>
+                <path id="lineArea" class="line-area" d="" />
+                <path id="linePath" class="line-path" d="" />
               </svg>
             </div>
           </div>
@@ -105,7 +109,13 @@
             <div class="table-scroll">
               <table class="data-table" id="dashTable">
                 <thead>
-                  <tr><th>Customer</th><th>Product</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
               </table>
@@ -120,4 +130,5 @@
   <!-- GO UP ONE FOLDER -->
   <script src="../main.js"></script>
 </body>
+
 </html>
