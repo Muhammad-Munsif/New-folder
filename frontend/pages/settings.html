@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-theme-mode="system">
-
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings — Lumora</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
-<body>
+<body id="settingsPage">
   <header class="nav-wrap">
     <nav class="nav-inner">
       <a href="../index.html" class="brand">
@@ -41,10 +37,6 @@
   <main class="shell">
     <div class="dash">
       <aside class="dash-side">
-        <div class="dash-brand">
-          <span class="dash-brand-mark"><i class="fa-solid fa-chart-pie" style="color:#fff;font-size:12px;"></i></span>
-          <span class="dash-brand-name">Workspace</span>
-        </div>
         <nav class="dash-nav">
           <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
           <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
@@ -58,57 +50,47 @@
         <div class="dash-topbar">
           <div>
             <h3 class="dash-title">Settings</h3>
-            <p class="dash-subtitle">Manage your account preferences</p>
+            <p class="dash-subtitle">App preferences</p>
           </div>
         </div>
 
         <div class="dash-body">
           <div class="grid-cards">
-            <div class="card" style="grid-column: 1 / -1;">
-              <h3 style="margin-bottom:16px;">Profile Information</h3>
-              <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
-                <div class="dash-avatar" style="width:60px; height:60px; font-size:1.2rem;">AM</div>
-                <div style="flex:1;">
-                  <div style="font-weight:600; color:var(--text-primary);">Ada Martinez</div>
-                  <div style="font-size:.85rem; color:var(--text-muted);">ada@lumora.dev</div>
+            <!-- Theme Customization -->
+            <div class="card">
+              <h3 style="margin-bottom:16px;">Appearance</h3>
+              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div>
+                  <div style="font-weight:600; color:var(--text-primary);">Accent Color</div>
+                  <div style="font-size:.8rem; color:var(--text-muted);">Change the brand color</div>
                 </div>
-                <button class="btn btn-ghost btn-sm">Edit Profile</button>
+                <input type="color" id="accentPicker" value="#6366f1" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
               </div>
             </div>
 
+            <!-- Notifications -->
             <div class="card">
               <h3 style="margin-bottom:16px;">Notifications</h3>
-              <div class="settings-row">
+              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-color);">
                 <div>
-                  <div style="font-weight:500; color:var(--text-primary);">Email Alerts</div>
-                  <div style="font-size:.75rem; color:var(--text-muted);">Receive weekly summaries</div>
+                  <div style="font-weight:600; color:var(--text-primary);">Email Alerts</div>
+                  <div style="font-size:.8rem; color:var(--text-muted);">Weekly summary</div>
                 </div>
                 <div class="switch" role="switch" aria-checked="true"></div>
               </div>
-              <div class="settings-row">
+              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
                 <div>
-                  <div style="font-weight:500; color:var(--text-primary);">Push Notifications</div>
-                  <div style="font-size:.75rem; color:var(--text-muted);">Real-time alerts on your device</div>
+                  <div style="font-weight:600; color:var(--text-primary);">Push Notifications</div>
+                  <div style="font-size:.8rem; color:var(--text-muted);">Real-time alerts</div>
                 </div>
                 <div class="switch" role="switch" aria-checked="false"></div>
               </div>
-            </div>
-
-            <div class="card">
-              <h3 style="margin-bottom:16px; color:var(--danger);">Danger Zone</h3>
-              <p style="font-size:.85rem; color:var(--text-muted); margin-bottom:16px;">Once you delete your account,
-                there is no going back. Please be certain.</p>
-              <button class="btn btn-ghost btn-block" style="border-color:var(--danger); color:var(--danger);">Delete
-                Account</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </main>
-
-  <div class="toast-stack" id="toastStack"></div>
   <script src="../main.js"></script>
 </body>
-
 </html>
