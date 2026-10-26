@@ -1,76 +1,77 @@
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.documentElement;
 
-  var root = document.documentElement;
+  // --- DATA LAYER (LocalStorage) ---
+  const getData = (key, fallback) => JSON.parse(localStorage.getItem(key)) || fallback;
+  const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
-  // --- HELPERS ---
-  function savePref(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
-  function readPref(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  let transactions = getData('lumora_transactions', [
+    { id: 1, merchant: 'AWS Hosting', category: 'Infrastructure', date: '2025-10-24', amount: 124.50, status: 'paid' },
+    { id: 2, merchant: 'Figma Pro', category: 'Software', date: '2025-10-23', amount: 15.00, status: 'paid' },
+    { id: 3, merchant: 'Starbucks', category: 'Meals', date: '2025-10-22', amount: 8.50, status: 'pending' }
+  ]);
 
-  function showToast(msg) {
-    var stack = document.getElementById('toastStack');
-    if (!stack) return;
-    var el = document.createElement('div');
+  let categories = getData('lumora_categories', [
+    { id: 1, name: 'Software', budget: 200, spent: 15, icon: 'fa-code', gradient: 'var(--gradient-1)' },
+    { id: 2, name: 'Infrastructure', budget: 500, spent: 124.50, icon: 'fa-server', gradient: 'var(--gradient-2)' },
+    { id: 3, name: 'Meals', budget: 150, spent: 8.50, icon: 'fa-utensils', gradient: 'linear-gradient(135deg, #10b981, #059669)' }
+  ]);
+
+  // --- UTILS ---
+  const showToast = (msg) => {
+    let stack = document.getElementById('toastStack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.id = 'toastStack'; stack.className = 'toast-stack';
+      document.body.appendChild(stack);
+    }
+    const el = document.createElement('div');
     el.className = 'toast';
-    el.innerHTML = '<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ' + msg;
+    el.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ${msg}`;
     stack.appendChild(el);
-    setTimeout(function () { el.style.opacity = '0'; setTimeout(function () { el.remove() }, 300); }, 3000);
-  }
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+  };
+
+  const formatCurrency = (num) => '$' + parseFloat(num).toFixed(2);
 
   // --- THEME ENGINE ---
-  var THEME_KEY = 'lumora-theme-mode';
-  var mq = matchMedia('(prefers-color-scheme: dark)');
+  const applyTheme = (mode) => {
+    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('lumora_theme', mode);
+  };
 
-  function resolveTheme(mode) {
-    if (mode === 'light' || mode === 'dark') return mode;
-    return mq.matches ? 'dark' : 'light';
-  }
-
-  function applyThemeMode(mode, persist) {
-    if (persist) savePref(THEME_KEY, mode);
-    var resolved = resolveTheme(mode);
-    root.setAttribute('data-theme', resolved);
-    var toggle = document.getElementById('themeToggle');
-    if (toggle) toggle.setAttribute('aria-pressed', String(resolved === 'dark'));
-  }
-
-  function toggleTheme() {
-    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyThemeMode(next, true);
-    showToast(next === 'dark' ? 'Dark mode enabled' : 'Light mode enabled');
-  }
-
-  applyThemeMode(readPref(THEME_KEY) || 'system', false);
-
-  ['themeToggle', 'dashThemeBtn'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) el.addEventListener('click', toggleTheme);
+  applyTheme(localStorage.getItem('lumora_theme') || 'system');
+  
+  document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
+    if(btn) btn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
+    });
   });
 
   // --- MOBILE MENU ---
-  var menuBtn = document.getElementById('menuBtn');
-  var navMenu = document.getElementById('navMenu');
+  const menuBtn = document.getElementById('menuBtn');
+  const navMenu = document.getElementById('navMenu');
   if (menuBtn && navMenu) {
-    menuBtn.addEventListener('click', function (e) {
+    menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       navMenu.classList.toggle('open');
     });
-    document.addEventListener('click', function (e) {
-      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
-        navMenu.classList.remove('open');
-      }
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target)) navMenu.classList.remove('open');
     });
   }
 
-  // --- ACTIVE NAV HIGHLIGHTING ---
-  var currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-link, .dash-nav-item').forEach(function (link) {
-    var href = link.getAttribute('href');
-    if (href && href.includes(currentPath)) link.classList.add('active');
+  // Active Nav Highlighting
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-link, .dash-nav-item').forEach(link => {
+    if (link.getAttribute('href') === currentPath) link.classList.add('active');
   });
 
   // --- MODAL SYSTEM ---
-  var modalHTML = `
+  const modalHTML = `
     <div class="modal-overlay" id="globalModal">
       <div class="modal-box">
         <div class="modal-header">
@@ -81,178 +82,255 @@
           <div id="modalFields"></div>
           <div class="modal-actions">
             <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Record</button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </div>
         </form>
       </div>
-    </div>
-  `;
+    </div>`;
   document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-  var modal = document.getElementById('globalModal');
-  var modalForm = document.getElementById('modalForm');
-  var modalFields = document.getElementById('modalFields');
-  var modalTitle = document.getElementById('modalTitle');
-  var currentSaveCallback = null;
+  const modal = document.getElementById('globalModal');
+  const modalForm = document.getElementById('modalForm');
+  const modalFields = document.getElementById('modalFields');
+  const modalTitle = document.getElementById('modalTitle');
+  let onModalSave = null;
 
-  function openModal(title, fieldsHTML, onSave) {
+  const openModal = (title, fieldsHTML, callback) => {
     modalTitle.textContent = title;
     modalFields.innerHTML = fieldsHTML;
-    currentSaveCallback = onSave;
+    onModalSave = callback;
     modal.classList.add('open');
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     modal.classList.remove('open');
     modalForm.reset();
-    currentSaveCallback = null;
-  }
+    onModalSave = null;
+  };
 
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
-  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
-
-  modalForm.addEventListener('submit', function (e) {
+  
+  modalForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (currentSaveCallback) currentSaveCallback(new FormData(modalForm));
+    if (onModalSave) onModalSave(new FormData(modalForm));
     closeModal();
     showToast('Record saved successfully!');
   });
 
-  // --- DASHBOARD LOGIC ---
-  var dashTable = document.getElementById('dashTable');
-  if (dashTable) {
-    document.querySelectorAll('[data-count]').forEach(function (el) {
-      var target = parseFloat(el.getAttribute('data-count'));
-      var start = performance.now();
-      function frame(now) {
-        var p = Math.min((now - start) / 1400, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = (target * eased).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        if (p < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
+  // ==========================================
+  // PAGE: DASHBOARD
+  // ==========================================
+  if (document.getElementById('dashTable')) {
+    // Animate Counters
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseFloat(el.getAttribute('data-count'));
+      let start = null;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / 1200, 1);
+        el.textContent = formatCurrency(target * progress).replace('.00','');
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
     });
 
-    var linePath = document.getElementById('linePath');
-    var lineArea = document.getElementById('lineArea');
+    // Render Recent Transactions (Top 5)
+    const tbody = document.getElementById('tableBody');
+    const recent = transactions.slice(0, 5);
+    tbody.innerHTML = recent.map(t => `
+      <tr>
+        <td><strong>${t.merchant}</strong></td>
+        <td>${t.category}</td>
+        <td>${t.date}</td>
+        <td>${formatCurrency(t.amount)}</td>
+        <td><span class="status-pill status-${t.status}">${t.status.toUpperCase()}</span></td>
+      </tr>
+    `).join('');
+
+    // Draw Chart (Simple SVG Path)
+    const linePath = document.getElementById('linePath');
+    const lineArea = document.getElementById('lineArea');
     if (linePath) {
-      var values = [22, 30, 42, 38, 55, 48, 62, 58, 74, 68, 78, 84];
-      var W = 400, H = 180, pad = 10;
-      var min = Math.min(...values), max = Math.max(...values);
-      var span = max - min, stepX = (W - pad * 2) / (values.length - 1);
-      var d = '';
-      values.forEach(function (v, i) {
-        var x = pad + i * stepX;
-        var y = pad + (1 - (v - min) / span) * (H - pad * 2);
+      const vals = [22, 30, 42, 38, 55, 48, 62, 58, 74, 68, 78, 84];
+      const W = 400, H = 180, pad = 10;
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const stepX = (W - pad*2) / (vals.length - 1);
+      let d = '';
+      vals.forEach((v, i) => {
+        const x = pad + i * stepX;
+        const y = pad + (1 - (v - min) / (max - min)) * (H - pad*2);
         d += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
       });
       linePath.setAttribute('d', d);
-      if (lineArea) lineArea.setAttribute('d', d + ' L ' + (W - pad) + ' ' + H + ' L ' + pad + ' ' + H + ' Z');
-    }
-
-    var transactions = [
-      { name: 'Elena Martinez', product: 'Pro plan', date: 'Oct 14', amount: 49, status: 'paid', color: '#6366f1' },
-      { name: 'James Chen', product: 'Starter', date: 'Oct 14', amount: 19, status: 'paid', color: '#ec4899' }
-    ];
-    var tbody = document.getElementById('tableBody');
-    if (tbody) {
-      tbody.innerHTML = transactions.map(function (t) {
-        return `<tr>
-          <td><div class="td-user"><span class="td-avatar" style="background:${t.color}">${t.name.charAt(0)}</span> ${t.name}</div></td>
-          <td>${t.product}</td><td>${t.date}</td><td>$${t.amount}</td>
-          <td><span class="status-pill status-${t.status}">${t.status.toUpperCase()}</span></td>
-        </tr>`;
-      }).join('');
+      lineArea.setAttribute('d', d + ` L ${W-pad} ${H} L ${pad} ${H} Z`);
     }
   }
 
-  // --- EXPENSES PAGE ---
-  var expensesBody = document.getElementById('expensesBody');
-  if (expensesBody) {
-    var expenses = [
-      { merchant: 'Figma Pro', category: 'Software', date: 'Oct 15, 2025', amount: 15.00, status: 'paid' },
-      { merchant: 'AWS Hosting', category: 'Infrastructure', date: 'Oct 14, 2025', amount: 124.50, status: 'paid' }
-    ];
+  // ==========================================
+  // PAGE: EXPENSES
+  // ==========================================
+  if (document.getElementById('expensesBody')) {
+    const renderExpenses = (filterText = '') => {
+      const tbody = document.getElementById('expensesBody');
+      const filtered = transactions.filter(t => 
+        t.merchant.toLowerCase().includes(filterText.toLowerCase()) || 
+        t.category.toLowerCase().includes(filterText.toLowerCase())
+      );
 
-    function renderExpenses() {
-      expensesBody.innerHTML = expenses.map(function (e) {
-        return `<tr>
-          <td><strong>${e.merchant}</strong></td><td>${e.category}</td><td>${e.date}</td>
-          <td>$${parseFloat(e.amount).toFixed(2)}</td>
-          <td><span class="status-pill status-${e.status}">${e.status.toUpperCase()}</span></td>
-        </tr>`;
-      }).join('');
-    }
+      tbody.innerHTML = filtered.map(t => `
+        <tr>
+          <td><strong>${t.merchant}</strong></td>
+          <td>${t.category}</td>
+          <td>${t.date}</td>
+          <td>${formatCurrency(t.amount)}</td>
+          <td><span class="status-pill status-${t.status}">${t.status.toUpperCase()}</span></td>
+          <td><button class="btn btn-ghost btn-sm delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button></td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = parseInt(e.currentTarget.getAttribute('data-id'));
+          transactions = transactions.filter(t => t.id !== id);
+          setData('lumora_transactions', transactions);
+          renderExpenses(document.getElementById('searchExpense').value);
+          showToast('Expense deleted');
+        });
+      });
+    };
+
     renderExpenses();
 
-    var addExpBtn = document.getElementById('add-expense-btn');
-    if (addExpBtn) {
-      addExpBtn.addEventListener('click', function () {
-        var fields = `
-          <div class="form-group"><label>Merchant Name</label><input type="text" name="merchant" class="form-input" required placeholder="e.g. Starbucks"></div>
+    // Search Feature
+    const searchInput = document.getElementById('searchExpense');
+    if(searchInput) searchInput.addEventListener('input', (e) => renderExpenses(e.target.value));
+
+    // Add Expense Feature
+    const addBtn = document.getElementById('add-expense-btn');
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        const fields = `
+          <div class="form-group"><label>Merchant</label><input type="text" name="merchant" class="form-input" required placeholder="e.g. Apple Store"></div>
           <div class="form-group"><label>Category</label>
             <select name="category" class="form-input">
-              <option>Software</option><option>Meals</option><option>Travel</option><option>Infrastructure</option>
+              ${categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
             </select>
           </div>
-          <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" name="amount" class="form-input" required placeholder="0.00"></div>
+          <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" name="amount" class="form-input" required></div>
           <div class="form-group"><label>Status</label>
-            <select name="status" class="form-input">
-              <option value="paid">Paid</option><option value="pending">Pending</option>
-            </select>
+            <select name="status" class="form-input"><option value="paid">Paid</option><option value="pending">Pending</option></select>
           </div>
         `;
-
-        openModal('Add New Expense', fields, function (formData) {
-          var newExp = {
+        openModal('Add New Expense', fields, (formData) => {
+          const newTx = {
+            id: Date.now(),
             merchant: formData.get('merchant'),
             category: formData.get('category'),
-            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             amount: parseFloat(formData.get('amount')),
-            status: formData.get('status')
+            status: formData.get('status'),
+            date: new Date().toISOString().split('T')[0]
           };
-          expenses.unshift(newExp);
+          transactions.unshift(newTx);
+          setData('lumora_transactions', transactions);
           renderExpenses();
         });
       });
     }
   }
 
-  // --- CATEGORIES PAGE ---
-  var categoriesGrid = document.getElementById('categoriesGrid');
-  if (categoriesGrid) {
-    var addCatBtn = document.getElementById('add-category-btn');
-    if (addCatBtn) {
-      addCatBtn.addEventListener('click', function () {
-        var fields = `
-          <div class="form-group"><label>Category Name</label><input type="text" name="name" class="form-input" required placeholder="e.g. Marketing"></div>
-          <div class="form-group"><label>Budget Amount ($)</label><input type="number" name="budget" class="form-input" required placeholder="500"></div>
+  // ==========================================
+  // PAGE: CATEGORIES
+  // ==========================================
+  if (document.getElementById('categoriesGrid')) {
+    const renderCategories = () => {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = categories.map(c => {
+        const percentage = Math.min((c.spent / c.budget) * 100, 100).toFixed(0);
+        return `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div style="width:40px; height:40px; border-radius:12px; background:${c.gradient}; display:grid; place-items:center; color:#fff;">
+                <i class="fa-solid ${c.icon}"></i>
+              </div>
+              <span style="font-weight:700; color:var(--text-primary);">${percentage}%</span>
+            </div>
+            <h3>${c.name}</h3>
+            <div style="font-size:.85rem; color:var(--text-muted); margin-bottom:8px;">${formatCurrency(c.spent)} / ${formatCurrency(c.budget)}</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${percentage}%"></div></div>
+          </div>
         `;
+      }).join('');
+    };
 
-        openModal('Create New Category', fields, function (formData) {
-          var name = formData.get('name');
-          var budget = formData.get('budget');
+    renderCategories();
 
-          var newCard = document.createElement('div');
-          newCard.className = 'card';
-          newCard.innerHTML = `
-            <div class="card-icon" style="background: linear-gradient(135deg, #a855f7, #6366f1);"><i class="fa-solid fa-tag"></i></div>
-            <h3>${name}</h3>
-            <p style="color:var(--text-muted); font-size:.85rem; margin-top:4px;">$${budget} allocated this month</p>
-          `;
-          categoriesGrid.prepend(newCard);
+    const addBtn = document.getElementById('add-category-btn');
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        const fields = `
+          <div class="form-group"><label>Category Name</label><input type="text" name="name" class="form-input" required placeholder="e.g. Travel"></div>
+          <div class="form-group"><label>Budget ($)</label><input type="number" name="budget" class="form-input" required placeholder="500"></div>
+        `;
+        openModal('Create Category', fields, (formData) => {
+          categories.push({
+            id: Date.now(),
+            name: formData.get('name'),
+            budget: parseFloat(formData.get('budget')),
+            spent: 0,
+            icon: 'fa-tag',
+            gradient: 'var(--gradient-1)'
+          });
+          setData('lumora_categories', categories);
+          renderCategories();
         });
       });
     }
   }
 
-  // --- SETTINGS TOGGLES ---
-  document.querySelectorAll('.switch').forEach(function (sw) {
-    sw.addEventListener('click', function () {
-      var isChecked = sw.getAttribute('aria-checked') === 'true';
-      sw.setAttribute('aria-checked', !isChecked);
+  // ==========================================
+  // PAGE: REPORTS (CSV Export)
+  // ==========================================
+  if (document.getElementById('exportCsvBtn')) {
+    document.getElementById('exportCsvBtn').addEventListener('click', () => {
+      let csv = 'Date,Merchant,Category,Amount,Status\n';
+      transactions.forEach(t => {
+        csv += `${t.date},"${t.merchant}","${t.category}",${t.amount},${t.status}\n`;
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lumora_report_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showToast('Report downloaded!');
     });
-  });
+  }
 
-})();
+  // ==========================================
+  // PAGE: SETTINGS (Accent Color & Toggles)
+  // ==========================================
+  if (document.getElementById('settingsPage')) {
+    document.querySelectorAll('.switch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true');
+      });
+    });
+
+    const accentPicker = document.getElementById('accentPicker');
+    if(accentPicker) {
+      accentPicker.addEventListener('input', (e) => {
+        root.style.setProperty('--primary', e.target.value);
+        root.style.setProperty('--primary-rgb', hexToRgb(e.target.value));
+      });
+    }
+  }
+
+  // Helper for hex to rgb
+  function hexToRgb(hex) {
+    let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return `${r}, ${g}, ${b}`;
+  }
+
+});
