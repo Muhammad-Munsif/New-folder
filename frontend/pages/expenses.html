@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-theme-mode="system">
-
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Expenses — Lumora</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
   <header class="nav-wrap">
     <nav class="nav-inner">
@@ -41,10 +37,6 @@
   <main class="shell">
     <div class="dash">
       <aside class="dash-side">
-        <div class="dash-brand">
-          <span class="dash-brand-mark"><i class="fa-solid fa-chart-pie" style="color:#fff;font-size:12px;"></i></span>
-          <span class="dash-brand-name">Workspace</span>
-        </div>
         <nav class="dash-nav">
           <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
           <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
@@ -58,29 +50,25 @@
         <div class="dash-topbar">
           <div>
             <h3 class="dash-title">All Expenses</h3>
-            <p class="dash-subtitle">View and manage your transactions</p>
+            <p class="dash-subtitle">Search and manage transactions</p>
           </div>
           <div class="dash-actions">
-            <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add
-              Expense</button>
+            <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add Expense</button>
           </div>
         </div>
 
         <div class="dash-body">
+          <!-- Search Bar -->
+          <div class="input-group" style="max-width: 400px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchExpense" class="form-input" placeholder="Search by merchant or category...">
+          </div>
+
           <div class="table-card">
-            <div class="table-head">
-              <div class="chart-title" style="margin:0;">Transaction History</div>
-            </div>
             <div class="table-scroll">
-              <table class="data-table" id="expensesTable">
+              <table class="data-table">
                 <thead>
-                  <tr>
-                    <th>Merchant</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
+                  <tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="expensesBody"></tbody>
               </table>
@@ -90,9 +78,6 @@
       </div>
     </div>
   </main>
-
-  <div class="toast-stack" id="toastStack"></div>
   <script src="../main.js"></script>
 </body>
-
 </html>
