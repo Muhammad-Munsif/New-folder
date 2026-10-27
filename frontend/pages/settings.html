@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -56,15 +55,27 @@
 
         <div class="dash-body">
           <div class="grid-cards">
-            <!-- Theme Customization -->
+            <!-- Appearance -->
             <div class="card">
               <h3 style="margin-bottom:16px;">Appearance</h3>
-              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-color);">
                 <div>
                   <div style="font-weight:600; color:var(--text-primary);">Accent Color</div>
-                  <div style="font-size:.8rem; color:var(--text-muted);">Change the brand color</div>
+                  <div style="font-size:.8rem; color:var(--text-muted);">Change the brand color globally</div>
                 </div>
                 <input type="color" id="accentPicker" value="#6366f1" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
+              </div>
+              <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
+                <div>
+                  <div style="font-weight:600; color:var(--text-primary);">Currency</div>
+                  <div style="font-size:.8rem; color:var(--text-muted);">Display format</div>
+                </div>
+                <select id="currencySelect" class="filter-select">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                  <option value="INR">INR (₹)</option>
+                </select>
               </div>
             </div>
 
