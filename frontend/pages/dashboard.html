@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -61,18 +60,34 @@
           <div class="dash-kpis">
             <div class="kpi">
               <div class="kpi-label">Total Revenue</div>
-              <div class="kpi-value" data-count="48392">$0</div>
+              <div class="kpi-value" data-count="revenue">$0</div>
               <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 12.4%</div>
             </div>
             <div class="kpi">
-              <div class="kpi-label">Active Users</div>
-              <div class="kpi-value" data-count="2847">0</div>
-              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 8.1%</div>
+              <div class="kpi-label">Total Transactions</div>
+              <div class="kpi-value" data-count="users">0</div>
+              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> All Time</div>
             </div>
             <div class="kpi">
-              <div class="kpi-label">Expenses</div>
-              <div class="kpi-value" data-count="12450">$0</div>
-              <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> 2.3%</div>
+              <div class="kpi-label">Total Expenses</div>
+              <div class="kpi-value" data-count="expenses">$0</div>
+              <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> Live Update</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Recent Spending Trend</div>
+            <div class="line-chart-wrap">
+              <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--primary)" stop-opacity=".35"/>
+                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path id="lineArea" class="line-area" d=""/>
+                <path id="linePath" class="line-path" d=""/>
+              </svg>
             </div>
           </div>
 
