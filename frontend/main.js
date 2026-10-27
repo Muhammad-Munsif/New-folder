@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-stack'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ${msg}`;
@@ -52,15 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   const savedAccent = localStorage.getItem('lumora_accent');
-  if(savedAccent) {
+  if (savedAccent) {
     root.style.setProperty('--primary', savedAccent);
     // Approximate RGB for shadows (this is a simple hex to rgb conversion)
-    let r = parseInt(savedAccent.slice(1,3),16), g = parseInt(savedAccent.slice(3,5),16), b = parseInt(savedAccent.slice(5,7),16);
+    let r = parseInt(savedAccent.slice(1, 3), 16), g = parseInt(savedAccent.slice(3, 5), 16), b = parseInt(savedAccent.slice(5, 7), 16);
     root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
   }
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
-  
+
   modalForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (onModalSave) onModalSave(new FormData(modalForm));
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate Real Totals
     const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
     const totalTransactions = transactions.length;
-    
+
     document.querySelector('[data-count="revenue"]').textContent = formatMoney(48392); // Fake revenue
     document.querySelector('[data-count="users"]').textContent = totalTransactions + " Items";
     document.querySelector('[data-count="expenses"]').textContent = formatMoney(totalExpenses);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Recent
     const tbody = document.getElementById('tableBody');
     const recent = transactions.slice(0, 5);
-    if(recent.length === 0) {
+    if (recent.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
     } else {
       tbody.innerHTML = recent.map(t => `
@@ -158,21 +158,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (linePath) {
       // Group by date (mocking for visual by taking last 7 transactions)
       let chartData = transactions.slice(0, 7).map(t => t.amount).reverse();
-      if(chartData.length < 2) chartData = [0, 0]; // Default flat line if empty
+      if (chartData.length < 2) chartData = [0, 0]; // Default flat line if empty
 
       const W = 400, H = 180, pad = 10;
       const min = Math.min(...chartData), max = Math.max(...chartData);
       const range = (max - min) || 1;
-      const stepX = (W - pad*2) / (chartData.length - 1);
-      
+      const stepX = (W - pad * 2) / (chartData.length - 1);
+
       let d = '';
       chartData.forEach((v, i) => {
         const x = pad + i * stepX;
-        const y = pad + (1 - (v - min) / range) * (H - pad*2);
+        const y = pad + (1 - (v - min) / range) * (H - pad * 2);
         d += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
       });
       linePath.setAttribute('d', d);
-      lineArea.setAttribute('d', d + ` L ${W-pad} ${H} L ${pad} ${H} Z`);
+      lineArea.setAttribute('d', d + ` L ${W - pad} ${H} L ${pad} ${H} Z`);
     }
   }
 
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderExpenses = () => {
       const tbody = document.getElementById('expensesBody');
       const emptyState = document.getElementById('emptyState');
-      
+
       // 1. Filter
       let filtered = transactions.filter(t => {
         const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
@@ -200,24 +200,24 @@ document.addEventListener('DOMContentLoaded', () => {
       // 2. Sort
       filtered.sort((a, b) => {
         let valA = a[sortKey], valB = b[sortKey];
-        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-        if(valA < valB) return sortAsc ? -1 : 1;
-        if(valA > valB) return sortAsc ? 1 : -1;
+        if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+        if (valA < valB) return sortAsc ? -1 : 1;
+        if (valA > valB) return sortAsc ? 1 : -1;
         return 0;
       });
 
       // 3. Pagination
       const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-      if(currentPage > totalPages) currentPage = totalPages;
+      if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const paginated = filtered.slice(start, start + rowsPerPage);
 
       // 4. Render
-      if(paginated.length === 0) {
+      if (paginated.length === 0) {
         tbody.innerHTML = '';
-        if(emptyState) emptyState.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'block';
       } else {
-        if(emptyState) emptyState.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'none';
         tbody.innerHTML = paginated.map(t => `
           <tr>
             <td><strong>${t.merchant}</strong></td>
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Update Pagination UI
-      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
+      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + rowsPerPage, filtered.length)} of ${filtered.length}`;
       document.getElementById('prevBtn').disabled = currentPage === 1;
       document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
@@ -264,12 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
 
     // Sort Bindings
-    document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
+    document.getElementById('thMerchant').addEventListener('click', () => { sortKey = 'merchant'; sortAsc = !sortAsc; renderExpenses(); });
+    document.getElementById('thDate').addEventListener('click', () => { sortKey = 'date'; sortAsc = !sortAsc; renderExpenses(); });
+    document.getElementById('thAmount').addEventListener('click', () => { sortKey = 'amount'; sortAsc = !sortAsc; renderExpenses(); });
 
     // Pagination Bindings
-    document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
+    document.getElementById('prevBtn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderExpenses(); } });
     document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
 
     // Modal Logic
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
           amount: parseFloat(formData.get('amount')),
           status: formData.get('status'),
         };
-        if(isEdit) {
+        if (isEdit) {
           const idx = transactions.findIndex(x => x.id === existingData.id);
           transactions[idx] = { ...transactions[idx], ...data };
         } else {
@@ -384,11 +384,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('settingsPage')) {
     // Accent Picker
     const accentPicker = document.getElementById('accentPicker');
-    if(accentPicker) {
-      if(savedAccent) accentPicker.value = savedAccent;
+    if (accentPicker) {
+      if (savedAccent) accentPicker.value = savedAccent;
       accentPicker.addEventListener('input', (e) => {
         root.style.setProperty('--primary', e.target.value);
-        let r = parseInt(e.target.value.slice(1,3),16), g = parseInt(e.target.value.slice(3,5),16), b = parseInt(e.target.value.slice(5,7),16);
+        let r = parseInt(e.target.value.slice(1, 3), 16), g = parseInt(e.target.value.slice(3, 5), 16), b = parseInt(e.target.value.slice(5, 7), 16);
         root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
         localStorage.setItem('lumora_accent', e.target.value);
       });
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Currency Picker
     const currSelect = document.getElementById('currencySelect');
-    if(currSelect) {
+    if (currSelect) {
       currSelect.value = currentCurrency;
       currSelect.addEventListener('change', (e) => {
         currentCurrency = e.target.value;
