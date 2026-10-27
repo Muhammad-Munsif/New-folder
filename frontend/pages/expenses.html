@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Expenses — Lumora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
   <header class="nav-wrap">
     <nav class="nav-inner">
@@ -52,7 +57,8 @@
             <p class="dash-subtitle">Search, filter, and manage transactions</p>
           </div>
           <div class="dash-actions">
-            <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add Expense</button>
+            <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add
+              Expense</button>
           </div>
         </div>
 
@@ -81,7 +87,8 @@
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th id="thMerchant">Merchant <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i></th>
+                    <th id="thMerchant">Merchant <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i>
+                    </th>
                     <th>Category</th>
                     <th id="thDate">Date <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i></th>
                     <th id="thAmount">Amount <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i></th>
@@ -92,7 +99,7 @@
                 <tbody id="expensesBody"></tbody>
               </table>
             </div>
-            
+
             <!-- Empty State -->
             <div id="emptyState" class="empty-state">
               <i class="fa-solid fa-receipt"></i>
@@ -115,4 +122,5 @@
   </main>
   <script src="../main.js"></script>
 </body>
+
 </html>
