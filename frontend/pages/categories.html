@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Categories — Lumora</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
   <header class="nav-wrap">
     <nav class="nav-inner">
@@ -37,6 +32,7 @@
       </div>
     </nav>
   </header>
+
   <main class="shell">
     <div class="dash">
       <aside class="dash-side">
@@ -48,6 +44,7 @@
           <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
         </nav>
       </aside>
+
       <div class="dash-main">
         <div class="dash-topbar">
           <div>
@@ -55,19 +52,16 @@
             <p class="dash-subtitle">Track your spending limits (Alerts at 80%)</p>
           </div>
           <div class="dash-actions">
-            <button class="btn btn-primary btn-sm" id="add-category-btn"><i class="fa-solid fa-plus"></i> New
-              Category</button>
+            <button class="btn btn-primary btn-sm" id="add-category-btn"><i class="fa-solid fa-plus"></i> New Category</button>
           </div>
         </div>
+
         <div class="dash-body">
-          <div class="grid-cards" id="categoriesGrid">
-            <!-- Rendered by JS -->
-          </div>
+          <div class="grid-cards" id="categoriesGrid"></div>
         </div>
       </div>
     </div>
   </main>
   <script src="../main.js"></script>
 </body>
-
 </html>
