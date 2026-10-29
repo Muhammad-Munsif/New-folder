@@ -1,114 +1,90 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <!-- Correct Path for Pages Folder -->
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <header class="nav-wrap">
-    <nav class="nav-inner">
-      <a href="../index.html" class="brand">
-        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
-        <span class="brand-name">Lumora.</span>
-      </a>
-      <ul class="nav-menu" id="navMenu">
-        <li><a class="nav-link" href="../index.html">Home</a></li>
-        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-        <li><a class="nav-link" href="categories.html">Categories</a></li>
-        <li><a class="nav-link" href="expenses.html">Expenses</a></li>
-        <li><a class="nav-link" href="reports.html">Reports</a></li>
-        <li><a class="nav-link" href="settings.html">Settings</a></li>
-      </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle">
-          <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
-          <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
-          <span class="tt-thumb"></span>
-        </button>
-        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand">
+          <span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="brand-name">Lumora</span>
+        </a>
       </div>
-    </nav>
-  </header>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+        <a href="expenses.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
+        <a href="categories.html" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories</a>
+        <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+    </aside>
 
-  <main class="shell">
-    <div class="dash">
-      <aside class="dash-side">
-        <nav class="dash-nav">
-          <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
-          <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
-          <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
-          <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
-          <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
-        </nav>
-      </aside>
-
-      <div class="dash-main">
-        <div class="dash-topbar">
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
           <div>
-            <h3 class="dash-title">Overview</h3>
-            <p class="dash-subtitle">Welcome back, Ada</p>
+            <div class="page-title">Overview</div>
+            <div class="page-subtitle">Welcome back, Ada</div>
           </div>
-          <div class="dash-actions">
-            <button class="icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        </div>
+      </header>
+
+      <main class="content-area">
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="card">
+            <div class="stat-title">Total Revenue</div>
+            <div class="stat-value" data-count="revenue">$0</div>
+            <div class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> 12.4% vs last month</div>
+          </div>
+          <div class="card">
+            <div class="stat-title">Transactions</div>
+            <div class="stat-value" data-count="users">0</div>
+            <div class="stat-trend up"><i class="fa-solid fa-receipt"></i> All time</div>
+          </div>
+          <div class="card">
+            <div class="stat-title">Total Expenses</div>
+            <div class="stat-value" data-count="expenses">$0</div>
+            <div class="stat-trend down"><i class="fa-solid fa-arrow-trend-down"></i> Needs review</div>
           </div>
         </div>
 
-        <div class="dash-body">
-          <div class="dash-kpis">
-            <div class="kpi">
-              <div class="kpi-label">Total Revenue</div>
-              <div class="kpi-value" data-count="revenue">$0</div>
-              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 12.4%</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Total Transactions</div>
-              <div class="kpi-value" data-count="users">0</div>
-              <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> All Time</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-label">Total Expenses</div>
-              <div class="kpi-value" data-count="expenses">$0</div>
-              <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> Live Update</div>
-            </div>
-          </div>
-
-          <div class="chart-card">
-            <div class="chart-title">Recent Spending Trend</div>
-            <div class="line-chart-wrap">
-              <svg viewBox="0 0 400 180" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--primary)" stop-opacity=".35"/>
-                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
-                  </linearGradient>
-                </defs>
-                <path id="lineArea" class="line-area" d=""/>
-                <path id="linePath" class="line-path" d=""/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="table-card">
-            <div class="table-head">
-              <h3 class="dash-title" style="font-size:1.1rem; margin:0;">Recent Transactions</h3>
-              <a href="expenses.html" class="btn btn-ghost btn-sm">View All</a>
-            </div>
-            <div class="table-scroll">
-              <table class="data-table" id="dashTable">
-                <thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
-                <tbody id="tableBody"></tbody>
-              </table>
-            </div>
+        <!-- Chart Placeholder -->
+        <div class="card">
+          <h3 style="margin-bottom:20px;">Spending Trend</h3>
+          <div style="height:200px; width:100%; background:var(--bg-secondary); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
+            <i class="fa-solid fa-chart-line" style="font-size:2rem; opacity:0.5;"></i>
           </div>
         </div>
-      </div>
+
+        <!-- Recent Transactions -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Recent Transactions</h3>
+            <a href="expenses.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div class="table-responsive">
+            <table id="dashTable">
+              <thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
-  </main>
+  </div>
   <script src="../main.js"></script>
 </body>
 </html>
