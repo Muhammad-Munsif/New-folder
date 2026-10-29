@@ -3,65 +3,49 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Categories — Lumora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <header class="nav-wrap">
-    <nav class="nav-inner">
-      <a href="../index.html" class="brand">
-        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
-        <span class="brand-name">Lumora.</span>
-      </a>
-      <ul class="nav-menu" id="navMenu">
-        <li><a class="nav-link" href="../index.html">Home</a></li>
-        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-        <li><a class="nav-link" href="categories.html">Categories</a></li>
-        <li><a class="nav-link" href="expenses.html">Expenses</a></li>
-        <li><a class="nav-link" href="reports.html">Reports</a></li>
-        <li><a class="nav-link" href="settings.html">Settings</a></li>
-      </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle">
-          <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
-          <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
-          <span class="tt-thumb"></span>
-        </button>
-        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+  <div class="app-layout">
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand">
+          <span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="brand-name">Lumora</span>
+        </a>
       </div>
-    </nav>
-  </header>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+        <a href="expenses.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
+        <a href="categories.html" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories</a>
+        <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+    </aside>
 
-  <main class="shell">
-    <div class="dash">
-      <aside class="dash-side">
-        <nav class="dash-nav">
-          <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
-          <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
-          <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
-          <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
-          <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
-        </nav>
-      </aside>
-
-      <div class="dash-main">
-        <div class="dash-topbar">
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
           <div>
-            <h3 class="dash-title">Budget Categories</h3>
-            <p class="dash-subtitle">Track your spending limits (Alerts at 80%)</p>
-          </div>
-          <div class="dash-actions">
-            <button class="btn btn-primary btn-sm" id="add-category-btn"><i class="fa-solid fa-plus"></i> New Category</button>
+            <div class="page-title">Budget Categories</div>
+            <div class="page-subtitle">Track your spending limits</div>
           </div>
         </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary btn-sm" id="add-category-btn"><i class="fa-solid fa-plus"></i> New Category</button>
+        </div>
+      </header>
 
-        <div class="dash-body">
-          <div class="grid-cards" id="categoriesGrid"></div>
+      <main class="content-area">
+        <div class="grid-3" id="categoriesGrid">
+          <!-- Rendered by JS -->
         </div>
-      </div>
+      </main>
     </div>
-  </main>
+  </div>
   <script src="../main.js"></script>
 </body>
 </html>
