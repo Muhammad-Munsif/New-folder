@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
 
+  // --- MOBILE SIDEBAR ---
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const appSidebar = document.getElementById('appSidebar');
+  if (mobileSidebarBtn && appSidebar) {
+    mobileSidebarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      appSidebar.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (appSidebar.classList.contains('open') && !appSidebar.contains(e.target) && !mobileSidebarBtn.contains(e.target)) {
+        appSidebar.classList.remove('open');
+      }
+    });
+  }
+
   // --- CURRENCY & FORMATTING ---
   const CURRENCIES = {
     USD: { symbol: '$', rate: 1 },
@@ -34,11 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- UTILS ---
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
-    stack.className = 'toast-stack'; stack.id = 'toastStack';
+    stack.className = 'toast-container'; stack.id = 'toastStack';
     if(!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
-    el.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ${msg}`;
+    el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
     stack.appendChild(el);
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
   };
@@ -66,16 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- MOBILE MENU ---
-  const menuBtn = document.getElementById('menuBtn');
-  const navMenu = document.getElementById('navMenu');
-  if (menuBtn && navMenu) {
-    menuBtn.addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('open'); });
-    document.addEventListener('click', (e) => { if (navMenu.classList.contains('open') && !navMenu.contains(e.target)) navMenu.classList.remove('open'); });
-  }
-
+  // Active Nav Highlighting
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-link, .dash-nav-item').forEach(link => {
+  document.querySelectorAll('.nav-link, .sidebar-link').forEach(link => {
     if (link.getAttribute('href') === currentPath) link.classList.add('active');
   });
 
@@ -84,14 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="modal-overlay" id="globalModal">
       <div class="modal-box">
         <div class="modal-header">
-          <h3 id="modalTitle">Add Record</h3>
-          <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+          <h3 class="modal-title" id="modalTitle">Add Record</h3>
+          <button class="icon-btn" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <form id="modalForm">
           <div id="modalFields"></div>
           <div class="modal-actions">
-            <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-outline" id="modalCancel">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
         </form>
       </div>
@@ -135,27 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
     } else {
       tbody.innerHTML = recent.map(t => `
-        <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status-pill status-${t.status}">${t.status}</span></td></tr>
+        <tr>
+          <td><strong>${t.merchant}</strong></td>
+          <td>${t.category}</td>
+          <td>${t.date}</td>
+          <td>${formatMoney(t.amount)}</td>
+          <td><span class="status ${t.status}">${t.status}</span></td>
+        </tr>
       `).join('');
-    }
-
-    const linePath = document.getElementById('linePath');
-    const lineArea = document.getElementById('lineArea');
-    if (linePath) {
-      let chartData = transactions.slice(0, 7).map(t => t.amount).reverse();
-      if(chartData.length < 2) chartData = [0, 0];
-      const W = 400, H = 180, pad = 10;
-      const min = Math.min(...chartData), max = Math.max(...chartData);
-      const range = (max - min) || 1;
-      const stepX = (W - pad*2) / (chartData.length - 1);
-      let d = '';
-      chartData.forEach((v, i) => {
-        const x = pad + i * stepX;
-        const y = pad + (1 - (v - min) / range) * (H - pad*2);
-        d += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
-      });
-      linePath.setAttribute('d', d);
-      lineArea.setAttribute('d', d + ` L ${W-pad} ${H} L ${pad} ${H} Z`);
     }
   }
 
@@ -195,12 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if(emptyState) emptyState.style.display = 'none';
         tbody.innerHTML = paginated.map(t => `
           <tr>
-            <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
+            <td><strong>${t.merchant}</strong></td>
+            <td>${t.category}</td>
+            <td>${t.date}</td>
             <td>${formatMoney(t.amount)}</td>
-            <td><span class="status-pill status-${t.status}">${t.status}</span></td>
-            <td class="actions-cell">
+            <td><span class="status ${t.status}">${t.status}</span></td>
+            <td class="actions-cell" style="justify-content:flex-end;">
               <button class="icon-btn edit-btn" data-id="${t.id}"><i class="fa-solid fa-pen"></i></button>
-              <button class="icon-btn delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
+              <button class="icon-btn danger delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `).join('');
@@ -241,15 +238,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const openExpenseModal = (existingData = null) => {
       const isEdit = !!existingData;
       const fields = `
-        <div class="form-group"><label>Merchant</label><input type="text" name="merchant" class="form-input" required value="${isEdit ? existingData.merchant : ''}"></div>
-        <div class="form-group"><label>Category</label>
-          <select name="category" class="form-input">
+        <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required value="${isEdit ? existingData.merchant : ''}"></div>
+        <div class="form-group"><label class="form-label">Category</label>
+          <select name="category" class="input-field">
             ${categories.map(c => `<option value="${c.name}" ${isEdit && existingData.category === c.name ? 'selected' : ''}>${c.name}</option>`).join('')}
           </select>
         </div>
-        <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="form-input" required value="${isEdit ? existingData.amount : ''}"></div>
-        <div class="form-group"><label>Status</label>
-          <select name="status" class="form-input">
+        <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="input-field" required value="${isEdit ? existingData.amount : ''}"></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select name="status" class="input-field">
             <option value="paid" ${isEdit && existingData.status === 'paid' ? 'selected' : ''}>Paid</option>
             <option value="pending" ${isEdit && existingData.status === 'pending' ? 'selected' : ''}>Pending</option>
           </select>
@@ -282,13 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `
           <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <div style="width:40px; height:40px; border-radius:12px; background:${c.gradient}; display:grid; place-items:center; color:#fff;"><i class="fa-solid ${c.icon}"></i></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div style="width:40px; height:40px; border-radius:10px; background:${c.gradient}; display:grid; place-items:center; color:#fff;"><i class="fa-solid ${c.icon}"></i></div>
               <span style="font-weight:700; color:${isAlert ? 'var(--danger)' : 'var(--text-primary)'};">${percentage}%</span>
             </div>
-            <h3>${c.name}</h3>
-            <div style="font-size:.85rem; color:var(--text-muted); margin-bottom:8px;">${formatMoney(spent)} / ${formatMoney(c.budget)}</div>
-            <div class="progress-bar"><div class="progress-fill ${isAlert ? 'alert' : ''}" style="width:${percentage}%"></div></div>
+            <h3 style="margin-bottom:8px;">${c.name}</h3>
+            <div style="font-size:.9rem; color:var(--text-muted); margin-bottom:16px;">${formatMoney(spent)} / ${formatMoney(c.budget)}</div>
+            <div class="progress-track"><div class="progress-fill ${isAlert ? 'alert' : ''}" style="width:${percentage}%"></div></div>
           </div>
         `;
       }).join('');
@@ -298,8 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('add-category-btn').addEventListener('click', () => {
       const fields = `
-        <div class="form-group"><label>Category Name</label><input type="text" name="name" class="form-input" required placeholder="e.g. Travel"></div>
-        <div class="form-group"><label>Budget ($)</label><input type="number" name="budget" class="form-input" required min="1" placeholder="500"></div>
+        <div class="form-group"><label class="form-label">Category Name</label><input type="text" name="name" class="input-field" required placeholder="e.g. Travel"></div>
+        <div class="form-group"><label class="form-label">Budget ($)</label><input type="number" name="budget" class="input-field" required min="1" placeholder="500"></div>
       `;
       openModal('Create Category', fields, (formData) => {
         categories.push({ id: Date.now(), name: formData.get('name'), budget: parseFloat(formData.get('budget')), icon: 'fa-tag', gradient: 'var(--gradient-1)' });
