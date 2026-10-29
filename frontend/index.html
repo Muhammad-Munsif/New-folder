@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lumora — Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <!-- Correct Path for Root -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="landing-body">
   <header class="nav-wrap">
     <nav class="nav-inner">
       <a href="index.html" class="brand">
-        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
-        <span class="brand-name">Lumora.</span>
+        <span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="brand-name">Lumora</span>
       </a>
       <ul class="nav-menu" id="navMenu">
         <li><a class="nav-link" href="index.html">Home</a></li>
         <li><a class="nav-link" href="pages/dashboard.html">Dashboard</a></li>
-        <li><a class="nav-link" href="pages/categories.html">Categories</a></li>
         <li><a class="nav-link" href="pages/expenses.html">Expenses</a></li>
-        <li><a class="nav-link" href="pages/reports.html">Reports</a></li>
         <li><a class="nav-link" href="pages/settings.html">Settings</a></li>
       </ul>
       <div class="nav-actions">
@@ -30,17 +26,19 @@
           <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
           <span class="tt-thumb"></span>
         </button>
-        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
       </div>
     </nav>
   </header>
 
-  <main class="shell" style="text-align: center; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-    <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 16px;">Intelligent Expense Tracking.</h1>
-    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 32px; max-width: 600px;">A modern dashboard built with Lumora's adaptive theming engine. Fully responsive and accessible.</p>
-    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+  <main class="hero-section">
+    <div style="display:inline-block; padding:6px 16px; border-radius:999px; border:1px solid var(--border-color); font-size:.85rem; font-weight:500; margin-bottom:24px;">
+      <i class="fa-solid fa-bolt" style="color:var(--primary)"></i> Lumora v2.0
+    </div>
+    <h1>Manage your finances<br>with absolute clarity.</h1>
+    <p>A professional dashboard built for modern teams. Track expenses, manage budgets, and export reports seamlessly.</p>
+    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
       <a href="pages/dashboard.html" class="btn btn-primary">Go to Dashboard</a>
-      <a href="pages/expenses.html" class="btn btn-ghost">View Expenses</a>
+      <a href="pages/expenses.html" class="btn btn-outline">View Expenses</a>
     </div>
   </main>
   <script src="main.js"></script>
