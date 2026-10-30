@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
@@ -67,14 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   const savedAccent = localStorage.getItem('lumora_accent');
-  if(savedAccent) {
+  if (savedAccent) {
     root.style.setProperty('--primary', savedAccent);
-    let r = parseInt(savedAccent.slice(1,3),16), g = parseInt(savedAccent.slice(3,5),16), b = parseInt(savedAccent.slice(5,7),16);
+    let r = parseInt(savedAccent.slice(1, 3), 16), g = parseInt(savedAccent.slice(3, 5), 16), b = parseInt(savedAccent.slice(5, 7), 16);
     root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
   }
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
-  
+
   modalForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (onModalSave) onModalSave(new FormData(modalForm));
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tbody = document.getElementById('tableBody');
     const recent = transactions.slice(0, 5);
-    if(recent.length === 0) {
+    if (recent.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
     } else {
       tbody.innerHTML = recent.map(t => `
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderExpenses = () => {
       const tbody = document.getElementById('expensesBody');
       const emptyState = document.getElementById('emptyState');
-      
+
       let filtered = transactions.filter(t => {
         const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
         const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
@@ -172,22 +172,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       filtered.sort((a, b) => {
         let valA = a[sortKey], valB = b[sortKey];
-        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-        if(valA < valB) return sortAsc ? -1 : 1;
-        if(valA > valB) return sortAsc ? 1 : -1;
+        if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+        if (valA < valB) return sortAsc ? -1 : 1;
+        if (valA > valB) return sortAsc ? 1 : -1;
         return 0;
       });
 
       const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-      if(currentPage > totalPages) currentPage = totalPages;
+      if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const paginated = filtered.slice(start, start + rowsPerPage);
 
-      if(paginated.length === 0) {
+      if (paginated.length === 0) {
         tbody.innerHTML = '';
-        if(emptyState) emptyState.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'block';
       } else {
-        if(emptyState) emptyState.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'none';
         tbody.innerHTML = paginated.map(t => `
           <tr>
             <td><strong>${t.merchant}</strong></td>
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
       }
 
-      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
+      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + rowsPerPage, filtered.length)} of ${filtered.length}`;
       document.getElementById('prevBtn').disabled = currentPage === 1;
       document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
@@ -228,11 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
     document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
 
-    document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
+    document.getElementById('thMerchant').addEventListener('click', () => { sortKey = 'merchant'; sortAsc = !sortAsc; renderExpenses(); });
+    document.getElementById('thDate').addEventListener('click', () => { sortKey = 'date'; sortAsc = !sortAsc; renderExpenses(); });
+    document.getElementById('thAmount').addEventListener('click', () => { sortKey = 'amount'; sortAsc = !sortAsc; renderExpenses(); });
 
-    document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
+    document.getElementById('prevBtn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderExpenses(); } });
     document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
 
     const openExpenseModal = (existingData = null) => {
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
         const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
-        if(isEdit) {
+        if (isEdit) {
           const idx = transactions.findIndex(x => x.id === existingData.id);
           transactions[idx] = { ...transactions[idx], ...data };
         } else {
@@ -320,18 +320,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (document.getElementById('settingsPage')) {
     const accentPicker = document.getElementById('accentPicker');
-    if(accentPicker) {
-      if(savedAccent) accentPicker.value = savedAccent;
+    if (accentPicker) {
+      if (savedAccent) accentPicker.value = savedAccent;
       accentPicker.addEventListener('input', (e) => {
         root.style.setProperty('--primary', e.target.value);
-        let r = parseInt(e.target.value.slice(1,3),16), g = parseInt(e.target.value.slice(3,5),16), b = parseInt(e.target.value.slice(5,7),16);
+        let r = parseInt(e.target.value.slice(1, 3), 16), g = parseInt(e.target.value.slice(3, 5), 16), b = parseInt(e.target.value.slice(5, 7), 16);
         root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
         localStorage.setItem('lumora_accent', e.target.value);
       });
     }
 
     const currSelect = document.getElementById('currencySelect');
-    if(currSelect) {
+    if (currSelect) {
       currSelect.value = currentCurrency;
       currSelect.addEventListener('change', (e) => {
         currentCurrency = e.target.value;
@@ -344,4 +344,4 @@ document.addEventListener('DOMContentLoaded', () => {
       sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
     });
   }
-});
+});         
