@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/');
   const isLoggedIn = localStorage.getItem('lumora_user');
 
-  // 1. Protect inner pages (if not logged in, go to login)
+  // 1. Protect inner pages
   if (!isAuthPage && !isLandingPage && !isLoggedIn) {
     window.location.href = '../login.html';
     return;
   }
 
-  // 2. Handle Login/Signup Form toggle
+  // 2. Handle Login/Signup Form
   if (isAuthPage) {
     let isSignup = false;
     const authForm = document.getElementById('authForm');
@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('authEmail').value;
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
       
-      // Simulate network delay
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
 
@@ -57,12 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'pages/dashboard.html';
       }, 800);
     });
-    
-    return; // Stop running dashboard logic on auth page
+    return; // Stop running app logic on auth page
   }
-
-  // --- LOGOUT LOGIC (Add this to settings later if needed) ---
-  // localStorage.removeItem('lumora_user');
 
   // --- MOBILE SIDEBAR ---
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
@@ -79,21 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- CURRENCY & FORMATTING ---
-  const CURRENCIES = {
-    USD: { symbol: '$', rate: 1 },
-    EUR: { symbol: '€', rate: 0.92 },
-    GBP: { symbol: '£', rate: 0.79 },
-    INR: { symbol: '₹', rate: 83.2 }
-  };
-  let currentCurrency = localStorage.getItem('lumora_currency') || 'USD';
-
-  const formatMoney = (amount) => {
-    const c = CURRENCIES[currentCurrency];
-    return c.symbol + (parseFloat(amount) * c.rate).toFixed(2);
-  };
-
   // --- DATA LAYER ---
+  const CURRENCIES = { USD: { symbol: '$', rate: 1 }, EUR: { symbol: '€', rate: 0.92 }, GBP: { symbol: '£', rate: 0.79 }, INR: { symbol: '₹', rate: 83.2 } };
+  let currentCurrency = localStorage.getItem('lumora_currency') || 'USD';
+  const formatMoney = (amount) => CURRENCIES[currentCurrency].symbol + (parseFloat(amount) * CURRENCIES[currentCurrency].rate).toFixed(2);
+
   const getData = (key, fallback) => JSON.parse(localStorage.getItem(key)) || fallback;
   const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
@@ -109,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 3, name: 'Meals', budget: 150, icon: 'fa-utensils', gradient: 'linear-gradient(135deg, #10b981, #059669)' }
   ]);
 
-  // --- UTILS ---
+  // --- UTILS & THEME ---
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
@@ -121,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
   };
 
-  // --- THEME & ACCENT ENGINE ---
   const applyTheme = (mode) => {
     const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     root.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -165,252 +149,253 @@ document.addEventListener('DOMContentLoaded', () => {
         </form>
       </div>
     </div>`;
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  if(!isLandingPage) document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-  const modal = document.getElementById('globalModal');
-  const modalForm = document.getElementById('modalForm');
-  const modalFields = document.getElementById('modalFields');
-  const modalTitle = document.getElementById('modalTitle');
-  let onModalSave = null;
+  if(!isLandingPage) {
+    const modal = document.getElementById('globalModal');
+    const modalForm = document.getElementById('modalForm');
+    const modalFields = document.getElementById('modalFields');
+    const modalTitle = document.getElementById('modalTitle');
+    let onModalSave = null;
 
-  const openModal = (title, fieldsHTML, callback) => {
-    modalTitle.textContent = title;
-    modalFields.innerHTML = fieldsHTML;
-    onModalSave = callback;
-    modal.classList.add('open');
-  };
-
-  const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  document.getElementById('modalCancel').addEventListener('click', closeModal);
+    const openModal = (title, fieldsHTML, callback) => {
+      modalTitle.textContent = title;
+      modalFields.innerHTML = fieldsHTML;
+      onModalSave = callback;
+      modal.classList.add('open');
+    };
+    const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
+    
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    
+    modalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (onModalSave) onModalSave(new FormData(modalForm));
+      closeModal();
+      showToast('Record saved successfully!');
+    });
   
-  modalForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (onModalSave) onModalSave(new FormData(modalForm));
-    closeModal();
-    showToast('Record saved successfully!');
-  });
+    // --- DASHBOARD LOGIC ---
+    if (document.getElementById('dashTable')) {
+      const user = JSON.parse(localStorage.getItem('lumora_user'));
+      document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
 
-  // --- DASHBOARD LOGIC ---
-  if (document.getElementById('dashTable')) {
-    const user = JSON.parse(localStorage.getItem('lumora_user'));
-    document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
+      const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
+      document.querySelector('[data-count="revenue"]').textContent = formatMoney(48392);
+      document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
+      document.querySelector('[data-count="expenses"]').textContent = formatMoney(totalExpenses);
 
-    const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
-    document.querySelector('[data-count="revenue"]').textContent = formatMoney(48392);
-    document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
-    document.querySelector('[data-count="expenses"]').textContent = formatMoney(totalExpenses);
-
-    const tbody = document.getElementById('tableBody');
-    const recent = transactions.slice(0, 5);
-    if(recent.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
-    } else {
-      tbody.innerHTML = recent.map(t => `
-        <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status ${t.status}">${t.status}</span></td></tr>
-      `).join('');
-    }
-  }
-
-  // --- EXPENSES LOGIC ---
-  if (document.getElementById('expensesBody')) {
-    let currentPage = 1; const rowsPerPage = 5;
-    let sortKey = 'date', sortAsc = false;
-    let searchVal = '', filterStatus = 'all', filterCat = 'all';
-
-    const renderExpenses = () => {
-      const tbody = document.getElementById('expensesBody');
-      const emptyState = document.getElementById('emptyState');
-      
-      let filtered = transactions.filter(t => {
-        const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
-        const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
-        const matchesCat = filterCat === 'all' || t.category === filterCat;
-        return matchesSearch && matchesStatus && matchesCat;
-      });
-
-      filtered.sort((a, b) => {
-        let valA = a[sortKey], valB = b[sortKey];
-        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-        if(valA < valB) return sortAsc ? -1 : 1;
-        if(valA > valB) return sortAsc ? 1 : -1;
-        return 0;
-      });
-
-      const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-      if(currentPage > totalPages) currentPage = totalPages;
-      const start = (currentPage - 1) * rowsPerPage;
-      const paginated = filtered.slice(start, start + rowsPerPage);
-
-      if(paginated.length === 0) {
-        tbody.innerHTML = '';
-        if(emptyState) emptyState.style.display = 'block';
+      const tbody = document.getElementById('tableBody');
+      const recent = transactions.slice(0, 5);
+      if(recent.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
       } else {
-        if(emptyState) emptyState.style.display = 'none';
-        tbody.innerHTML = paginated.map(t => `
-          <tr>
-            <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
-            <td>${formatMoney(t.amount)}</td>
-            <td><span class="status ${t.status}">${t.status}</span></td>
-            <td class="actions-cell">
-              <button class="icon-btn edit-btn" data-id="${t.id}"><i class="fa-solid fa-pen"></i></button>
-              <button class="icon-btn danger delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
+        tbody.innerHTML = recent.map(t => `
+          <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status ${t.status}">${t.status}</span></td></tr>
         `).join('');
       }
+    }
 
-      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
-      document.getElementById('prevBtn').disabled = currentPage === 1;
-      document.getElementById('nextBtn').disabled = currentPage === totalPages;
+    // --- EXPENSES LOGIC ---
+    if (document.getElementById('expensesBody')) {
+      let currentPage = 1; const rowsPerPage = 5;
+      let sortKey = 'date', sortAsc = false;
+      let searchVal = '', filterStatus = 'all', filterCat = 'all';
 
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = parseInt(e.currentTarget.getAttribute('data-id'));
-          transactions = transactions.filter(t => t.id !== id);
-          setData('lumora_transactions', transactions);
-          renderExpenses(); showToast('Expense deleted');
+      const renderExpenses = () => {
+        const tbody = document.getElementById('expensesBody');
+        const emptyState = document.getElementById('emptyState');
+        
+        let filtered = transactions.filter(t => {
+          const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
+          const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
+          const matchesCat = filterCat === 'all' || t.category === filterCat;
+          return matchesSearch && matchesStatus && matchesCat;
         });
-      });
 
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = parseInt(e.currentTarget.getAttribute('data-id'));
-          openExpenseModal(transactions.find(x => x.id === id));
+        filtered.sort((a, b) => {
+          let valA = a[sortKey], valB = b[sortKey];
+          if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+          if(valA < valB) return sortAsc ? -1 : 1;
+          if(valA > valB) return sortAsc ? 1 : -1;
+          return 0;
         });
-      });
-    };
 
-    document.getElementById('searchExpense').addEventListener('input', (e) => { searchVal = e.target.value.toLowerCase(); currentPage = 1; renderExpenses(); });
-    document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
-    document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
+        const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
+        if(currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * rowsPerPage;
+        const paginated = filtered.slice(start, start + rowsPerPage);
 
-    document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
-    document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
-
-    document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
-    document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
-
-    const openExpenseModal = (existingData = null) => {
-      const isEdit = !!existingData;
-      const fields = `
-        <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required value="${isEdit ? existingData.merchant : ''}"></div>
-        <div class="form-group"><label class="form-label">Category</label>
-          <select name="category" class="input-field">
-            ${categories.map(c => `<option value="${c.name}" ${isEdit && existingData.category === c.name ? 'selected' : ''}>${c.name}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="input-field" required value="${isEdit ? existingData.amount : ''}"></div>
-        <div class="form-group"><label class="form-label">Status</label>
-          <select name="status" class="input-field">
-            <option value="paid" ${isEdit && existingData.status === 'paid' ? 'selected' : ''}>Paid</option>
-            <option value="pending" ${isEdit && existingData.status === 'pending' ? 'selected' : ''}>Pending</option>
-          </select>
-        </div>
-      `;
-      openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
-        const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
-        if(isEdit) {
-          const idx = transactions.findIndex(x => x.id === existingData.id);
-          transactions[idx] = { ...transactions[idx], ...data };
+        if(paginated.length === 0) {
+          tbody.innerHTML = '';
+          if(emptyState) emptyState.style.display = 'block';
         } else {
-          transactions.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], ...data });
+          if(emptyState) emptyState.style.display = 'none';
+          tbody.innerHTML = paginated.map(t => `
+            <tr>
+              <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
+              <td>${formatMoney(t.amount)}</td>
+              <td><span class="status ${t.status}">${t.status}</span></td>
+              <td class="actions-cell">
+                <button class="icon-btn edit-btn" data-id="${t.id}"><i class="fa-solid fa-pen"></i></button>
+                <button class="icon-btn danger delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `).join('');
         }
-        setData('lumora_transactions', transactions);
-        renderExpenses();
-      });
-    };
 
-    document.getElementById('add-expense-btn').addEventListener('click', () => openExpenseModal());
-    renderExpenses();
-  }
+        document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
-  // --- CATEGORIES LOGIC ---
-  if (document.getElementById('categoriesGrid')) {
-    const renderCategories = () => {
-      const grid = document.getElementById('categoriesGrid');
-      grid.innerHTML = categories.map(c => {
-        const spent = transactions.filter(t => t.category === c.name).reduce((sum, t) => sum + t.amount, 0);
-        const percentage = Math.min((spent / c.budget) * 100, 100).toFixed(0);
-        const isAlert = percentage >= 80;
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            transactions = transactions.filter(t => t.id !== id);
+            setData('lumora_transactions', transactions);
+            renderExpenses(); showToast('Expense deleted');
+          });
+        });
 
-        return `
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-              <div style="width:40px; height:40px; border-radius:10px; background:${c.gradient}; display:grid; place-items:center; color:#fff;"><i class="fa-solid ${c.icon}"></i></div>
-              <span style="font-weight:700; color:${isAlert ? 'var(--danger)' : 'var(--text-primary)'};">${percentage}%</span>
-            </div>
-            <h3 style="margin-bottom:8px;">${c.name}</h3>
-            <div style="font-size:.9rem; color:var(--text-muted); margin-bottom:16px;">${formatMoney(spent)} / ${formatMoney(c.budget)}</div>
-            <div class="progress-track"><div class="progress-fill ${isAlert ? 'alert' : ''}" style="width:${percentage}%"></div></div>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            openExpenseModal(transactions.find(x => x.id === id));
+          });
+        });
+      };
+
+      document.getElementById('searchExpense').addEventListener('input', (e) => { searchVal = e.target.value.toLowerCase(); currentPage = 1; renderExpenses(); });
+      document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
+      document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
+
+      document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
+      document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
+      document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
+
+      document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
+      document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
+
+      const openExpenseModal = (existingData = null) => {
+        const isEdit = !!existingData;
+        const fields = `
+          <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required value="${isEdit ? existingData.merchant : ''}"></div>
+          <div class="form-group"><label class="form-label">Category</label>
+            <select name="category" class="input-field">
+              ${categories.map(c => `<option value="${c.name}" ${isEdit && existingData.category === c.name ? 'selected' : ''}>${c.name}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="input-field" required value="${isEdit ? existingData.amount : ''}"></div>
+          <div class="form-group"><label class="form-label">Status</label>
+            <select name="status" class="input-field">
+              <option value="paid" ${isEdit && existingData.status === 'paid' ? 'selected' : ''}>Paid</option>
+              <option value="pending" ${isEdit && existingData.status === 'pending' ? 'selected' : ''}>Pending</option>
+            </select>
           </div>
         `;
-      }).join('');
-    };
+        openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
+          const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
+          if(isEdit) {
+            const idx = transactions.findIndex(x => x.id === existingData.id);
+            transactions[idx] = { ...transactions[idx], ...data };
+          } else {
+            transactions.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], ...data });
+          }
+          setData('lumora_transactions', transactions);
+          renderExpenses();
+        });
+      };
 
-    renderCategories();
+      document.getElementById('add-expense-btn').addEventListener('click', () => openExpenseModal());
+      renderExpenses();
+    }
 
-    document.getElementById('add-category-btn').addEventListener('click', () => {
-      const fields = `
-        <div class="form-group"><label class="form-label">Category Name</label><input type="text" name="name" class="input-field" required placeholder="e.g. Travel"></div>
-        <div class="form-group"><label class="form-label">Budget ($)</label><input type="number" name="budget" class="input-field" required min="1" placeholder="500"></div>
-      `;
-      openModal('Create Category', fields, (formData) => {
-        categories.push({ id: Date.now(), name: formData.get('name'), budget: parseFloat(formData.get('budget')), icon: 'fa-tag', gradient: 'linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)' });
-        setData('lumora_categories', categories);
-        renderCategories();
-      });
-    });
-  }
+    // --- CATEGORIES LOGIC ---
+    if (document.getElementById('categoriesGrid')) {
+      const renderCategories = () => {
+        const grid = document.getElementById('categoriesGrid');
+        grid.innerHTML = categories.map(c => {
+          const spent = transactions.filter(t => t.category === c.name).reduce((sum, t) => sum + t.amount, 0);
+          const percentage = Math.min((spent / c.budget) * 100, 100).toFixed(0);
+          const isAlert = percentage >= 80;
 
-  // --- SETTINGS LOGIC ---
-  if (document.getElementById('settingsPage')) {
-    const accentPicker = document.getElementById('accentPicker');
-    if(accentPicker) {
-      if(savedAccent) accentPicker.value = savedAccent;
-      accentPicker.addEventListener('input', (e) => {
-        root.style.setProperty('--primary', e.target.value);
-        let r = parseInt(e.target.value.slice(1,3),16), g = parseInt(e.target.value.slice(3,5),16), b = parseInt(e.target.value.slice(5,7),16);
-        root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
-        localStorage.setItem('lumora_accent', e.target.value);
+          return `
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:${c.gradient}; display:grid; place-items:center; color:#fff;"><i class="fa-solid ${c.icon}"></i></div>
+                <span style="font-weight:700; color:${isAlert ? 'var(--danger)' : 'var(--text-primary)'};">${percentage}%</span>
+              </div>
+              <h3 style="margin-bottom:8px;">${c.name}</h3>
+              <div style="font-size:.9rem; color:var(--text-muted); margin-bottom:16px;">${formatMoney(spent)} / ${formatMoney(c.budget)}</div>
+              <div class="progress-track"><div class="progress-fill ${isAlert ? 'alert' : ''}" style="width:${percentage}%"></div></div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      renderCategories();
+
+      document.getElementById('add-category-btn').addEventListener('click', () => {
+        const fields = `
+          <div class="form-group"><label class="form-label">Category Name</label><input type="text" name="name" class="input-field" required placeholder="e.g. Travel"></div>
+          <div class="form-group"><label class="form-label">Budget ($)</label><input type="number" name="budget" class="input-field" required min="1" placeholder="500"></div>
+        `;
+        openModal('Create Category', fields, (formData) => {
+          categories.push({ id: Date.now(), name: formData.get('name'), budget: parseFloat(formData.get('budget')), icon: 'fa-tag', gradient: 'linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)' });
+          setData('lumora_categories', categories);
+          renderCategories();
+        });
       });
     }
 
-    const currSelect = document.getElementById('currencySelect');
-    if(currSelect) {
-      currSelect.value = currentCurrency;
-      currSelect.addEventListener('change', (e) => {
-        currentCurrency = e.target.value;
-        localStorage.setItem('lumora_currency', currentCurrency);
-        showToast(`Currency changed to ${currentCurrency}`);
+    // --- SETTINGS LOGIC ---
+    if (document.getElementById('settingsPage')) {
+      const accentPicker = document.getElementById('accentPicker');
+      if(accentPicker) {
+        if(savedAccent) accentPicker.value = savedAccent;
+        accentPicker.addEventListener('input', (e) => {
+          root.style.setProperty('--primary', e.target.value);
+          let r = parseInt(e.target.value.slice(1,3),16), g = parseInt(e.target.value.slice(3,5),16), b = parseInt(e.target.value.slice(5,7),16);
+          root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+          localStorage.setItem('lumora_accent', e.target.value);
+        });
+      }
+
+      const currSelect = document.getElementById('currencySelect');
+      if(currSelect) {
+        currSelect.value = currentCurrency;
+        currSelect.addEventListener('change', (e) => {
+          currentCurrency = e.target.value;
+          localStorage.setItem('lumora_currency', currentCurrency);
+          showToast(`Currency changed to ${currentCurrency}`);
+        });
+      }
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('lumora_user');
+          window.location.href = '../login.html';
+        });
+      }
+
+      document.querySelectorAll('.switch').forEach(sw => {
+        sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
       });
     }
 
-    // Add Logout Button functionality
-    const logoutBtn = document.getElementById('logoutBtn');
-    if(logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('lumora_user');
-        window.location.href = '../login.html';
+    // --- REPORTS LOGIC ---
+    if (document.getElementById('exportCsvBtn')) {
+      document.getElementById('exportCsvBtn').addEventListener('click', () => {
+        let csv = 'Date,Merchant,Category,Amount,Status\n';
+        transactions.forEach(t => { csv += `${t.date},"${t.merchant}","${t.category}",${t.amount},${t.status}\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `lumora_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+        showToast('CSV Downloaded!');
       });
     }
-
-    document.querySelectorAll('.switch').forEach(sw => {
-      sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
-    });
-  }
-
-  // --- REPORTS LOGIC ---
-  if (document.getElementById('exportCsvBtn')) {
-    document.getElementById('exportCsvBtn').addEventListener('click', () => {
-      let csv = 'Date,Merchant,Category,Amount,Status\n';
-      transactions.forEach(t => { csv += `${t.date},"${t.merchant}","${t.category}",${t.amount},${t.status}\n`; });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `lumora_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
-      showToast('CSV Downloaded!');
-    });
   }
 });
