@@ -1,5 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
+  const currentPath = window.location.pathname;
+
+  // --- AUTHENTICATION LOGIC ---
+  const isAuthPage = currentPath.includes('login.html');
+  const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/');
+  const isLoggedIn = localStorage.getItem('lumora_user');
+
+  // 1. Protect inner pages (if not logged in, go to login)
+  if (!isAuthPage && !isLandingPage && !isLoggedIn) {
+    window.location.href = '../login.html';
+    return;
+  }
+
+  // 2. Handle Login/Signup Form toggle
+  if (isAuthPage) {
+    let isSignup = false;
+    const authForm = document.getElementById('authForm');
+    const nameGroup = document.getElementById('nameGroup');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const toggleText = document.getElementById('toggleText');
+    const toggleAuth = document.getElementById('toggleAuth');
+
+    toggleAuth.addEventListener('click', () => {
+      isSignup = !isSignup;
+      if (isSignup) {
+        authTitle.textContent = 'Create an account';
+        authSubtitle.textContent = 'Start managing your finances today.';
+        authSubmitBtn.textContent = 'Sign Up';
+        toggleText.textContent = 'Already have an account?';
+        toggleAuth.textContent = 'Log in';
+        nameGroup.style.display = 'block';
+      } else {
+        authTitle.textContent = 'Welcome back';
+        authSubtitle.textContent = 'Enter your credentials to access your account.';
+        authSubmitBtn.textContent = 'Sign In';
+        toggleText.textContent = "Don't have an account?";
+        toggleAuth.textContent = 'Sign up';
+        nameGroup.style.display = 'none';
+      }
+    });
+
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
+      
+      // Simulate network delay
+      authSubmitBtn.textContent = 'Loading...';
+      authSubmitBtn.disabled = true;
+
+      setTimeout(() => {
+        localStorage.setItem('lumora_user', JSON.stringify({ email, name }));
+        window.location.href = 'pages/dashboard.html';
+      }, 800);
+    });
+    
+    return; // Stop running dashboard logic on auth page
+  }
+
+  // --- LOGOUT LOGIC (Add this to settings later if needed) ---
+  // localStorage.removeItem('lumora_user');
 
   // --- MOBILE SIDEBAR ---
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
@@ -41,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ]);
 
   let categories = getData('lumora_categories', [
-    { id: 1, name: 'Software', budget: 200, icon: 'fa-code', gradient: 'var(--gradient-1)' },
-    { id: 2, name: 'Infrastructure', budget: 500, icon: 'fa-server', gradient: 'var(--gradient-2)' },
+    { id: 1, name: 'Software', budget: 200, icon: 'fa-code', gradient: 'linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)' },
+    { id: 2, name: 'Infrastructure', budget: 500, icon: 'fa-server', gradient: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' },
     { id: 3, name: 'Meals', budget: 150, icon: 'fa-utensils', gradient: 'linear-gradient(135deg, #10b981, #059669)' }
   ]);
 
@@ -50,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if (!stack.parentElement) document.body.appendChild(stack);
+    if(!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
@@ -67,24 +130,22 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   const savedAccent = localStorage.getItem('lumora_accent');
-  if (savedAccent) {
+  if(savedAccent) {
     root.style.setProperty('--primary', savedAccent);
-    let r = parseInt(savedAccent.slice(1, 3), 16), g = parseInt(savedAccent.slice(3, 5), 16), b = parseInt(savedAccent.slice(5, 7), 16);
+    let r = parseInt(savedAccent.slice(1,3),16), g = parseInt(savedAccent.slice(3,5),16), b = parseInt(savedAccent.slice(5,7),16);
     root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
   }
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if (btn) btn.addEventListener('click', () => {
+    if(btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
     });
   });
 
-  // Active Nav Highlighting
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-link, .sidebar-link').forEach(link => {
-    if (link.getAttribute('href') === currentPath) link.classList.add('active');
+    if (link.getAttribute('href') === currentPath.split('/').pop()) link.classList.add('active');
   });
 
   // --- MODAL SYSTEM ---
@@ -122,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
-
+  
   modalForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (onModalSave) onModalSave(new FormData(modalForm));
@@ -130,8 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Record saved successfully!');
   });
 
-  // --- PAGES LOGIC ---
+  // --- DASHBOARD LOGIC ---
   if (document.getElementById('dashTable')) {
+    const user = JSON.parse(localStorage.getItem('lumora_user'));
+    document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
+
     const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
     document.querySelector('[data-count="revenue"]').textContent = formatMoney(48392);
     document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
@@ -139,21 +203,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tbody = document.getElementById('tableBody');
     const recent = transactions.slice(0, 5);
-    if (recent.length === 0) {
+    if(recent.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
     } else {
       tbody.innerHTML = recent.map(t => `
-        <tr>
-          <td><strong>${t.merchant}</strong></td>
-          <td>${t.category}</td>
-          <td>${t.date}</td>
-          <td>${formatMoney(t.amount)}</td>
-          <td><span class="status ${t.status}">${t.status}</span></td>
-        </tr>
+        <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status ${t.status}">${t.status}</span></td></tr>
       `).join('');
     }
   }
 
+  // --- EXPENSES LOGIC ---
   if (document.getElementById('expensesBody')) {
     let currentPage = 1; const rowsPerPage = 5;
     let sortKey = 'date', sortAsc = false;
@@ -162,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderExpenses = () => {
       const tbody = document.getElementById('expensesBody');
       const emptyState = document.getElementById('emptyState');
-
+      
       let filtered = transactions.filter(t => {
         const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
         const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
@@ -172,30 +231,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       filtered.sort((a, b) => {
         let valA = a[sortKey], valB = b[sortKey];
-        if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-        if (valA < valB) return sortAsc ? -1 : 1;
-        if (valA > valB) return sortAsc ? 1 : -1;
+        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+        if(valA < valB) return sortAsc ? -1 : 1;
+        if(valA > valB) return sortAsc ? 1 : -1;
         return 0;
       });
 
       const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-      if (currentPage > totalPages) currentPage = totalPages;
+      if(currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const paginated = filtered.slice(start, start + rowsPerPage);
 
-      if (paginated.length === 0) {
+      if(paginated.length === 0) {
         tbody.innerHTML = '';
-        if (emptyState) emptyState.style.display = 'block';
+        if(emptyState) emptyState.style.display = 'block';
       } else {
-        if (emptyState) emptyState.style.display = 'none';
+        if(emptyState) emptyState.style.display = 'none';
         tbody.innerHTML = paginated.map(t => `
           <tr>
-            <td><strong>${t.merchant}</strong></td>
-            <td>${t.category}</td>
-            <td>${t.date}</td>
+            <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
             <td>${formatMoney(t.amount)}</td>
             <td><span class="status ${t.status}">${t.status}</span></td>
-            <td class="actions-cell" style="justify-content:flex-end;">
+            <td class="actions-cell">
               <button class="icon-btn edit-btn" data-id="${t.id}"><i class="fa-solid fa-pen"></i></button>
               <button class="icon-btn danger delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
             </td>
@@ -203,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
       }
 
-      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + rowsPerPage, filtered.length)} of ${filtered.length}`;
+      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
       document.getElementById('prevBtn').disabled = currentPage === 1;
       document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
@@ -228,11 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
     document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
 
-    document.getElementById('thMerchant').addEventListener('click', () => { sortKey = 'merchant'; sortAsc = !sortAsc; renderExpenses(); });
-    document.getElementById('thDate').addEventListener('click', () => { sortKey = 'date'; sortAsc = !sortAsc; renderExpenses(); });
-    document.getElementById('thAmount').addEventListener('click', () => { sortKey = 'amount'; sortAsc = !sortAsc; renderExpenses(); });
+    document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
+    document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
+    document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
 
-    document.getElementById('prevBtn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderExpenses(); } });
+    document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
     document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
 
     const openExpenseModal = (existingData = null) => {
@@ -254,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
         const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
-        if (isEdit) {
+        if(isEdit) {
           const idx = transactions.findIndex(x => x.id === existingData.id);
           transactions[idx] = { ...transactions[idx], ...data };
         } else {
@@ -269,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExpenses();
   }
 
+  // --- CATEGORIES LOGIC ---
   if (document.getElementById('categoriesGrid')) {
     const renderCategories = () => {
       const grid = document.getElementById('categoriesGrid');
@@ -299,13 +357,51 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-group"><label class="form-label">Budget ($)</label><input type="number" name="budget" class="input-field" required min="1" placeholder="500"></div>
       `;
       openModal('Create Category', fields, (formData) => {
-        categories.push({ id: Date.now(), name: formData.get('name'), budget: parseFloat(formData.get('budget')), icon: 'fa-tag', gradient: 'var(--gradient-1)' });
+        categories.push({ id: Date.now(), name: formData.get('name'), budget: parseFloat(formData.get('budget')), icon: 'fa-tag', gradient: 'linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)' });
         setData('lumora_categories', categories);
         renderCategories();
       });
     });
   }
 
+  // --- SETTINGS LOGIC ---
+  if (document.getElementById('settingsPage')) {
+    const accentPicker = document.getElementById('accentPicker');
+    if(accentPicker) {
+      if(savedAccent) accentPicker.value = savedAccent;
+      accentPicker.addEventListener('input', (e) => {
+        root.style.setProperty('--primary', e.target.value);
+        let r = parseInt(e.target.value.slice(1,3),16), g = parseInt(e.target.value.slice(3,5),16), b = parseInt(e.target.value.slice(5,7),16);
+        root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+        localStorage.setItem('lumora_accent', e.target.value);
+      });
+    }
+
+    const currSelect = document.getElementById('currencySelect');
+    if(currSelect) {
+      currSelect.value = currentCurrency;
+      currSelect.addEventListener('change', (e) => {
+        currentCurrency = e.target.value;
+        localStorage.setItem('lumora_currency', currentCurrency);
+        showToast(`Currency changed to ${currentCurrency}`);
+      });
+    }
+
+    // Add Logout Button functionality
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('lumora_user');
+        window.location.href = '../login.html';
+      });
+    }
+
+    document.querySelectorAll('.switch').forEach(sw => {
+      sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
+    });
+  }
+
+  // --- REPORTS LOGIC ---
   if (document.getElementById('exportCsvBtn')) {
     document.getElementById('exportCsvBtn').addEventListener('click', () => {
       let csv = 'Date,Merchant,Category,Amount,Status\n';
@@ -317,31 +413,4 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('CSV Downloaded!');
     });
   }
-
-  if (document.getElementById('settingsPage')) {
-    const accentPicker = document.getElementById('accentPicker');
-    if (accentPicker) {
-      if (savedAccent) accentPicker.value = savedAccent;
-      accentPicker.addEventListener('input', (e) => {
-        root.style.setProperty('--primary', e.target.value);
-        let r = parseInt(e.target.value.slice(1, 3), 16), g = parseInt(e.target.value.slice(3, 5), 16), b = parseInt(e.target.value.slice(5, 7), 16);
-        root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
-        localStorage.setItem('lumora_accent', e.target.value);
-      });
-    }
-
-    const currSelect = document.getElementById('currencySelect');
-    if (currSelect) {
-      currSelect.value = currentCurrency;
-      currSelect.addEventListener('change', (e) => {
-        currentCurrency = e.target.value;
-        localStorage.setItem('lumora_currency', currentCurrency);
-        showToast(`Currency changed to ${currentCurrency}`);
-      });
-    }
-
-    document.querySelectorAll('.switch').forEach(sw => {
-      sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
-    });
-  }
-});         
+});
