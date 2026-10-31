@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
   <div class="app-layout">
-    <!-- Sidebar -->
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
         <a href="../index.html" class="brand">
@@ -21,7 +17,7 @@
         </a>
       </div>
       <nav class="sidebar-nav">
-        <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+        <a href="dashboard.html" class="sidebar-link active"><i class="fa-solid fa-gauge-high"></i> Overview</a>
         <a href="expenses.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
         <a href="categories.html" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories</a>
         <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
@@ -29,14 +25,13 @@
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <div class="main-wrapper">
       <header class="topbar">
         <div style="display:flex; align-items:center; gap:16px;">
           <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
           <div>
             <div class="page-title">Overview</div>
-            <div class="page-subtitle">Welcome back, Ada</div>
+            <div class="page-subtitle">Loading...</div>
           </div>
         </div>
         <div class="topbar-actions">
@@ -45,7 +40,6 @@
       </header>
 
       <main class="content-area">
-        <!-- Stats -->
         <div class="stats-grid">
           <div class="card">
             <div class="stat-title">Total Revenue</div>
@@ -64,16 +58,6 @@
           </div>
         </div>
 
-        <!-- Chart Placeholder -->
-        <div class="card">
-          <h3 style="margin-bottom:20px;">Spending Trend</h3>
-          <div
-            style="height:200px; width:100%; background:var(--bg-secondary); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
-            <i class="fa-solid fa-chart-line" style="font-size:2rem; opacity:0.5;"></i>
-          </div>
-        </div>
-
-        <!-- Recent Transactions -->
         <div class="table-container">
           <div class="table-header">
             <h3>Recent Transactions</h3>
@@ -81,15 +65,7 @@
           </div>
           <div class="table-responsive">
             <table id="dashTable">
-              <thead>
-                <tr>
-                  <th>Merchant</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
               <tbody id="tableBody"></tbody>
             </table>
           </div>
@@ -99,5 +75,4 @@
   </div>
   <script src="../main.js"></script>
 </body>
-
 </html>
