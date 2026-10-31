@@ -1,123 +1,97 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Expenses — Lumora</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
-  <header class="nav-wrap">
-    <nav class="nav-inner">
-      <a href="../index.html" class="brand">
-        <span class="brand-mark"><i class="fa-solid fa-circle-half-stroke" style="color:#fff;"></i></span>
-        <span class="brand-name">Lumora.</span>
-      </a>
-      <ul class="nav-menu" id="navMenu">
-        <li><a class="nav-link" href="../index.html">Home</a></li>
-        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-        <li><a class="nav-link" href="categories.html">Categories</a></li>
-        <li><a class="nav-link" href="expenses.html">Expenses</a></li>
-        <li><a class="nav-link" href="reports.html">Reports</a></li>
-        <li><a class="nav-link" href="settings.html">Settings</a></li>
-      </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle">
-          <span class="tt-icon tt-sun"><i class="fa-solid fa-sun"></i></span>
-          <span class="tt-icon tt-moon"><i class="fa-solid fa-moon"></i></span>
-          <span class="tt-thumb"></span>
-        </button>
-        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+  <div class="app-layout">
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand">
+          <span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="brand-name">Lumora</span>
+        </a>
       </div>
-    </nav>
-  </header>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+        <a href="expenses.html" class="sidebar-link active"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
+        <a href="categories.html" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories</a>
+        <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+    </aside>
 
-  <main class="shell">
-    <div class="dash">
-      <aside class="dash-side">
-        <nav class="dash-nav">
-          <a href="dashboard.html" class="dash-nav-item"><i class="fa-solid fa-gauge-high"></i>Overview</a>
-          <a href="categories.html" class="dash-nav-item"><i class="fa-solid fa-layer-group"></i>Categories</a>
-          <a href="expenses.html" class="dash-nav-item"><i class="fa-solid fa-file-invoice-dollar"></i>Expenses</a>
-          <a href="reports.html" class="dash-nav-item"><i class="fa-solid fa-chart-line"></i>Reports</a>
-          <a href="settings.html" class="dash-nav-item"><i class="fa-solid fa-gear"></i>Settings</a>
-        </nav>
-      </aside>
-
-      <div class="dash-main">
-        <div class="dash-topbar">
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
           <div>
-            <h3 class="dash-title">All Expenses</h3>
-            <p class="dash-subtitle">Search, filter, and manage transactions</p>
-          </div>
-          <div class="dash-actions">
-            <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add
-              Expense</button>
+            <div class="page-title">All Expenses</div>
+            <div class="page-subtitle">Search, filter, and manage transactions</div>
           </div>
         </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary btn-sm" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add Expense</button>
+        </div>
+      </header>
 
-        <div class="dash-body">
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <div class="input-group" style="flex:1; min-width:200px;">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="searchExpense" class="form-input" placeholder="Search merchant...">
-            </div>
-            <select id="filterStatus" class="filter-select">
-              <option value="all">All Status</option>
-              <option value="paid">Paid</option>
-              <option value="pending">Pending</option>
-            </select>
-            <select id="filterCategory" class="filter-select">
-              <option value="all">All Categories</option>
-              <option value="Software">Software</option>
-              <option value="Infrastructure">Infrastructure</option>
-              <option value="Meals">Meals</option>
-            </select>
+      <main class="content-area">
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchExpense" class="input-field" placeholder="Search merchant...">
+          </div>
+          <select id="filterStatus" class="input-field" style="width:160px;">
+            <option value="all">All Status</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+          </select>
+          <select id="filterCategory" class="input-field" style="width:180px;">
+            <option value="all">All Categories</option>
+            <option value="Software">Software</option>
+            <option value="Infrastructure">Infrastructure</option>
+            <option value="Meals">Meals</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th id="thMerchant">Merchant <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;margin-left:4px;"></i></th>
+                  <th>Category</th>
+                  <th id="thDate">Date <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;margin-left:4px;"></i></th>
+                  <th id="thAmount">Amount <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;margin-left:4px;"></i></th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expensesBody"></tbody>
+            </table>
+          </div>
+          
+          <div id="emptyState" class="empty-state">
+            <i class="fa-solid fa-receipt"></i>
+            <h3>No expenses found</h3>
+            <p style="color:var(--text-muted); font-size:.9rem;">Try adjusting your filters or add a new expense.</p>
           </div>
 
-          <div class="table-card">
-            <div class="table-scroll">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th id="thMerchant">Merchant <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i>
-                    </th>
-                    <th>Category</th>
-                    <th id="thDate">Date <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i></th>
-                    <th id="thAmount">Amount <i class="fa-solid fa-sort" style="font-size:.7rem;opacity:0.5;"></i></th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="expensesBody"></tbody>
-              </table>
-            </div>
-
-            <div id="emptyState" class="empty-state">
-              <i class="fa-solid fa-receipt"></i>
-              <h3>No expenses found</h3>
-              <p>Try adjusting your search or add a new expense.</p>
-            </div>
-
-            <div class="pagination">
-              <span id="pageInfo">Showing 0-0 of 0</span>
-              <div class="page-btns">
-                <button class="page-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="page-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
-              </div>
+          <div class="pagination">
+            <span id="pageInfo">Showing 0-0 of 0</span>
+            <div class="page-controls">
+              <button class="icon-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="icon-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
-  </main>
+  </div>
   <script src="../main.js"></script>
 </body>
-
 </html>
