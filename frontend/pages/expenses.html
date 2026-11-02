@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
   <div class="app-layout">
     <aside class="sidebar" id="appSidebar">
@@ -27,7 +25,6 @@
         <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
       </nav>
     </aside>
-
     <div class="main-wrapper">
       <header class="topbar">
         <div style="display:flex; align-items:center; gap:16px;">
@@ -42,7 +39,6 @@
             Expense</button>
         </div>
       </header>
-
       <main class="content-area">
         <div style="display:flex; gap:16px; flex-wrap:wrap;">
           <div class="search-wrapper">
@@ -61,7 +57,6 @@
             <option value="Meals">Meals</option>
           </select>
         </div>
-
         <div class="table-container">
           <div class="table-responsive">
             <table>
@@ -81,13 +76,11 @@
               <tbody id="expensesBody"></tbody>
             </table>
           </div>
-
           <div id="emptyState" class="empty-state">
             <i class="fa-solid fa-receipt"></i>
             <h3>No expenses found</h3>
             <p style="color:var(--text-muted); font-size:.9rem;">Try adjusting your filters or add a new expense.</p>
           </div>
-
           <div class="pagination">
             <span id="pageInfo">Showing 0-0 of 0</span>
             <div class="page-controls">
@@ -101,5 +94,4 @@
   </div>
   <script src="../main.js"></script>
 </body>
-
 </html>
