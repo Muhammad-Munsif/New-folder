@@ -2,18 +2,61 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
   const currentPath = window.location.pathname;
 
+  // --- THEME ENGINE ---
+  const applyTheme = (mode) => {
+    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('lumora_theme', mode);
+  };
+  applyTheme(localStorage.getItem('lumora_theme') || 'system');
+
+  document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
+    if(btn) btn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
+    });
+  });
+
   // --- AUTHENTICATION LOGIC ---
   const isAuthPage = currentPath.includes('login.html');
-  const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/');
+  const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
   const isLoggedIn = localStorage.getItem('lumora_user');
 
-  // 1. Protect inner pages
+  // 1. Protect App Pages
   if (!isAuthPage && !isLandingPage && !isLoggedIn) {
     window.location.href = '../login.html';
     return;
   }
 
-  // 2. Handle Login/Signup Form
+  // 2. Update Navbar based on login state
+  if (isLandingPage) {
+    const navActions = document.querySelector('.landing-nav .nav-actions');
+    if (navActions) {
+      if (isLoggedIn) {
+        navActions.innerHTML = `
+          <button class="icon-btn" id="landingThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a href="pages/dashboard.html" class="btn btn-primary btn-sm">Go to Dashboard</a>
+        `;
+        document.getElementById('landingThemeBtn').addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+      } else {
+        navActions.innerHTML = `
+          <button class="icon-btn" id="landingThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="login.html" class="btn btn-primary btn-sm">Get Started</a>
+        `;
+        document.getElementById('landingThemeBtn').addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+      }
+    }
+  }
+
+  // 3. Handle Login/Signup Form
   if (isAuthPage) {
     let isSignup = false;
     const authForm = document.getElementById('authForm');
@@ -47,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value;
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
-
+      
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
 
@@ -56,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'pages/dashboard.html';
       }, 800);
     });
-    return; // Stop running app logic on auth page
+    return;
   }
 
   // --- MOBILE SIDEBAR ---
@@ -94,11 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 3, name: 'Meals', budget: 150, icon: 'fa-utensils', gradient: 'linear-gradient(135deg, #10b981, #059669)' }
   ]);
 
-  // --- UTILS & THEME ---
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if (!stack.parentElement) document.body.appendChild(stack);
+    if(!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
@@ -106,52 +148,30 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
   };
 
-  const applyTheme = (mode) => {
-    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('lumora_theme', mode);
-  };
-  applyTheme(localStorage.getItem('lumora_theme') || 'system');
-
-  const savedAccent = localStorage.getItem('lumora_accent');
-  if (savedAccent) {
-    root.style.setProperty('--primary', savedAccent);
-    let r = parseInt(savedAccent.slice(1, 3), 16), g = parseInt(savedAccent.slice(3, 5), 16), b = parseInt(savedAccent.slice(5, 7), 16);
-    root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
-  }
-
-  document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if (btn) btn.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
-    });
-  });
-
-  document.querySelectorAll('.nav-link, .sidebar-link').forEach(link => {
+  document.querySelectorAll('.sidebar-link').forEach(link => {
     if (link.getAttribute('href') === currentPath.split('/').pop()) link.classList.add('active');
   });
 
   // --- MODAL SYSTEM ---
-  const modalHTML = `
-    <div class="modal-overlay" id="globalModal">
-      <div class="modal-box">
-        <div class="modal-header">
-          <h3 class="modal-title" id="modalTitle">Add Record</h3>
-          <button class="icon-btn" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <form id="modalForm">
-          <div id="modalFields"></div>
-          <div class="modal-actions">
-            <button type="button" class="btn btn-outline" id="modalCancel">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </div>`;
-  if (!isLandingPage) document.body.insertAdjacentHTML('beforeend', modalHTML);
-
   if (!isLandingPage) {
+    const modalHTML = `
+      <div class="modal-overlay" id="globalModal">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Add Record</h3>
+            <button class="icon-btn" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <form id="modalForm">
+            <div id="modalFields"></div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-outline" id="modalCancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
     const modal = document.getElementById('globalModal');
     const modalForm = document.getElementById('modalForm');
     const modalFields = document.getElementById('modalFields');
@@ -165,10 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.classList.add('open');
     };
     const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
-
+    
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
-
+    
     modalForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (onModalSave) onModalSave(new FormData(modalForm));
@@ -176,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Record saved successfully!');
     });
 
-    // --- DASHBOARD LOGIC ---
+    // --- PAGE LOGIC ---
     if (document.getElementById('dashTable')) {
       const user = JSON.parse(localStorage.getItem('lumora_user'));
       document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
@@ -188,16 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const tbody = document.getElementById('tableBody');
       const recent = transactions.slice(0, 5);
-      if (recent.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No recent transactions</td></tr>`;
-      } else {
-        tbody.innerHTML = recent.map(t => `
-          <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status ${t.status}">${t.status}</span></td></tr>
-        `).join('');
-      }
+      tbody.innerHTML = recent.map(t => `
+        <tr><td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td><td>${formatMoney(t.amount)}</td><td><span class="status ${t.status}">${t.status}</span></td></tr>
+      `).join('');
     }
 
-    // --- EXPENSES LOGIC ---
     if (document.getElementById('expensesBody')) {
       let currentPage = 1; const rowsPerPage = 5;
       let sortKey = 'date', sortAsc = false;
@@ -206,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const renderExpenses = () => {
         const tbody = document.getElementById('expensesBody');
         const emptyState = document.getElementById('emptyState');
-
+        
         let filtered = transactions.filter(t => {
           const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
           const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
@@ -216,22 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filtered.sort((a, b) => {
           let valA = a[sortKey], valB = b[sortKey];
-          if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-          if (valA < valB) return sortAsc ? -1 : 1;
-          if (valA > valB) return sortAsc ? 1 : -1;
+          if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+          if(valA < valB) return sortAsc ? -1 : 1;
+          if(valA > valB) return sortAsc ? 1 : -1;
           return 0;
         });
 
         const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-        if (currentPage > totalPages) currentPage = totalPages;
+        if(currentPage > totalPages) currentPage = totalPages;
         const start = (currentPage - 1) * rowsPerPage;
         const paginated = filtered.slice(start, start + rowsPerPage);
 
-        if (paginated.length === 0) {
+        if(paginated.length === 0) {
           tbody.innerHTML = '';
-          if (emptyState) emptyState.style.display = 'block';
+          if(emptyState) emptyState.style.display = 'block';
         } else {
-          if (emptyState) emptyState.style.display = 'none';
+          if(emptyState) emptyState.style.display = 'none';
           tbody.innerHTML = paginated.map(t => `
             <tr>
               <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
@@ -245,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `).join('');
         }
 
-        document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + rowsPerPage, filtered.length)} of ${filtered.length}`;
+        document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
         document.getElementById('prevBtn').disabled = currentPage === 1;
         document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
@@ -270,11 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
       document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
 
-      document.getElementById('thMerchant').addEventListener('click', () => { sortKey = 'merchant'; sortAsc = !sortAsc; renderExpenses(); });
-      document.getElementById('thDate').addEventListener('click', () => { sortKey = 'date'; sortAsc = !sortAsc; renderExpenses(); });
-      document.getElementById('thAmount').addEventListener('click', () => { sortKey = 'amount'; sortAsc = !sortAsc; renderExpenses(); });
+      document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
+      document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
+      document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
 
-      document.getElementById('prevBtn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderExpenses(); } });
+      document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
       document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
 
       const openExpenseModal = (existingData = null) => {
@@ -296,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
           const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
-          if (isEdit) {
+          if(isEdit) {
             const idx = transactions.findIndex(x => x.id === existingData.id);
             transactions[idx] = { ...transactions[idx], ...data };
           } else {
@@ -311,7 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
       renderExpenses();
     }
 
-    // --- CATEGORIES LOGIC ---
     if (document.getElementById('categoriesGrid')) {
       const renderCategories = () => {
         const grid = document.getElementById('categoriesGrid');
@@ -323,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return `
             <div class="card">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <div style="width:40px; height:40px; border-radius:10px; background:${c.gradient}; display:grid; place-items:center; color:#fff;"><i class="fa-solid ${c.icon}"></i></div>
+                <div style="width:44px; height:44px; border-radius:12px; background:${c.gradient}; display:grid; place-items:center; color:#fff; font-size:1.1rem;"><i class="fa-solid ${c.icon}"></i></div>
                 <span style="font-weight:700; color:${isAlert ? 'var(--danger)' : 'var(--text-primary)'};">${percentage}%</span>
               </div>
               <h3 style="margin-bottom:8px;">${c.name}</h3>
@@ -349,21 +363,18 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- SETTINGS LOGIC ---
     if (document.getElementById('settingsPage')) {
       const accentPicker = document.getElementById('accentPicker');
-      if (accentPicker) {
-        if (savedAccent) accentPicker.value = savedAccent;
+      if(accentPicker) {
+        accentPicker.value = localStorage.getItem('lumora_accent') || '#4f46e5';
         accentPicker.addEventListener('input', (e) => {
           root.style.setProperty('--primary', e.target.value);
-          let r = parseInt(e.target.value.slice(1, 3), 16), g = parseInt(e.target.value.slice(3, 5), 16), b = parseInt(e.target.value.slice(5, 7), 16);
-          root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
           localStorage.setItem('lumora_accent', e.target.value);
         });
       }
 
       const currSelect = document.getElementById('currencySelect');
-      if (currSelect) {
+      if(currSelect) {
         currSelect.value = currentCurrency;
         currSelect.addEventListener('change', (e) => {
           currentCurrency = e.target.value;
@@ -373,19 +384,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
+      if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {
           localStorage.removeItem('lumora_user');
           window.location.href = '../login.html';
         });
       }
-
-      document.querySelectorAll('.switch').forEach(sw => {
-        sw.addEventListener('click', () => { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true'); });
-      });
     }
 
-    // --- REPORTS LOGIC ---
     if (document.getElementById('exportCsvBtn')) {
       document.getElementById('exportCsvBtn').addEventListener('click', () => {
         let csv = 'Date,Merchant,Category,Amount,Status\n';
