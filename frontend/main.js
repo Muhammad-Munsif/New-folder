@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value;
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
-      
+
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
 
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
@@ -185,10 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.classList.add('open');
     };
     const closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
-    
+
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
-    
+
     modalForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (onModalSave) onModalSave(new FormData(modalForm));
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const renderExpenses = () => {
         const tbody = document.getElementById('expensesBody');
         const emptyState = document.getElementById('emptyState');
-        
+
         let filtered = transactions.filter(t => {
           const matchesSearch = t.merchant.toLowerCase().includes(searchVal) || t.category.toLowerCase().includes(searchVal);
           const matchesStatus = filterStatus === 'all' || t.status === filterStatus;
@@ -231,22 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filtered.sort((a, b) => {
           let valA = a[sortKey], valB = b[sortKey];
-          if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-          if(valA < valB) return sortAsc ? -1 : 1;
-          if(valA > valB) return sortAsc ? 1 : -1;
+          if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+          if (valA < valB) return sortAsc ? -1 : 1;
+          if (valA > valB) return sortAsc ? 1 : -1;
           return 0;
         });
 
         const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
-        if(currentPage > totalPages) currentPage = totalPages;
+        if (currentPage > totalPages) currentPage = totalPages;
         const start = (currentPage - 1) * rowsPerPage;
         const paginated = filtered.slice(start, start + rowsPerPage);
 
-        if(paginated.length === 0) {
+        if (paginated.length === 0) {
           tbody.innerHTML = '';
-          if(emptyState) emptyState.style.display = 'block';
+          if (emptyState) emptyState.style.display = 'block';
         } else {
-          if(emptyState) emptyState.style.display = 'none';
+          if (emptyState) emptyState.style.display = 'none';
           tbody.innerHTML = paginated.map(t => `
             <tr>
               <td><strong>${t.merchant}</strong></td><td>${t.category}</td><td>${t.date}</td>
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `).join('');
         }
 
-        document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+rowsPerPage, filtered.length)} of ${filtered.length}`;
+        document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + rowsPerPage, filtered.length)} of ${filtered.length}`;
         document.getElementById('prevBtn').disabled = currentPage === 1;
         document.getElementById('nextBtn').disabled = currentPage === totalPages;
 
@@ -285,11 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('filterStatus').addEventListener('change', (e) => { filterStatus = e.target.value; currentPage = 1; renderExpenses(); });
       document.getElementById('filterCategory').addEventListener('change', (e) => { filterCat = e.target.value; currentPage = 1; renderExpenses(); });
 
-      document.getElementById('thMerchant').addEventListener('click', () => { sortKey='merchant'; sortAsc=!sortAsc; renderExpenses(); });
-      document.getElementById('thDate').addEventListener('click', () => { sortKey='date'; sortAsc=!sortAsc; renderExpenses(); });
-      document.getElementById('thAmount').addEventListener('click', () => { sortKey='amount'; sortAsc=!sortAsc; renderExpenses(); });
+      document.getElementById('thMerchant').addEventListener('click', () => { sortKey = 'merchant'; sortAsc = !sortAsc; renderExpenses(); });
+      document.getElementById('thDate').addEventListener('click', () => { sortKey = 'date'; sortAsc = !sortAsc; renderExpenses(); });
+      document.getElementById('thAmount').addEventListener('click', () => { sortKey = 'amount'; sortAsc = !sortAsc; renderExpenses(); });
 
-      document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderExpenses(); }});
+      document.getElementById('prevBtn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderExpenses(); } });
       document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; renderExpenses(); });
 
       const openExpenseModal = (existingData = null) => {
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         openModal(isEdit ? 'Edit Expense' : 'Add New Expense', fields, (formData) => {
           const data = { merchant: formData.get('merchant'), category: formData.get('category'), amount: parseFloat(formData.get('amount')), status: formData.get('status') };
-          if(isEdit) {
+          if (isEdit) {
             const idx = transactions.findIndex(x => x.id === existingData.id);
             transactions[idx] = { ...transactions[idx], ...data };
           } else {
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (document.getElementById('settingsPage')) {
       const accentPicker = document.getElementById('accentPicker');
-      if(accentPicker) {
+      if (accentPicker) {
         accentPicker.value = localStorage.getItem('lumora_accent') || '#4f46e5';
         accentPicker.addEventListener('input', (e) => {
           root.style.setProperty('--primary', e.target.value);
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const currSelect = document.getElementById('currencySelect');
-      if(currSelect) {
+      if (currSelect) {
         currSelect.value = currentCurrency;
         currSelect.addEventListener('change', (e) => {
           currentCurrency = e.target.value;
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const logoutBtn = document.getElementById('logoutBtn');
-      if(logoutBtn) {
+      if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
           localStorage.removeItem('lumora_user');
           window.location.href = '../login.html';
