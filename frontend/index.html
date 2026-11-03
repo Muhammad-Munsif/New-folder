@@ -1,29 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lumora — Intelligent Expense Tracking</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      background: var(--bg-primary);
-    }
-
-    .preview-img {
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-  </style>
 </head>
-
 <body>
   <nav class="landing-nav">
     <div class="container">
@@ -32,7 +15,7 @@
         Lumora
       </a>
       <div class="nav-actions" id="landingNavActions">
-        <!-- Rendered by JS based on login state -->
+        <!-- Javascript automatically renders Sign In/Get Started OR Go to Dashboard -->
       </div>
     </div>
   </nav>
@@ -40,40 +23,11 @@
   <main class="landing-hero">
     <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Lumora v3.0 is here</div>
     <h1>Manage your finances<br>with absolute clarity.</h1>
-    <p>A professional dashboard built for modern teams. Track expenses, manage budgets, and export reports seamlessly.
-    </p>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
-        <h3>Real-time Analytics</h3>
-        <p>Watch your spending trends update instantly as you log new transactions.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-file-export"></i></div>
-        <h3>One-Click Export</h3>
-        <p>Download your complete financial data into standard CSV files for accountants.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <h3>Secure & Private</h3>
-        <p>Your data is stored locally in your browser. No servers, no tracking, no leaks.</p>
-      </div>
-    </div>
-
-    <div style="padding: 0 24px; margin-bottom: 80px;">
-      <div
-        style="height: 400px; background: var(--bg-secondary); border-radius: 20px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-muted); max-width: 1000px; margin: 0 auto;">
-        <div style="text-align: center;">
-          <i class="fa-solid fa-desktop" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
-          <h3>App Preview Mockup</h3>
-          <p>Your beautiful dashboard lives here.</p>
-        </div>
-      </div>
+    <p>A professional dashboard built for modern teams. Track expenses, manage budgets, and export reports seamlessly.</p>
+    <div style="display:flex; gap:16px; justify-content:center;">
+      <a href="login.html" class="btn btn-primary" style="padding: 0 32px; height: 50px; font-size: 1.05rem;">Get Started for Free</a>
     </div>
   </main>
-
   <script src="main.js"></script>
 </body>
-
 </html>
