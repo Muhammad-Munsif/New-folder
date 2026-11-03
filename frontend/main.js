@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value;
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
-      
+
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
 
@@ -91,12 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'pages/dashboard.html';
       }, 800);
     });
-    return; 
+    return;
   }
 
   // Logout Logic
   const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) {
+  if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('lumora_session');
       window.location.href = '../login.html';
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     el.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ${msg}`;
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Bind DELETE
       document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          if(!confirm('Are you sure you want to delete this expense?')) return;
+          if (!confirm('Are you sure you want to delete this expense?')) return;
           const id = parseInt(e.currentTarget.getAttribute('data-id'));
           transactions = transactions.filter(t => t.id !== id);
           setData('lumora_transactions', transactions);
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
           const id = parseInt(e.currentTarget.getAttribute('data-id'));
           const data = transactions.find(t => t.id === id);
-          
+
           const fields = `
             <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required value="${data.merchant}"></div>
             <div class="form-group"><label class="form-label">Category</label>
@@ -306,10 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.classList.add('open');
     };
     window.closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
-    
+
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
-    
+
     modalForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (onModalSave) onModalSave(new FormData(modalForm));
