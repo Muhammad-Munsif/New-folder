@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -13,18 +12,21 @@
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
         <a href="../index.html" class="brand">
-          <span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span>
-          <span class="brand-name">Lumora</span>
+          <span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span>
+          Lumora
         </a>
       </div>
       <nav class="sidebar-nav">
         <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
         <a href="expenses.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
-        <a href="categories.html" class="sidebar-link"><i class="fa-solid fa-tags"></i> Categories</a>
         <a href="reports.html" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
         <a href="settings.html" class="sidebar-link active"><i class="fa-solid fa-gear"></i> Settings</a>
       </nav>
+      <div class="sidebar-footer">
+        <button class="btn" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
+      </div>
     </aside>
+
     <div class="main-wrapper">
       <header class="topbar">
         <div style="display:flex; align-items:center; gap:16px;">
@@ -35,57 +37,16 @@
           </div>
         </div>
       </header>
+
       <main class="content-area">
-        <div class="grid-2">
-          <!-- Appearance -->
-          <div class="card">
-            <h3 style="margin-bottom:24px;">Appearance</h3>
-            <div class="toggle-row">
-              <div>
-                <div style="font-weight:500; color:var(--text-primary);">Accent Color</div>
-                <div style="font-size:.85rem; color:var(--text-muted);">Change brand color globally</div>
-              </div>
-              <input type="color" id="accentPicker" value="#4f46e5"
-                style="width:36px; height:36px; border:none; border-radius:8px; cursor:pointer; background:none;">
+        <div class="card" style="max-width:500px;">
+          <h3 style="margin-bottom:24px;">Appearance</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:500; color:var(--text-primary);">Accent Color</div>
+              <div style="font-size:.85rem; color:var(--text-muted);">Change brand color globally</div>
             </div>
-            <div class="toggle-row">
-              <div>
-                <div style="font-weight:500; color:var(--text-primary);">Currency</div>
-                <div style="font-size:.85rem; color:var(--text-muted);">Display format</div>
-              </div>
-              <select id="currencySelect" class="input-field" style="width:120px;">
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="GBP">GBP (£)</option>
-                <option value="INR">INR (₹)</option>
-              </select>
-            </div>
-          </div>
-          <!-- Notifications -->
-          <div class="card">
-            <h3 style="margin-bottom:24px;">Notifications</h3>
-            <div class="toggle-row">
-              <div>
-                <div style="font-weight:500; color:var(--text-primary);">Email Alerts</div>
-                <div style="font-size:.85rem; color:var(--text-muted);">Weekly summary</div>
-              </div>
-              <div class="switch" role="switch" aria-checked="true"></div>
-            </div>
-            <div class="toggle-row">
-              <div>
-                <div style="font-weight:500; color:var(--text-primary);">Push Notifications</div>
-                <div style="font-size:.85rem; color:var(--text-muted);">Real-time alerts</div>
-              </div>
-              <div class="switch" role="switch" aria-checked="false"></div>
-            </div>
-          </div>
-          <!-- Account -->
-          <div class="card">
-            <h3 style="margin-bottom:24px;">Account</h3>
-            <button class="btn btn-outline" id="logoutBtn"
-              style="color:var(--danger); border-color:var(--danger); width:100%;">
-              <i class="fa-solid fa-sign-out-alt"></i> Sign Out
-            </button>
+            <input type="color" id="accentPicker" value="#4f46e5" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
           </div>
         </div>
       </main>
