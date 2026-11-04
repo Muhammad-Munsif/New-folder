@@ -2,9 +2,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
   const currentPath = window.location.pathname;
 
-  // ==========================================
-  // 1. THEME ENGINE
-  // ==========================================
+  // --- UTILS & SECURITY ---
+  const showToast = (msg, isError = false) => {
+    let stack = document.getElementById('toastStack') || document.createElement('div');
+    stack.className = 'toast-container'; stack.id = 'toastStack';
+    if(!stack.parentElement) document.body.appendChild(stack);
+    const el = document.createElement('div');
+    el.className = 'toast';
+    
+    const icon = document.createElement('i');
+    icon.className = isError ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-check";
+    icon.style.color = isError ? "var(--danger)" : "var(--success)";
+    
+    const text = document.createElement('span');
+    text.textContent = msg;
+    
+    el.appendChild(icon);
+    el.appendChild(text);
+    stack.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+  };
+
+  // --- THEME ENGINE ---
   const applyTheme = (mode) => {
     const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     root.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -13,27 +32,36 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if (btn) btn.addEventListener('click', () => {
+    if(btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
-      showToast(`${next.charAt(0).toUpperCase() + next.slice(1)} mode enabled`);
     });
   });
 
-  // ==========================================
-  // 2. AUTHENTICATION & ROUTING GUARD
-  // ==========================================
+  // --- AUTH & ROUTING GUARD ---
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
-  const session = JSON.parse(localStorage.getItem('lumora_session'));
+  
+  let session = null;
+  try {
+    const raw = localStorage.getItem('lumora_session');
+    if (raw) session = JSON.parse(atob(raw));
+  } catch(e) { session = null; }
 
-  // Route Guard: Kick unauthenticated users out of the app pages
   if (!isAuthPage && !isLandingPage && !session) {
     window.location.href = '../login.html';
     return;
   }
 
-  // Update Navbar on Landing Page
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('lumora_session');
+      window.location.href = '../login.html';
+    });
+  }
+
+  // --- LANDING PAGE NAVBAR ---
   if (isLandingPage) {
     const navActions = document.getElementById('landingNavActions');
     if (navActions) {
@@ -50,13 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
       document.getElementById('landingThemeBtn').addEventListener('click', () => {
-        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
+        applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
       });
     }
   }
 
-  // Handle Login / Signup Form
+  // --- AUTH FORM ---
   if (isAuthPage) {
     let isSignup = false;
     const authForm = document.getElementById('authForm');
@@ -79,33 +106,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     authForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = document.getElementById('authEmail').value;
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email format', true); return; }
+      if (password.length < 8) { showToast('Password must be 8+ characters', true); return; }
+      
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
+      if(isSignup && name.length < 2) { showToast('Name too short', true); return; }
 
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
 
-      // Simulate network request
       setTimeout(() => {
-        localStorage.setItem('lumora_session', JSON.stringify({ email, name }));
+        const mockToken = btoa(JSON.stringify({ email, name }));
+        localStorage.setItem('lumora_session', mockToken);
         window.location.href = 'pages/dashboard.html';
       }, 800);
     });
     return;
   }
 
-  // Logout Logic
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('lumora_session');
-      window.location.href = '../login.html';
-    });
-  }
-
-  // ==========================================
-  // 3. MOBILE SIDEBAR
-  // ==========================================
+  // --- MOBILE SIDEBAR ---
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
   const appSidebar = document.getElementById('appSidebar');
   if (mobileSidebarBtn && appSidebar) {
@@ -120,201 +142,229 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 4. DATABASE & CRUD LOGIC
-  // ==========================================
-  const getData = (key, fallback) => JSON.parse(localStorage.getItem(key)) || fallback;
-  const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-
-  let transactions = getData('lumora_transactions', [
+  // --- DATA LAYER ---
+  let transactions = JSON.parse(localStorage.getItem('lumora_transactions')) || [
     { id: 1, merchant: 'AWS Hosting', category: 'Infrastructure', date: '2025-10-24', amount: 124.50, status: 'paid' },
-    { id: 2, merchant: 'Figma Pro', category: 'Software', date: '2025-10-23', amount: 15.00, status: 'paid' },
-    { id: 3, merchant: 'Starbucks', category: 'Meals', date: '2025-10-22', amount: 8.50, status: 'pending' }
-  ]);
+    { id: 2, merchant: 'Figma Pro', category: 'Software', date: '2025-10-23', amount: 15.00, status: 'paid' }
+  ];
+  const saveData = () => localStorage.setItem('lumora_transactions', JSON.stringify(transactions));
 
-  let categories = getData('lumora_categories', [
-    { id: 1, name: 'Software' }, { id: 2, name: 'Infrastructure' }, { id: 3, name: 'Meals' }
-  ]);
-
-  const showToast = (msg) => {
-    let stack = document.getElementById('toastStack') || document.createElement('div');
-    stack.className = 'toast-container'; stack.id = 'toastStack';
-    if (!stack.parentElement) document.body.appendChild(stack);
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i> ${msg}`;
-    stack.appendChild(el);
-    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
-  };
-
-  // Render Dashboard Stats
-  if (document.getElementById('dashTable')) {
-    const user = JSON.parse(localStorage.getItem('lumora_session'));
-    document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
-
-    const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
-    document.querySelector('[data-count="revenue"]').textContent = '$48,392';
-    document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
-    document.querySelector('[data-count="expenses"]').textContent = '$' + totalExpenses.toFixed(2);
-
-    const tbody = document.getElementById('tableBody');
-    const recent = transactions.slice(0, 5);
-    tbody.innerHTML = recent.map(t => `
-      <tr>
-        <td><strong>${t.merchant}</strong></td>
-        <td>${t.category}</td>
-        <td>${t.date}</td>
-        <td>$${parseFloat(t.amount).toFixed(2)}</td>
-        <td><span class="status ${t.status}">${t.status}</span></td>
-      </tr>
-    `).join('');
-  }
-
-  // Render Full CRUD Table (Expenses)
-  if (document.getElementById('expensesBody')) {
-    const renderTable = () => {
-      const tbody = document.getElementById('expensesBody');
-      tbody.innerHTML = transactions.map(t => `
-        <tr>
-          <td><strong>${t.merchant}</strong></td>
-          <td>${t.category}</td>
-          <td>${t.date}</td>
-          <td>$${parseFloat(t.amount).toFixed(2)}</td>
-          <td><span class="status ${t.status}">${t.status}</span></td>
-          <td class="actions-cell">
-            <button class="icon-btn edit-btn" data-id="${t.id}"><i class="fa-solid fa-pen"></i></button>
-            <button class="icon-btn danger delete-btn" data-id="${t.id}"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>
-      `).join('');
-
-      // Bind DELETE
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (!confirm('Are you sure you want to delete this expense?')) return;
-          const id = parseInt(e.currentTarget.getAttribute('data-id'));
-          transactions = transactions.filter(t => t.id !== id);
-          setData('lumora_transactions', transactions);
-          renderTable();
-          showToast('Expense deleted successfully');
-        });
-      });
-
-      // Bind UPDATE
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = parseInt(e.currentTarget.getAttribute('data-id'));
-          const data = transactions.find(t => t.id === id);
-
-          const fields = `
-            <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required value="${data.merchant}"></div>
-            <div class="form-group"><label class="form-label">Category</label>
-              <select name="category" class="input-field">
-                ${categories.map(c => `<option value="${c.name}" ${data.category === c.name ? 'selected' : ''}>${c.name}</option>`).join('')}
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="input-field" required value="${data.amount}"></div>
-            <div class="form-group"><label class="form-label">Status</label>
-              <select name="status" class="input-field">
-                <option value="paid" ${data.status === 'paid' ? 'selected' : ''}>Paid</option>
-                <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>Pending</option>
-              </select>
-            </div>
-          `;
-          openModal('Edit Expense', fields, (formData) => {
-            const idx = transactions.findIndex(t => t.id === id);
-            transactions[idx] = {
-              ...transactions[idx],
-              merchant: formData.get('merchant'),
-              category: formData.get('category'),
-              amount: parseFloat(formData.get('amount')),
-              status: formData.get('status')
-            };
-            setData('lumora_transactions', transactions);
-            renderTable();
-          });
-        });
-      });
-    };
-
-    // Bind CREATE
-    document.getElementById('add-expense-btn').addEventListener('click', () => {
-      const fields = `
-        <div class="form-group"><label class="form-label">Merchant</label><input type="text" name="merchant" class="input-field" required placeholder="e.g. Apple Store"></div>
-        <div class="form-group"><label class="form-label">Category</label>
-          <select name="category" class="input-field">
-            ${categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" step="0.01" min="0.01" name="amount" class="input-field" required placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Status</label>
-          <select name="status" class="input-field">
-            <option value="paid">Paid</option>
-            <option value="pending">Pending</option>
-          </select>
-        </div>
-      `;
-      openModal('Add New Expense', fields, (formData) => {
-        transactions.unshift({
-          id: Date.now(),
-          merchant: formData.get('merchant'),
-          category: formData.get('category'),
-          amount: parseFloat(formData.get('amount')),
-          status: formData.get('status'),
-          date: new Date().toISOString().split('T')[0]
-        });
-        setData('lumora_transactions', transactions);
-        renderTable();
-      });
-    });
-
-    renderTable();
-  }
-
-  // ==========================================
-  // 5. MODAL SYSTEM
-  // ==========================================
+  // --- MODAL INJECTION ---
   if (!isLandingPage && !isAuthPage) {
     const modalHTML = `
       <div class="modal-overlay" id="globalModal">
         <div class="modal-box">
           <div class="modal-header">
             <h3 class="modal-title" id="modalTitle">Add Record</h3>
-            <button class="icon-btn" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+            <button class="icon-btn modal-close"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <form id="modalForm">
-            <div id="modalFields"></div>
+            <input type="hidden" id="recordId">
+            <div class="form-group">
+              <label class="form-label">Merchant</label>
+              <input type="text" id="merchantInput" class="input-field" required minlength="2" placeholder="e.g. Apple Store">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount ($)</label>
+              <input type="number" step="0.01" min="0.01" id="amountInput" class="input-field" required placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="categoryInput" class="input-field">
+                <option value="Software">Software</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Meals">Meals</option>
+                <option value="Travel">Travel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="statusInput" class="input-field">
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
             <div class="modal-actions">
-              <button type="button" class="btn btn-outline" id="modalCancel">Cancel</button>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-outline modal-close">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Record</button>
             </div>
           </form>
         </div>
       </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
+  }
 
-    const modal = document.getElementById('globalModal');
-    const modalForm = document.getElementById('modalForm');
-    const modalFields = document.getElementById('modalFields');
-    const modalTitle = document.getElementById('modalTitle');
-    let onModalSave = null;
+  // --- DASHBOARD PAGE ---
+  if (document.getElementById('dashTable')) {
+    if(session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
+    
+    const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
+    document.querySelector('[data-count="revenue"]').textContent = '$48,392';
+    document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
+    document.querySelector('[data-count="expenses"]').textContent = '$' + totalExpenses.toFixed(2);
 
-    window.openModal = (title, fieldsHTML, callback) => {
-      modalTitle.textContent = title;
-      modalFields.innerHTML = fieldsHTML;
-      onModalSave = callback;
-      modal.classList.add('open');
-    };
-    window.closeModal = () => { modal.classList.remove('open'); modalForm.reset(); onModalSave = null; };
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = ''; // Safe clear
 
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    transactions.slice(0, 5).forEach(t => {
+      const tr = document.createElement('tr');
+      ['merchant', 'category', 'date'].forEach(key => {
+        const td = document.createElement('td');
+        if(key === 'merchant') {
+          const strong = document.createElement('strong');
+          strong.textContent = t[key]; // XSS SAFE
+          td.appendChild(strong);
+        } else {
+          td.textContent = t[key];
+        }
+        tr.appendChild(td);
+      });
 
-    modalForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (onModalSave) onModalSave(new FormData(modalForm));
-      closeModal();
-      showToast('Record saved successfully!');
+      const tdAmount = document.createElement('td');
+      tdAmount.textContent = '$' + parseFloat(t.amount).toFixed(2);
+      tr.appendChild(tdAmount);
+
+      const tdStatus = document.createElement('td');
+      const span = document.createElement('span');
+      span.className = `status ${t.status}`;
+      span.textContent = t.status;
+      tdStatus.appendChild(span);
+      tr.appendChild(tdStatus);
+
+      tbody.appendChild(tr);
     });
+  }
+
+  // --- EXPENSES PAGE (CRUD) ---
+  if (document.getElementById('expensesBody')) {
+    const tbody = document.getElementById('expensesBody');
+    
+    const renderTable = () => {
+      tbody.innerHTML = ''; // Safe clear
+      
+      transactions.forEach(t => {
+        const tr = document.createElement('tr');
+        
+        const tdMerchant = document.createElement('td');
+        tdMerchant.textContent = t.merchant; // XSS SAFE
+        tr.appendChild(tdMerchant);
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = t.category;
+        tr.appendChild(tdCat);
+
+        const tdDate = document.createElement('td');
+        tdDate.textContent = t.date;
+        tr.appendChild(tdDate);
+
+        const tdAmount = document.createElement('td');
+        tdAmount.textContent = '$' + parseFloat(t.amount).toFixed(2);
+        tr.appendChild(tdAmount);
+
+        const tdStatus = document.createElement('td');
+        const span = document.createElement('span');
+        span.className = `status ${t.status}`;
+        span.textContent = t.status;
+        tdStatus.appendChild(span);
+        tr.appendChild(tdStatus);
+
+        const tdActions = document.createElement('td');
+        tdActions.className = 'actions-cell';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'icon-btn';
+        editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'; // static HTML
+        editBtn.addEventListener('click', () => {
+          document.getElementById('modalTitle').textContent = 'Edit Expense';
+          document.getElementById('recordId').value = t.id;
+          document.getElementById('merchantInput').value = t.merchant;
+          document.getElementById('amountInput').value = t.amount;
+          document.getElementById('categoryInput').value = t.category;
+          document.getElementById('statusInput').value = t.status;
+          document.getElementById('globalModal').classList.add('open');
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'icon-btn danger';
+        delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+        delBtn.addEventListener('click', () => {
+          if(confirm('Delete this record?')) {
+            transactions = transactions.filter(item => item.id !== t.id);
+            saveData(); renderTable(); showToast('Record deleted');
+          }
+        });
+
+        tdActions.appendChild(editBtn);
+        tdActions.appendChild(delBtn);
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
+      });
+    };
+
+    renderTable();
+
+    document.getElementById('add-expense-btn').addEventListener('click', () => {
+      document.getElementById('modalTitle').textContent = 'Add New Expense';
+      document.getElementById('modalForm').reset();
+      document.getElementById('recordId').value = '';
+      document.getElementById('globalModal').classList.add('open');
+    });
+
+    // Handle Form Submit (Create/Update)
+    document.getElementById('modalForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('recordId').value;
+      const merchant = document.getElementById('merchantInput').value.trim();
+      const amount = parseFloat(document.getElementById('amountInput').value);
+      const category = document.getElementById('categoryInput').value;
+      const status = document.getElementById('statusInput').value;
+
+      if (id) {
+        // UPDATE
+        const idx = transactions.findIndex(t => t.id === parseInt(id));
+        transactions[idx] = { ...transactions[idx], merchant, amount, category, status };
+        showToast('Record updated');
+      } else {
+        // CREATE
+        transactions.unshift({ id: Date.now(), merchant, amount, category, status, date: new Date().toISOString().split('T')[0] });
+        showToast('Record created');
+      }
+      saveData();
+      document.getElementById('globalModal').classList.remove('open');
+      renderTable();
+    });
+  }
+
+  // --- MODAL CLOSE LOGIC ---
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', () => document.getElementById('globalModal').classList.remove('open'));
+  });
+
+  // --- REPORTS PAGE ---
+  if (document.getElementById('exportCsvBtn')) {
+    document.getElementById('exportCsvBtn').addEventListener('click', () => {
+      let csv = 'Date,Merchant,Category,Amount,Status\n';
+      transactions.forEach(t => { csv += `${t.date},"${t.merchant}","${t.category}",${t.amount},${t.status}\n`; });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `export_${Date.now()}.csv`; a.click();
+      showToast('CSV Downloaded!');
+    });
+  }
+
+  // --- SETTINGS PAGE ---
+  if (document.getElementById('settingsPage')) {
+    const accentPicker = document.getElementById('accentPicker');
+    if(accentPicker) {
+      accentPicker.value = localStorage.getItem('lumora_accent') || '#4f46e5';
+      accentPicker.addEventListener('input', (e) => {
+        root.style.setProperty('--primary', e.target.value);
+        localStorage.setItem('lumora_accent', e.target.value);
+      });
+    }
+    if (localStorage.getItem('lumora_accent')) {
+      root.style.setProperty('--primary', localStorage.getItem('lumora_accent'));
+    }
   }
 });
