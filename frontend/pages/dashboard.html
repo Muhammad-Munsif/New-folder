@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <aside class="sidebar" id="appSidebar">
@@ -63,11 +66,20 @@
         <div class="table-container">
           <div class="table-header">
             <h3>Recent Transactions</h3>
-            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View All</a>
+            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View
+              All</a>
           </div>
           <div class="table-responsive">
             <table id="dashTable">
-              <thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Merchant</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
               <tbody id="tableBody"></tbody>
             </table>
           </div>
@@ -77,4 +89,5 @@
   </div>
   <script src="../main.js"></script>
 </body>
+
 </html>
