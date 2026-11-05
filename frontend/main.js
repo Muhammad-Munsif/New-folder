@@ -6,17 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg, isError = false) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
-    
+
     const icon = document.createElement('i');
     icon.className = isError ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-check";
     icon.style.color = isError ? "var(--danger)" : "var(--success)";
-    
+
     const text = document.createElement('span');
     text.textContent = msg;
-    
+
     el.appendChild(icon);
     el.appendChild(text);
     stack.appendChild(el);
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
     });
@@ -41,12 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- AUTH & ROUTING GUARD ---
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
-  
+
   let session = null;
   try {
     const raw = localStorage.getItem('lumora_session');
     if (raw) session = JSON.parse(atob(raw));
-  } catch(e) { session = null; }
+  } catch (e) { session = null; }
 
   if (!isAuthPage && !isLandingPage && !session) {
     window.location.href = '../login.html';
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) {
+  if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('lumora_session');
       window.location.href = '../login.html';
@@ -108,12 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value.trim();
       const password = document.getElementById('authPassword').value;
-      
+
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email format', true); return; }
       if (password.length < 8) { showToast('Password must be 8+ characters', true); return; }
-      
+
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
-      if(isSignup && name.length < 2) { showToast('Name too short', true); return; }
+      if (isSignup && name.length < 2) { showToast('Name too short', true); return; }
 
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
@@ -196,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- DASHBOARD PAGE ---
   if (document.getElementById('dashTable')) {
-    if(session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
-    
+    if (session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
+
     const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
     document.querySelector('[data-count="revenue"]').textContent = '$48,392';
     document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tr = document.createElement('tr');
       ['merchant', 'category', 'date'].forEach(key => {
         const td = document.createElement('td');
-        if(key === 'merchant') {
+        if (key === 'merchant') {
           const strong = document.createElement('strong');
           strong.textContent = t[key]; // XSS SAFE
           td.appendChild(strong);
@@ -238,13 +238,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- EXPENSES PAGE (CRUD) ---
   if (document.getElementById('expensesBody')) {
     const tbody = document.getElementById('expensesBody');
-    
+
     const renderTable = () => {
       tbody.innerHTML = ''; // Safe clear
-      
+
       transactions.forEach(t => {
         const tr = document.createElement('tr');
-        
+
         const tdMerchant = document.createElement('td');
         tdMerchant.textContent = t.merchant; // XSS SAFE
         tr.appendChild(tdMerchant);
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tdActions = document.createElement('td');
         tdActions.className = 'actions-cell';
-        
+
         const editBtn = document.createElement('button');
         editBtn.className = 'icon-btn';
         editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'; // static HTML
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         delBtn.className = 'icon-btn danger';
         delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
         delBtn.addEventListener('click', () => {
-          if(confirm('Delete this record?')) {
+          if (confirm('Delete this record?')) {
             transactions = transactions.filter(item => item.id !== t.id);
             saveData(); renderTable(); showToast('Record deleted');
           }
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- SETTINGS PAGE ---
   if (document.getElementById('settingsPage')) {
     const accentPicker = document.getElementById('accentPicker');
-    if(accentPicker) {
+    if (accentPicker) {
       accentPicker.value = localStorage.getItem('lumora_accent') || '#4f46e5';
       accentPicker.addEventListener('input', (e) => {
         root.style.setProperty('--primary', e.target.value);
