@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
-
 <body>
   <div class="app-layout">
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="../index.html" class="brand">
-          <span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span>
-          Lumora
-        </a>
+        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span> Lumora</a>
       </div>
       <nav class="sidebar-nav">
         <a href="dashboard.html" class="sidebar-link active"><i class="fa-solid fa-gauge-high"></i> Overview</a>
@@ -40,6 +34,7 @@
           </div>
         </div>
         <div class="topbar-actions">
+          <button class="btn btn-primary" id="add-dash-btn"><i class="fa-solid fa-plus"></i> Add Record</button>
           <button class="icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
         </div>
       </header>
@@ -66,18 +61,13 @@
         <div class="table-container">
           <div class="table-header">
             <h3>Recent Transactions</h3>
-            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View
-              All</a>
+            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View All</a>
           </div>
           <div class="table-responsive">
             <table id="dashTable">
               <thead>
                 <tr>
-                  <th>Merchant</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
+                  <th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th><th style="text-align:right;">Actions</th>
                 </tr>
               </thead>
               <tbody id="tableBody"></tbody>
@@ -89,5 +79,4 @@
   </div>
   <script src="../main.js"></script>
 </body>
-
 </html>
