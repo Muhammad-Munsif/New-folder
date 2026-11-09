@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg, isError = false) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     const icon = document.createElement('i');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => {
+    if (btn) btn.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(next);
     });
@@ -42,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- AUTH & ROUTING GUARD ---
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
-  
+
   let session = null;
   try {
     const raw = localStorage.getItem('lumora_session');
     if (raw) session = JSON.parse(atob(raw));
-  } catch(e) { session = null; }
+  } catch (e) { session = null; }
 
   if (!isAuthPage && !isLandingPage && !session) {
     window.location.href = '../login.html';
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) {
+  if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('lumora_session');
       window.location.href = '../login.html';
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
   const appSidebar = document.getElementById('appSidebar');
   const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-  
+
   if (mobileSidebarBtn && appSidebar && sidebarBackdrop) {
     const toggleSidebar = () => {
       appSidebar.classList.toggle('open');
@@ -133,9 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = document.getElementById('authPassword').value;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email', true); return; }
       if (password.length < 8) { showToast('Password must be 8+ characters', true); return; }
-      
+
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
-      if(isSignup && name.length < 2) { showToast('Name too short', true); return; }
+      if (isSignup && name.length < 2) { showToast('Name too short', true); return; }
 
       authSubmitBtn.textContent = 'Loading...';
       authSubmitBtn.disabled = true;
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('recordId').value = '';
       document.getElementById('globalModal').classList.add('open');
     };
-    
+
     const openEditModal = (data) => {
       document.getElementById('modalTitle').textContent = 'Edit Expense';
       document.getElementById('recordId').value = data.id;
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       saveData();
       document.getElementById('globalModal').classList.remove('open');
-      
+
       if (document.getElementById('dashTable')) renderDashboard();
       if (document.getElementById('expensesBody')) renderExpenses();
     });
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const createActionsCell = (t) => {
       const td = document.createElement('td');
       td.className = 'actions-cell';
-      
+
       const editBtn = document.createElement('button');
       editBtn.className = 'icon-btn';
       editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
@@ -229,9 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
       delBtn.className = 'icon-btn danger';
       delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
       delBtn.addEventListener('click', () => {
-        if(confirm('Delete this record?')) {
+        if (confirm('Delete this record?')) {
           transactions = transactions.filter(item => item.id !== t.id);
-          saveData(); 
+          saveData();
           if (document.getElementById('dashTable')) renderDashboard();
           if (document.getElementById('expensesBody')) renderExpenses();
           showToast('Record deleted');
@@ -245,19 +245,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DASHBOARD RENDER ---
     const renderDashboard = () => {
-      if(session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
+      if (session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
       const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
       document.querySelector('[data-count="revenue"]').textContent = '$48,392';
       document.querySelector('[data-count="users"]').textContent = transactions.length + " Items";
       document.querySelector('[data-count="expenses"]').textContent = '$' + totalExpenses.toFixed(2);
 
       const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = ''; 
+      tbody.innerHTML = '';
       transactions.slice(0, 5).forEach(t => {
         const tr = document.createElement('tr');
         ['merchant', 'category', 'date'].forEach(key => {
           const td = document.createElement('td');
-          if(key === 'merchant') { const strong = document.createElement('strong'); strong.textContent = t[key]; td.appendChild(strong); }
+          if (key === 'merchant') { const strong = document.createElement('strong'); strong.textContent = t[key]; td.appendChild(strong); }
           else { td.textContent = t[key]; }
           tr.appendChild(td);
         });
@@ -272,23 +272,23 @@ document.addEventListener('DOMContentLoaded', () => {
         tdStatus.appendChild(span);
         tr.appendChild(tdStatus);
 
-        tr.appendChild(createActionsCell(t)); 
+        tr.appendChild(createActionsCell(t));
         tbody.appendChild(tr);
       });
-      
+
       const addBtn = document.getElementById('add-dash-btn');
-      if(addBtn) addBtn.onclick = openAddModal;
+      if (addBtn) addBtn.onclick = openAddModal;
     };
 
     // --- EXPENSES RENDER ---
     const renderExpenses = () => {
       const tbody = document.getElementById('expensesBody');
-      tbody.innerHTML = ''; 
+      tbody.innerHTML = '';
       transactions.forEach(t => {
         const tr = document.createElement('tr');
         ['merchant', 'category', 'date'].forEach(key => {
           const td = document.createElement('td');
-          if(key === 'merchant') { const strong = document.createElement('strong'); strong.textContent = t[key]; td.appendChild(strong); }
+          if (key === 'merchant') { const strong = document.createElement('strong'); strong.textContent = t[key]; td.appendChild(strong); }
           else { td.textContent = t[key]; }
           tr.appendChild(td);
         });
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const addBtn = document.getElementById('add-expense-btn');
-      if(addBtn) addBtn.onclick = openAddModal;
+      if (addBtn) addBtn.onclick = openAddModal;
     };
 
     if (document.getElementById('dashTable')) renderDashboard();
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- SETTINGS PAGE ---
   if (document.getElementById('settingsPage')) {
     const accentPicker = document.getElementById('accentPicker');
-    if(accentPicker) {
+    if (accentPicker) {
       accentPicker.value = localStorage.getItem('lumora_accent') || '#4f46e5';
       accentPicker.addEventListener('input', (e) => {
         root.style.setProperty('--primary', e.target.value);
