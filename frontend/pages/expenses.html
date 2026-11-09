@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Expenses — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <!-- ADDED BACKDROP HERE -->
@@ -14,7 +17,8 @@
 
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span> Lumora</a>
+        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span>
+          Lumora</a>
       </div>
       <nav class="sidebar-nav">
         <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
@@ -37,7 +41,8 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn btn-primary" id="add-expense-btn"><i class="fa-solid fa-plus"></i> <span class="hide-mobile">Add</span></button>
+          <button class="btn btn-primary" id="add-expense-btn"><i class="fa-solid fa-plus"></i> <span
+              class="hide-mobile">Add</span></button>
         </div>
       </header>
 
@@ -47,7 +52,12 @@
             <table>
               <thead>
                 <tr>
-                  <th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th><th style="text-align:right;">Actions</th>
+                  <th>Merchant</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
                 </tr>
               </thead>
               <tbody id="expensesBody"></tbody>
@@ -59,4 +69,5 @@
   </div>
   <script src="../main.js"></script>
 </body>
+
 </html>
