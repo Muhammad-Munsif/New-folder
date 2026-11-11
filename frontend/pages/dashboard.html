@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -10,12 +9,10 @@
 </head>
 <body>
   <div class="app-layout">
-    <!-- ADDED BACKDROP HERE -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span>
-          Lumora</a>
+        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span> Lumora</a>
       </div>
       <nav class="sidebar-nav">
         <a href="dashboard.html" class="sidebar-link active"><i class="fa-solid fa-gauge-high"></i> Overview</a>
@@ -27,6 +24,7 @@
         <button class="btn" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
       </div>
     </aside>
+
     <div class="main-wrapper">
       <header class="topbar">
         <div style="display:flex; align-items:center; gap:12px;">
@@ -37,50 +35,41 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn btn-primary" id="add-dash-btn"><i class="fa-solid fa-plus"></i> <span
-              class="hide-mobile">Add Record</span></button>
+          <button class="btn btn-primary" id="add-dash-btn"><i class="fa-solid fa-plus"></i> <span class="hide-mobile">Add</span></button>
           <button class="icon-btn" id="dashThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i></button>
         </div>
       </header>
+
       <main class="content-area">
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-title">Total Revenue</div>
-            <div class="stat-value" data-count="revenue">$0</div>
+            <div class="stat-value" id="kpi-rev">$0</div>
             <div class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> 12.4%</div>
           </div>
           <div class="stat-card">
             <div class="stat-title">Transactions</div>
-            <div class="stat-value" data-count="users">0</div>
+            <div class="stat-value" id="kpi-items">0</div>
             <div class="stat-trend up"><i class="fa-solid fa-receipt"></i> All time</div>
           </div>
           <div class="stat-card">
             <div class="stat-title">Total Expenses</div>
-            <div class="stat-value" data-count="expenses">$0</div>
+            <div class="stat-value" id="kpi-exp">$0</div>
             <div class="stat-trend down"><i class="fa-solid fa-arrow-trend-down"></i> Needs review</div>
           </div>
         </div>
+
         <div class="table-container">
           <div class="table-header">
             <h3>Recent Transactions</h3>
-            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View
-              All</a>
+            <a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View All</a>
           </div>
-          <div class="table-responsive">
-            <table id="dashTable">
-              <thead>
-                <tr>
-                  <th>Merchant</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th style="text-align:right;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </div>
+          <table id="dashTable">
+            <thead>
+              <tr><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Status</th><th style="text-align:right;">Actions</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
         </div>
       </main>
     </div>
