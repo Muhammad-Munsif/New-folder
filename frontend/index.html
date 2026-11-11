@@ -1,57 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign In — Lumora</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumora — Intelligent Expense Tracking</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="auth-layout">
-    <div class="auth-left">
-      <div class="brand" style="color:#fff;">
-        <span class="brand-icon" style="background:#fff; color:var(--primary);"><i
-            class="fa-solid fa-layer-group"></i></span>
-        <span style="font-size:1.25rem; font-weight:700;">Lumora</span>
-      </div>
-      <div style="position:relative; z-index:1;">
-        <h2>Manage your finances<br>with absolute clarity.</h2>
-        <p>A professional dashboard built for modern teams. Track expenses, manage budgets, and export reports
-          seamlessly.</p>
-      </div>
-      <p style="font-size:0.875rem; opacity:0.6; position:relative; z-index:1;">© 2025 Lumora Inc. All rights reserved.
-      </p>
+  <nav class="landing-nav">
+    <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span> Lumora
+      </a>
+      <div class="nav-actions" id="landingNavActions"></div>
     </div>
-    <div class="auth-right">
-      <div class="auth-box">
-        <div class="auth-header">
-          <h2 id="authTitle">Welcome back</h2>
-          <p id="authSubtitle">Enter your credentials to access your account.</p>
-        </div>
-        <form id="authForm">
-          <div class="form-group" id="nameGroup" style="display:none;">
-            <label class="form-label">Full Name</label>
-            <input type="text" id="authName" class="input-field" placeholder="Ada Lovelace">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email Address</label>
-            <input type="email" id="authEmail" class="input-field" placeholder="ada@company.com" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" id="authPassword" class="input-field" placeholder="••••••••" required minlength="8">
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;" id="authSubmitBtn">Sign
-            In</button>
-        </form>
-        <p class="auth-toggle-text">
-          <span id="toggleText">Don't have an account?</span> <a id="toggleAuth">Sign up</a>
-        </p>
-      </div>
+  </nav>
+  <main class="landing-hero">
+    <div style="display:inline-block; padding:6px 16px; border-radius:999px; background:rgba(79,70,229,0.1); color:var(--primary); font-size:.85rem; font-weight:600; margin-bottom:20px; border:1px solid rgba(79,70,229,0.2);">
+      <i class="fa-solid fa-bolt"></i> Lumora v3.0 is here
     </div>
-  </div>
+    <h1>Manage your finances<br>with absolute clarity.</h1>
+    <p>A professional dashboard built for modern teams. Track expenses, manage budgets, and export reports seamlessly.</p>
+    <div style="display:flex; gap:16px; justify-content:center;">
+      <a href="login.html" class="btn btn-primary" style="padding: 0 32px; height: 50px; font-size: 1.05rem;">Get Started for Free</a>
+    </div>
+  </main>
   <script src="main.js"></script>
 </body>
 </html>
