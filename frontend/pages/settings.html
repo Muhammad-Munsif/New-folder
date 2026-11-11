@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings — Lumora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -10,12 +9,10 @@
 </head>
 <body id="settingsPage">
   <div class="app-layout">
-    <!-- ADDED BACKDROP HERE -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span>
-          Lumora</a>
+        <a href="../index.html" class="brand"><span class="brand-icon"><i class="fa-solid fa-layer-group"></i></span> Lumora</a>
       </div>
       <nav class="sidebar-nav">
         <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
@@ -27,9 +24,10 @@
         <button class="btn" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
       </div>
     </aside>
+
     <div class="main-wrapper">
       <header class="topbar">
-        <div style="display:flex; align-items:center; gap:16px;">
+        <div style="display:flex; align-items:center; gap:12px;">
           <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
           <div>
             <div class="page-title">Settings</div>
@@ -37,16 +35,16 @@
           </div>
         </div>
       </header>
+
       <main class="content-area">
-        <div class="card" style="max-width:500px;">
+        <div class="stat-card" style="max-width:500px;">
           <h3 style="margin-bottom:24px;">Appearance</h3>
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
               <div style="font-weight:500; color:var(--text-primary);">Accent Color</div>
               <div style="font-size:.85rem; color:var(--text-muted);">Change brand color globally</div>
             </div>
-            <input type="color" id="accentPicker" value="#4f46e5"
-              style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
+            <input type="color" id="accentPicker" value="#4f46e5" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
           </div>
         </div>
       </main>
