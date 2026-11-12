@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg, isError = false) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = 'toast';
     const icon = document.createElement('i');
@@ -28,24 +28,24 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
 
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    if (btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
   });
   if (localStorage.getItem('lumora_accent')) root.style.setProperty('--primary', localStorage.getItem('lumora_accent'));
 
   // --- AUTH & ROUTING GUARD ---
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
-  
+
   let session = null;
   try {
     const raw = localStorage.getItem('lumora_session');
     if (raw) session = JSON.parse(atob(raw));
-  } catch(e) { session = null; }
+  } catch (e) { session = null; }
 
   if (!isAuthPage && !isLandingPage && !session) { window.location.href = '../login.html'; return; }
-  
+
   const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('lumora_session'); window.location.href = '../login.html'; });
+  if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('lumora_session'); window.location.href = '../login.html'; });
 
   // --- DATA LAYER ---
   let transactions = JSON.parse(localStorage.getItem('lumora_transactions')) || [
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const pass = document.getElementById('authPassword').value;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email', true); return; }
       if (pass.length < 8) { showToast('Password must be 8+ characters', true); return; }
-      
+
       const name = isSignup ? document.getElementById('authName').value : email.split('@')[0];
       document.getElementById('authSubmitBtn').textContent = 'Loading...';
       setTimeout(() => {
@@ -125,9 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
+
     document.querySelectorAll('.modal-close').forEach(b => b.addEventListener('click', () => document.getElementById('globalModal').classList.remove('open')));
-    
+
     const openAdd = () => { document.getElementById('modalTitle').textContent = 'Add Expense'; document.getElementById('modalForm').reset(); document.getElementById('recordId').value = ''; document.getElementById('globalModal').classList.add('open'); };
     const openEdit = (t) => { document.getElementById('modalTitle').textContent = 'Edit Expense'; document.getElementById('recordId').value = t.id; document.getElementById('merchantInput').value = t.merchant; document.getElementById('amountInput').value = t.amount; document.getElementById('categoryInput').value = t.category; document.getElementById('statusInput').value = t.status; document.getElementById('globalModal').classList.add('open'); };
 
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         category: document.getElementById('categoryInput').value,
         status: document.getElementById('statusInput').value
       };
-      
+
       if (id) {
         const idx = transactions.findIndex(t => t.id === parseInt(id));
         transactions[idx] = { ...transactions[idx], ...data };
@@ -155,18 +155,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const createActionsCell = (t) => {
       const td = document.createElement('td'); td.className = 'actions-cell'; td.setAttribute('data-label', 'Actions');
       const edit = document.createElement('button'); edit.className = 'icon-btn'; edit.innerHTML = '<i class="fa-solid fa-pen"></i>'; edit.onclick = () => openEdit(t);
-      const del = document.createElement('button'); del.className = 'icon-btn danger'; del.innerHTML = '<i class="fa-solid fa-trash"></i>'; 
-      del.onclick = () => { if(confirm('Delete?')) { transactions = transactions.filter(x => x.id !== t.id); saveData(); if(document.getElementById('dashTable')) renderDash(); if(document.getElementById('expensesBody')) renderExpPage(); showToast('Deleted'); } };
+      const del = document.createElement('button'); del.className = 'icon-btn danger'; del.innerHTML = '<i class="fa-solid fa-trash"></i>';
+      del.onclick = () => { if (confirm('Delete?')) { transactions = transactions.filter(x => x.id !== t.id); saveData(); if (document.getElementById('dashTable')) renderDash(); if (document.getElementById('expensesBody')) renderExpPage(); showToast('Deleted'); } };
       td.appendChild(edit); td.appendChild(del); return td;
     };
 
     // --- DASHBOARD RENDER ---
     const renderDash = () => {
-      if(session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
+      if (session) document.querySelector('.page-subtitle').textContent = `Welcome back, ${session.name}`;
       document.getElementById('kpi-rev').textContent = '$48,392';
       document.getElementById('kpi-items').textContent = transactions.length;
-      document.getElementById('kpi-exp').textContent = '$' + transactions.reduce((s,t)=>s+t.amount,0).toFixed(2);
-      
+      document.getElementById('kpi-exp').textContent = '$' + transactions.reduce((s, t) => s + t.amount, 0).toFixed(2);
+
       const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
       transactions.slice(0, 5).forEach(t => {
         const tr = document.createElement('tr');
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.appendChild(createActionsCell(t));
         tbody.appendChild(tr);
       });
-      const addBtn = document.getElementById('add-dash-btn'); if(addBtn) addBtn.onclick = openAdd;
+      const addBtn = document.getElementById('add-dash-btn'); if (addBtn) addBtn.onclick = openAdd;
     };
 
     // --- EXPENSES PAGE RENDER (Search, Filter, Sort, Pagination) ---
@@ -193,19 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       filtered.sort((a, b) => {
         let valA = a[expState.sortKey], valB = b[expState.sortKey];
-        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
-        if(valA < valB) return expState.sortAsc ? -1 : 1;
-        if(valA > valB) return expState.sortAsc ? 1 : -1;
+        if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+        if (valA < valB) return expState.sortAsc ? -1 : 1;
+        if (valA > valB) return expState.sortAsc ? 1 : -1;
         return 0;
       });
 
       const totalPages = Math.ceil(filtered.length / expState.perPage) || 1;
-      if(expState.page > totalPages) expState.page = totalPages;
+      if (expState.page > totalPages) expState.page = totalPages;
       const start = (expState.page - 1) * expState.perPage;
       const paginated = filtered.slice(start, start + expState.perPage);
 
       const tbody = document.getElementById('expensesBody'); tbody.innerHTML = '';
-      
+
       if (paginated.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">No expenses found.</td></tr>`;
       } else {
@@ -223,24 +223,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Update Pagination UI
       const pageInfo = document.getElementById('pageInfo');
-      if (pageInfo) pageInfo.textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+expState.perPage, filtered.length)} of ${filtered.length}`;
-      const prevBtn = document.getElementById('prevBtn'); if(prevBtn) prevBtn.disabled = expState.page === 1;
-      const nextBtn = document.getElementById('nextBtn'); if(nextBtn) nextBtn.disabled = expState.page === totalPages;
+      if (pageInfo) pageInfo.textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + expState.perPage, filtered.length)} of ${filtered.length}`;
+      const prevBtn = document.getElementById('prevBtn'); if (prevBtn) prevBtn.disabled = expState.page === 1;
+      const nextBtn = document.getElementById('nextBtn'); if (nextBtn) nextBtn.disabled = expState.page === totalPages;
 
-      const addBtn = document.getElementById('add-expense-btn'); if(addBtn) addBtn.onclick = openAdd;
+      const addBtn = document.getElementById('add-expense-btn'); if (addBtn) addBtn.onclick = openAdd;
     };
 
     // Bind Expenses Page Controls
     if (document.getElementById('expensesBody')) {
       document.getElementById('searchExpense').addEventListener('input', (e) => { expState.search = e.target.value.toLowerCase(); expState.page = 1; renderExpPage(); });
       document.getElementById('filterStatus').addEventListener('change', (e) => { expState.filterStatus = e.target.value; expState.page = 1; renderExpPage(); });
-      
-      const sortHeader = (key) => { if(expState.sortKey === key) expState.sortAsc = !expState.sortAsc; else { expState.sortKey = key; expState.sortAsc = true; } renderExpPage(); };
+
+      const sortHeader = (key) => { if (expState.sortKey === key) expState.sortAsc = !expState.sortAsc; else { expState.sortKey = key; expState.sortAsc = true; } renderExpPage(); };
       document.getElementById('thMerchant').onclick = () => sortHeader('merchant');
       document.getElementById('thDate').onclick = () => sortHeader('date');
       document.getElementById('thAmount').onclick = () => sortHeader('amount');
 
-      document.getElementById('prevBtn').onclick = () => { if(expState.page > 1) { expState.page--; renderExpPage(); }};
+      document.getElementById('prevBtn').onclick = () => { if (expState.page > 1) { expState.page--; renderExpPage(); } };
       document.getElementById('nextBtn').onclick = () => { expState.page++; renderExpPage(); };
     }
 
