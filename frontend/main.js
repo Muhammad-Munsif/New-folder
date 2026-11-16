@@ -11,19 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
     if(!stack.parentElement) document.body.appendChild(stack);
-    
     const el = document.createElement('div');
     el.className = isError ? 'toast error' : 'toast';
-    
     const icon = document.createElement('i');
     icon.className = isError ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-check";
     icon.style.color = isError ? "var(--danger)" : "var(--success)";
-    
     const text = document.createElement('span');
     text.className = 'toast-text'; text.textContent = msg;
-    
     el.appendChild(icon); el.appendChild(text); stack.appendChild(el);
-    
     setTimeout(() => { 
       if(window.innerWidth <= 768) el.classList.add('out');
       else el.style.animation = 'swiperSlideOut 0.3s ease forwards';
@@ -42,7 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if(btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
   });
 
-  // --- AUTH GUARDS ---
+  // --- PASSWORD EYE ICON TOGGLE ---
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('authPassword');
+  if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      // Toggle the icon
+      togglePassword.classList.toggle('fa-eye');
+      togglePassword.classList.toggle('fa-eye-slash');
+    });
+  }
+
+  // --- ROUTING GUARD ---
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
   if (!isAuthPage && !isLandingPage && !getToken()) { window.location.href = '../login.html'; return; }
@@ -115,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = getUser();
     if(user && document.querySelector('.page-subtitle')) document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
     let transactions = [];
+    let categoryChart = null; // Store chart instance
 
     const fetchTransactions = async () => {
       try {
@@ -185,6 +194,53 @@ document.addEventListener('DOMContentLoaded', () => {
       td.appendChild(edit); td.appendChild(del); return td;
     };
 
+    // --- DONUT CHART LOGIC ---
+    const renderChart = () => {
+      const canvas = document.getElementById('categoryChart');
+      if (!canvas) return;
+
+      // Group data by category
+      const grouped = {};
+      transactions.forEach(t => {
+        if (grouped[t.category]) grouped[t.category] += parseFloat(t.amount);
+        else grouped[t.category] = parseFloat(t.amount);
+      });
+
+      const labels = Object.keys(grouped);
+      const data = Object.values(grouped);
+      const colors = ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#06b6d4'];
+
+      if (categoryChart) categoryChart.destroy(); // Destroy old chart before rendering new one
+
+      categoryChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%', // Makes it a donut
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
+                padding: 20,
+                font: { family: 'Inter', size: 12 }
+              }
+            }
+          }
+        }
+      });
+    };
+
     const renderDash = () => {
       document.getElementById('kpi-rev').textContent = '$48,392';
       document.getElementById('kpi-items').textContent = transactions.length;
@@ -201,6 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.appendChild(createActionsCell(t)); tbody.appendChild(tr);
       });
       const addBtn = document.getElementById('add-dash-btn'); if(addBtn) addBtn.onclick = openAdd;
+      
+      renderChart(); // Render chart after data loads
     };
 
     let expState = { search: '', filterStatus: 'all', sortKey: 'date', sortAsc: false, page: 1, perPage: 5 };
