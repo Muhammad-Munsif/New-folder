@@ -39,7 +39,7 @@ function saveDb() {
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  
+
   if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -88,7 +88,7 @@ app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = db.users.find(u => u.email === email);
-    
+
     if (!user) return res.status(400).json({ error: 'User not found.' });
 
     const validPass = await bcrypt.compare(password, user.password);
@@ -126,19 +126,19 @@ app.post('/api/transactions', authenticateToken, (req, res) => {
       return res.status(400).json({ error: 'Amount must be a positive number.' });
     }
 
-    const newTx = { 
-      id: Date.now(), 
-      userId: req.user.id, 
-      merchant: merchant.trim(), 
-      amount: parseFloat(amount), 
-      category, 
+    const newTx = {
+      id: Date.now(),
+      userId: req.user.id,
+      merchant: merchant.trim(),
+      amount: parseFloat(amount),
+      category,
       status,
-      date: new Date().toISOString().split('T')[0] 
+      date: new Date().toISOString().split('T')[0]
     };
-    
+
     db.transactions.unshift(newTx);
     saveDb(); // Persist to file!
-    
+
     console.log(`💸 Transaction added for user ${req.user.id}: ${merchant}`);
     res.json(newTx);
   } catch (err) {
@@ -152,20 +152,20 @@ app.put('/api/transactions/:id', authenticateToken, (req, res) => {
   try {
     // Find the exact transaction and ensure it belongs to the logged-in user
     const idx = db.transactions.findIndex(t => t.id == req.params.id && t.userId === req.user.id);
-    
+
     if (idx === -1) {
       return res.status(404).json({ error: 'Transaction not found or unauthorized.' });
     }
 
     // Validate incoming data
     if (req.body.amount && (isNaN(req.body.amount) || req.body.amount <= 0)) {
-       return res.status(400).json({ error: 'Amount must be a positive number.' });
+      return res.status(400).json({ error: 'Amount must be a positive number.' });
     }
 
     // Update transaction
     db.transactions[idx] = { ...db.transactions[idx], ...req.body };
     saveDb(); // Persist to file!
-    
+
     console.log(`✏️ Transaction updated: ID ${req.params.id}`);
     res.json(db.transactions[idx]);
   } catch (err) {
@@ -178,12 +178,12 @@ app.put('/api/transactions/:id', authenticateToken, (req, res) => {
 app.delete('/api/transactions/:id', authenticateToken, (req, res) => {
   try {
     const initialLength = db.transactions.length;
-    
+
     // Filter out the transaction ONLY if it matches the ID and the User ID
     db.transactions = db.transactions.filter(t => !(t.id == req.params.id && t.userId === req.user.id));
-    
+
     if (db.transactions.length === initialLength) {
-       return res.status(404).json({ error: 'Transaction not found or unauthorized.' });
+      return res.status(404).json({ error: 'Transaction not found or unauthorized.' });
     }
 
     saveDb(); // Persist to file!
