@@ -6,6 +6,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-layout">
@@ -34,12 +36,23 @@
       </header>
 
       <main class="content-area">
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-title">Total Revenue</div><div class="stat-value" id="kpi-rev">$0</div></div>
-          <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="kpi-items">0</div></div>
-          <div class="stat-card"><div class="stat-title">Total Expenses</div><div class="stat-value" id="kpi-exp">$0</div></div>
+        <!-- Dashboard Top: KPIs + Chart -->
+        <div class="dash-grid">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-title">Total Revenue</div><div class="stat-value" id="kpi-rev">$0</div></div>
+            <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="kpi-items">0</div></div>
+            <div class="stat-card"><div class="stat-title">Total Expenses</div><div class="stat-value" id="kpi-exp">$0</div></div>
+          </div>
+
+          <div class="chart-card">
+            <h3 style="margin-bottom: 16px; align-self: flex-start;">Expenses by Category</h3>
+            <div class="chart-container">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
         </div>
 
+        <!-- Dashboard Bottom: Recent Transactions -->
         <div class="table-container">
           <div class="table-header"><h3>Recent Transactions</h3><a href="expenses.html" class="btn btn-outline" style="height:36px; padding:0 16px; font-size:.85rem;">View All</a></div>
           <table id="dashTable">
