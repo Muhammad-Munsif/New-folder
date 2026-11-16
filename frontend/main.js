@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (msg, isError = false) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
-    if(!stack.parentElement) document.body.appendChild(stack);
+    if (!stack.parentElement) document.body.appendChild(stack);
     const el = document.createElement('div');
     el.className = isError ? 'toast error' : 'toast';
     const icon = document.createElement('i');
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = document.createElement('span');
     text.className = 'toast-text'; text.textContent = msg;
     el.appendChild(icon); el.appendChild(text); stack.appendChild(el);
-    setTimeout(() => { 
-      if(window.innerWidth <= 768) el.classList.add('out');
+    setTimeout(() => {
+      if (window.innerWidth <= 768) el.classList.add('out');
       else el.style.animation = 'swiperSlideOut 0.3s ease forwards';
-      setTimeout(() => el.remove(), 350); 
+      setTimeout(() => el.remove(), 350);
     }, 3000);
   };
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   applyTheme(localStorage.getItem('lumora_theme') || 'system');
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
-    if(btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    if (btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
   });
 
   // --- PASSWORD EYE ICON TOGGLE ---
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
   if (!isAuthPage && !isLandingPage && !getToken()) { window.location.href = '../login.html'; return; }
-  
+
   const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('lumora_token'); localStorage.removeItem('lumora_user'); window.location.href = '../login.html'; });
+  if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('lumora_token'); localStorage.removeItem('lumora_user'); window.location.href = '../login.html'; });
 
   // --- MOBILE SIDEBAR ---
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
@@ -93,13 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('authSubmitBtn');
-      if(btn.disabled) return;
+      if (btn.disabled) return;
       btn.textContent = 'Loading...'; btn.disabled = true;
-      
+
       const email = document.getElementById('authEmail').value.trim();
       const password = document.getElementById('authPassword').value;
       const name = isSignup ? document.getElementById('authName').value : '';
-      
+
       try {
         const res = await fetch(`${API_URL}${isSignup ? '/register' : '/login'}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- APP PAGES ---
   if (!isLandingPage && !isAuthPage) {
     const user = getUser();
-    if(user && document.querySelector('.page-subtitle')) document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
+    if (user && document.querySelector('.page-subtitle')) document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
     let transactions = [];
     let categoryChart = null; // Store chart instance
 
@@ -150,21 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
           </form>
         </div>
       </div>`);
-    
+
     document.querySelectorAll('.modal-close').forEach(b => b.addEventListener('click', () => document.getElementById('globalModal').classList.remove('open')));
-    
+
     const openAdd = () => { document.getElementById('modalTitle').textContent = 'Add Expense'; document.getElementById('modalForm').reset(); document.getElementById('recordId').value = ''; document.getElementById('globalModal').classList.add('open'); };
     const openEdit = (t) => { document.getElementById('modalTitle').textContent = 'Edit Expense'; document.getElementById('recordId').value = t.id; document.getElementById('merchantInput').value = t.merchant; document.getElementById('amountInput').value = t.amount; document.getElementById('categoryInput').value = t.category; document.getElementById('statusInput').value = t.status; document.getElementById('globalModal').classList.add('open'); };
 
     document.getElementById('modalForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveBtn');
-      if(saveBtn.disabled) return; 
+      if (saveBtn.disabled) return;
       saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
 
       const id = document.getElementById('recordId').value;
       const data = { merchant: document.getElementById('merchantInput').value.trim(), amount: parseFloat(document.getElementById('amountInput').value), category: document.getElementById('categoryInput').value, status: document.getElementById('statusInput').value };
-      
+
       try {
         const res = await fetch(id ? `${API_URL}/transactions/${id}` : `${API_URL}/transactions`, {
           method: id ? 'PUT' : 'POST',
@@ -172,15 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error('Failed to save');
-        document.getElementById('globalModal').classList.remove('open'); 
-        showToast('Data submitted successfully!'); 
-        await fetchTransactions(); 
-      } catch (err) { showToast('Failed to save data', true); } 
+        document.getElementById('globalModal').classList.remove('open');
+        showToast('Data submitted successfully!');
+        await fetchTransactions();
+      } catch (err) { showToast('Failed to save data', true); }
       finally { saveBtn.disabled = false; saveBtn.textContent = 'Save'; }
     });
 
     const deleteTx = async (id) => {
-      if(!confirm('Delete this record?')) return;
+      if (!confirm('Delete this record?')) return;
       try {
         await fetch(`${API_URL}/transactions/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` } });
         showToast('Record deleted successfully'); fetchTransactions();
@@ -244,8 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderDash = () => {
       document.getElementById('kpi-rev').textContent = '$48,392';
       document.getElementById('kpi-items').textContent = transactions.length;
-      document.getElementById('kpi-exp').textContent = '$' + transactions.reduce((s,t)=>s+parseFloat(t.amount),0).toFixed(2);
-      
+      document.getElementById('kpi-exp').textContent = '$' + transactions.reduce((s, t) => s + parseFloat(t.amount), 0).toFixed(2);
+
       const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
       transactions.slice(0, 5).forEach(t => {
         const tr = document.createElement('tr');
@@ -256,8 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const tdS = document.createElement('td'); const sp = document.createElement('span'); sp.className = `status ${t.status}`; sp.textContent = t.status; tdS.appendChild(sp); tdS.setAttribute('data-label', 'Status'); tr.appendChild(tdS);
         tr.appendChild(createActionsCell(t)); tbody.appendChild(tr);
       });
-      const addBtn = document.getElementById('add-dash-btn'); if(addBtn) addBtn.onclick = openAdd;
-      
+      const addBtn = document.getElementById('add-dash-btn'); if (addBtn) addBtn.onclick = openAdd;
+
       renderChart(); // Render chart after data loads
     };
 
@@ -270,17 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       filtered.sort((a, b) => {
         let valA = a[expState.sortKey], valB = b[expState.sortKey];
-        if(typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
+        if (typeof valA === 'string') valA = valA.toLowerCase(), valB = valB.toLowerCase();
         return valA < valB ? (expState.sortAsc ? -1 : 1) : (valA > valB ? (expState.sortAsc ? 1 : -1) : 0);
       });
 
       const totalPages = Math.ceil(filtered.length / expState.perPage) || 1;
-      if(expState.page > totalPages) expState.page = totalPages;
+      if (expState.page > totalPages) expState.page = totalPages;
       const start = (expState.page - 1) * expState.perPage;
       const paginated = filtered.slice(start, start + expState.perPage);
 
       const tbody = document.getElementById('expensesBody'); tbody.innerHTML = '';
-      if (paginated.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">No expenses found.</td></tr>`; } 
+      if (paginated.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">No expenses found.</td></tr>`; }
       else {
         paginated.forEach(t => {
           const tr = document.createElement('tr');
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
           tr.appendChild(createActionsCell(t)); tbody.appendChild(tr);
         });
       }
-      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start+1 : 0}-${Math.min(start+expState.perPage, filtered.length)} of ${filtered.length}`;
+      document.getElementById('pageInfo').textContent = `Showing ${filtered.length ? start + 1 : 0}-${Math.min(start + expState.perPage, filtered.length)} of ${filtered.length}`;
       document.getElementById('prevBtn').disabled = expState.page === 1;
       document.getElementById('nextBtn').disabled = expState.page === totalPages;
       document.getElementById('add-expense-btn').onclick = openAdd;
@@ -301,11 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('expensesBody')) {
       document.getElementById('searchExpense').addEventListener('input', (e) => { expState.search = e.target.value.toLowerCase(); expState.page = 1; renderExpPage(); });
       document.getElementById('filterStatus').addEventListener('change', (e) => { expState.filterStatus = e.target.value; expState.page = 1; renderExpPage(); });
-      const sortHeader = (key) => { if(expState.sortKey === key) expState.sortAsc = !expState.sortAsc; else { expState.sortKey = key; expState.sortAsc = true; } renderExpPage(); };
+      const sortHeader = (key) => { if (expState.sortKey === key) expState.sortAsc = !expState.sortAsc; else { expState.sortKey = key; expState.sortAsc = true; } renderExpPage(); };
       document.getElementById('thMerchant').onclick = () => sortHeader('merchant');
       document.getElementById('thDate').onclick = () => sortHeader('date');
       document.getElementById('thAmount').onclick = () => sortHeader('amount');
-      document.getElementById('prevBtn').onclick = () => { if(expState.page > 1) { expState.page--; renderExpPage(); }};
+      document.getElementById('prevBtn').onclick = () => { if (expState.page > 1) { expState.page--; renderExpPage(); } };
       document.getElementById('nextBtn').onclick = () => { expState.page++; renderExpPage(); };
     }
     fetchTransactions();
