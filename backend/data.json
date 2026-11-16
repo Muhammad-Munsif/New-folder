@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "id": 1794846765536,
+      "name": "hilal khan",
+      "email": "hilal@gmail.com",
+      "password": "$2a$10$JSosaeeMK2iYxQHTRlDyueAojdstMBMwVowDuClb/6Esm24NowsTq"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "userId": 1,
+      "merchant": "AWS Hosting",
+      "category": "Infrastructure",
+      "date": "2025-10-24",
+      "amount": 124.5,
+      "status": "paid"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "merchant": "Figma Pro",
+      "category": "Software",
+      "date": "2025-10-23",
+      "amount": 15,
+      "status": "paid"
+    }
+  ]
+}
