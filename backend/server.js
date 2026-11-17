@@ -146,7 +146,6 @@ app.post('/api/transactions', authenticateToken, (req, res) => {
     res.status(500).json({ error: 'Failed to create transaction.' });
   }
 });
-
 // UPDATE: Edit an existing transaction
 app.put('/api/transactions/:id', authenticateToken, (req, res) => {
   try {
@@ -156,16 +155,13 @@ app.put('/api/transactions/:id', authenticateToken, (req, res) => {
     if (idx === -1) {
       return res.status(404).json({ error: 'Transaction not found or unauthorized.' });
     }
-
     // Validate incoming data
     if (req.body.amount && (isNaN(req.body.amount) || req.body.amount <= 0)) {
       return res.status(400).json({ error: 'Amount must be a positive number.' });
     }
-
     // Update transaction
     db.transactions[idx] = { ...db.transactions[idx], ...req.body };
     saveDb(); // Persist to file!
-
     console.log(`✏️ Transaction updated: ID ${req.params.id}`);
     res.json(db.transactions[idx]);
   } catch (err) {
@@ -173,7 +169,6 @@ app.put('/api/transactions/:id', authenticateToken, (req, res) => {
     res.status(500).json({ error: 'Failed to update transaction.' });
   }
 });
-
 // DELETE: Remove a transaction
 app.delete('/api/transactions/:id', authenticateToken, (req, res) => {
   try {
@@ -185,7 +180,6 @@ app.delete('/api/transactions/:id', authenticateToken, (req, res) => {
     if (db.transactions.length === initialLength) {
       return res.status(404).json({ error: 'Transaction not found or unauthorized.' });
     }
-
     saveDb(); // Persist to file!
     console.log(`🗑️ Transaction deleted: ID ${req.params.id}`);
     res.json({ success: true, message: 'Transaction deleted.' });
@@ -194,7 +188,6 @@ app.delete('/api/transactions/:id', authenticateToken, (req, res) => {
     res.status(500).json({ error: 'Failed to delete transaction.' });
   }
 });
-
 // Start Server
 const PORT = 3000;
 app.listen(PORT, '0.0.0.0', () => {
