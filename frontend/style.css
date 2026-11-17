@@ -934,13 +934,11 @@ tbody tr:hover {
     display: block;
     width: 100%;
   }
-
   thead tr {
     position: absolute;
     top: -9999px;
     left: -9999px;
   }
-
   tr {
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
@@ -949,7 +947,6 @@ tbody tr:hover {
     padding: 16px;
     box-shadow: var(--shadow-sm);
   }
-
   td {
     border: none;
     padding: 8px 0;
@@ -959,16 +956,13 @@ tbody tr:hover {
     text-align: right;
     border-bottom: 1px dashed var(--border-color);
   }
-
   td:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
-
   td:first-child {
     padding-top: 0;
   }
-
   td::before {
     content: attr(data-label);
     font-weight: 600;
@@ -977,17 +971,14 @@ tbody tr:hover {
     font-size: 0.75rem;
     text-align: left;
   }
-
   .actions-cell {
     justify-content: flex-end;
     gap: 12px;
   }
-
   .modal-overlay {
     align-items: flex-end;
     padding: 0;
   }
-
   .modal-box {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
