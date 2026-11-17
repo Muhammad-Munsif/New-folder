@@ -5,6 +5,12 @@
       "name": "hilal khan",
       "email": "hilal@gmail.com",
       "password": "$2a$10$JSosaeeMK2iYxQHTRlDyueAojdstMBMwVowDuClb/6Esm24NowsTq"
+    },
+    {
+      "id": 1794925998817,
+      "name": "saqif khan",
+      "email": "saqif@gmail.com",
+      "password": "$2a$10$02DJPqxNvM5J9zRj0Vk2EObtnVqLZBjjt7WS./dI1a43RB9nRrsO."
     }
   ],
   "transactions": [
