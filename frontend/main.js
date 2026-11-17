@@ -117,14 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     return;
   }
-
   // --- APP PAGES ---
   if (!isLandingPage && !isAuthPage) {
     const user = getUser();
     if (user && document.querySelector('.page-subtitle')) document.querySelector('.page-subtitle').textContent = `Welcome back, ${user.name}`;
     let transactions = [];
     let categoryChart = null; // Store chart instance
-
     const fetchTransactions = async () => {
       try {
         const res = await fetch(`${API_URL}/transactions`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
@@ -134,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('expensesBody')) renderExpPage();
       } catch (err) { console.error(err); }
     };
-
     // Modal Injection
     document.body.insertAdjacentHTML('beforeend', `
       <div class="modal-overlay" id="globalModal">
@@ -150,12 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </form>
         </div>
       </div>`);
-
     document.querySelectorAll('.modal-close').forEach(b => b.addEventListener('click', () => document.getElementById('globalModal').classList.remove('open')));
 
     const openAdd = () => { document.getElementById('modalTitle').textContent = 'Add Expense'; document.getElementById('modalForm').reset(); document.getElementById('recordId').value = ''; document.getElementById('globalModal').classList.add('open'); };
     const openEdit = (t) => { document.getElementById('modalTitle').textContent = 'Edit Expense'; document.getElementById('recordId').value = t.id; document.getElementById('merchantInput').value = t.merchant; document.getElementById('amountInput').value = t.amount; document.getElementById('categoryInput').value = t.category; document.getElementById('statusInput').value = t.status; document.getElementById('globalModal').classList.add('open'); };
-
     document.getElementById('modalForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveBtn');
