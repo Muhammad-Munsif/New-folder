@@ -86,11 +86,11 @@ app.post('/api/transactions', authenticateToken, (req, res) => {
     if (!merchant || !amount || !category || !status) return res.status(400).json({ error: 'Missing fields.' });
     if (isNaN(amount) || amount <= 0) return res.status(400).json({ error: 'Invalid amount.' });
 
-    const newTx = { 
+    const newTx = {
       id: Date.now(), userId: req.user.id, merchant: merchant.trim(), amount: parseFloat(amount), category, status,
-      date: new Date().toISOString().split('T')[0] 
+      date: new Date().toISOString().split('T')[0]
     };
-    
+
     db.transactions.unshift(newTx);
     saveDb();
     res.json(newTx);
