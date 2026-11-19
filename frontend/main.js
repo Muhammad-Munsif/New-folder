@@ -2,10 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = document.documentElement;
   const currentPath = window.location.pathname;
   const API_URL = `http://${window.location.hostname}:3000/api`;
-
   const getToken = () => localStorage.getItem('lumora_token');
   const getUser = () => JSON.parse(localStorage.getItem('lumora_user'));
-
   const showToast = (msg, isError = false) => {
     let stack = document.getElementById('toastStack') || document.createElement('div');
     stack.className = 'toast-container'; stack.id = 'toastStack';
@@ -24,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => el.remove(), 350);
     }, 3000);
   };
-
   const applyTheme = (mode) => {
     const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     root.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#themeToggle, #dashThemeBtn').forEach(btn => {
     if (btn) btn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
   });
-
   const togglePassword = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('authPassword');
   if (togglePassword && passwordInput) {
@@ -45,14 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
       togglePassword.classList.toggle('fa-eye-slash');
     });
   }
-
   const isAuthPage = currentPath.includes('login.html');
   const isLandingPage = currentPath.endsWith('index.html') || currentPath.endsWith('/frontend/') || currentPath.endsWith('/');
   if (!isAuthPage && !isLandingPage && !getToken()) { window.location.href = '../login.html'; return; }
 
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('lumora_token'); localStorage.removeItem('lumora_user'); window.location.href = '../login.html'; });
-
   const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
   const appSidebar = document.getElementById('appSidebar');
   const sidebarBackdrop = document.getElementById('sidebarBackdrop');
