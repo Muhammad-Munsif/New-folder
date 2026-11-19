@@ -8,10 +8,8 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 const JWT_SECRET = 'lumora_super_secret_key_123';
 const DB_FILE = path.join(__dirname, 'data.json');
-
 // --- DATABASE SETUP (File-Based) ---
 let db = { users: [], transactions: [] };
 if (fs.existsSync(DB_FILE)) {
@@ -21,11 +19,9 @@ if (fs.existsSync(DB_FILE)) {
     console.error("Error reading database file.");
   }
 }
-
 function saveDb() {
   fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
 }
-
 // --- AUTH MIDDLEWARE ---
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -38,7 +34,6 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
-
 // --- AUTH ROUTES ---
 app.post('/api/register', async (req, res) => {
   try {
@@ -58,7 +53,6 @@ app.post('/api/register', async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
-
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
