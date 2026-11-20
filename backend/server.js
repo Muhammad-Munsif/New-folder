@@ -8,8 +8,11 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 const JWT_SECRET = 'lumora_super_secret_key_123';
+
 const DB_FILE = path.join(__dirname, 'data.json');
+
 // --- DATABASE SETUP (File-Based) ---
 let db = { users: [], transactions: [] };
 if (fs.existsSync(DB_FILE)) {
