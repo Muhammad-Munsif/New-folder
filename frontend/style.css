@@ -731,6 +731,7 @@ tbody tr:hover {
 .toast.error::after {
   background: var(--danger);
 }
+
 @keyframes swiperSlideIn {
   from {
     opacity: 0;
@@ -742,6 +743,7 @@ tbody tr:hover {
     transform: translateX(0) scale(1);
   }
 }
+
 @keyframes swiperSlideOut {
   from {
     opacity: 1;
@@ -753,6 +755,7 @@ tbody tr:hover {
     transform: translateX(100%) scale(0.9);
   }
 }
+
 @keyframes progressBar {
   from {
     width: 100%;
@@ -762,6 +765,7 @@ tbody tr:hover {
     width: 0%;
   }
 }
+
 @media (max-width: 768px) {
   .toast-container {
     top: auto;
