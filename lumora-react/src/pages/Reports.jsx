@@ -1,52 +1,60 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
+import { useState } from 'react';
+import { Download } from 'lucide-react';
+import api from '../api';
+import { Header } from '../components/layout/Header';
+import { Button } from '../components/common/Button';
+import toast from 'react-hot-toast';
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reports — Lumora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="../style.css">
-</head>
+export default function Reports() {
+  const [loading, setLoading] = useState(false);
 
-<body>
-  <div class="app-layout">
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-    <aside class="sidebar" id="appSidebar">
-      <div class="sidebar-header"><a href="../index.html" class="brand"><span class="brand-icon"><i
-              class="fa-solid fa-layer-group"></i></span> Lumora</a></div>
-      <nav class="sidebar-nav">
-        <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Overview</a>
-        <a href="expenses.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Expenses</a>
-        <a href="reports.html" class="sidebar-link active"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-        <a href="settings.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
-      </nav>
-      <div class="sidebar-footer"><button class="btn" id="logoutBtn"><i
-            class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button></div>
-    </aside>
-    <div class="main-wrapper">
-      <header class="topbar">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <button class="icon-btn mobile-sidebar-toggle" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
-          <div>
-            <div class="page-title">Reports</div>
-            <div class="page-subtitle">Export your data</div>
-          </div>
-        </div>
-      </header>
-      <main class="content-area">
-        <div class="stat-card" style="max-width:600px;">
-          <h3 style="margin-bottom:12px;">Export Transactions</h3>
-          <p style="color:var(--text-muted); margin-bottom:24px; font-size:0.95rem;">Download a complete CSV file of all
-            your recorded expenses, including dates, categories, and amounts.</p>
-          <button class="btn btn-primary" onclick="alert('Report downloaded!')"><i class="fa-solid fa-file-csv"></i>
-            Download CSV</button>
+  const handleExport = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get('/transactions');
+      const transactions = res.data;
+
+      if (transactions.length === 0) {
+        toast.error('No data to export');
+        return;
+      }
+
+      let csvContent = "Date,Merchant,Category,Amount,Status\n";
+      transactions.forEach(t => {
+        csvContent += `${t.date},"${t.merchant}","${t.category}",${t.amount},${t.status}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Lumora_Export_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Report downloaded successfully!');
+    } catch (err) {
+      toast.error('Failed to generate report');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex-1">
+      <Header title="Reports" />
+      <main className="p-8">
+        <div className="max-w-xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h3 className="mb-2 text-lg font-bold">Export Transactions</h3>
+          <p className="mb-6 text-sm text-slate-500">
+            Download a complete CSV file of all your recorded expenses, including dates, categories, and amounts. This file can be opened in Excel or Google Sheets.
+          </p>
+          <Button onClick={handleExport} disabled={loading}>
+            <Download size={18} /> {loading ? 'Generating...' : 'Download CSV'}
+          </Button>
         </div>
       </main>
     </div>
-  </div>
-  <script src="../main.js"></script>
-</body>
-
-</html>
+  );
+}
