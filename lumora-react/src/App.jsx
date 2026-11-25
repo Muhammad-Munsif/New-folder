@@ -2,10 +2,13 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { Sidebar } from './components/layout/Sidebar';
+
+// ✅ Component Imports
+import { Sidebar } from './components/layout/Sidebar'; 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Expenses from './pages/Expenses';
+import Reports from './pages/Reports'; // 👈 Added Reports import
 
 const ProtectedLayout = () => {
   const { user } = useAuth();
@@ -30,7 +33,6 @@ export default function App() {
           <Toaster
             position="top-right"
             toastOptions={{
-              // Default styles for all toasts
               className: '!bg-white dark:!bg-slate-800 !text-slate-800 dark:!text-white !border !border-slate-200 dark:!border-slate-700 !shadow-lg !rounded-xl !text-sm !font-medium',
               duration: 3000,
               style: {
@@ -38,25 +40,31 @@ export default function App() {
               },
               success: {
                 iconTheme: {
-                  primary: '#10b981', // Tailwind green-500
+                  primary: '#10b981',
                   secondary: '#fff',
                 },
               },
               error: {
                 iconTheme: {
-                  primary: '#ef4444', // Tailwind red-500
+                  primary: '#ef4444',
                   secondary: '#fff',
                 },
               },
             }}
           />
+          
           <Routes>
+            {/* Public Route */}
             <Route path="/login" element={<Login />} />
+            
+            {/* Protected App Routes */}
             <Route element={<ProtectedLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/expenses" element={<Expenses />} />
+              <Route path="/reports" element={<Reports />} /> {/* 👈 Added Reports Route */}
             </Route>
           </Routes>
+          
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
