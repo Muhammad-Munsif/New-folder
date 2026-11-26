@@ -1,13 +1,13 @@
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Receipt, FileBarChart, LogOut } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { NavLink } from "react-router-dom";
+import { LayoutDashboard, Receipt, FileBarChart, LogOut } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export function Sidebar() {
   const { logout } = useAuth();
   const links = [
-    { path: '/', icon: LayoutDashboard, label: 'Overview' },
-    { path: '/expenses', icon: Receipt, label: 'Expenses' },
-    { path: '/reports', icon: FileBarChart, label: 'Reports' },
+    { path: "/", icon: LayoutDashboard, label: "Overview" },
+    { path: "/expenses", icon: Receipt, label: "Expenses" },
+    { path: "/reports", icon: FileBarChart, label: "Reports" },
   ];
 
   return (
@@ -23,8 +23,8 @@ export function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                 isActive
-                  ? 'bg-primary text-white shadow-md'
-                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700'
+                  ? "bg-primary text-white shadow-md"
+                  : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
               }`
             }
           >
