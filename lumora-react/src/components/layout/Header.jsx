@@ -15,6 +15,8 @@ export function Header({ title }) {
         <p className="text-xs text-slate-500">Welcome back, {user?.name}</p>
       </div>
       <button
+        type="button"
+        aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
         onClick={toggleTheme}
         className="rounded-xl border border-slate-200 bg-white p-2 text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
       >

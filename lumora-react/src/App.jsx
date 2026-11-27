@@ -1,12 +1,14 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Sidebar } from './components/layout/Sidebar';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Expenses from './pages/Expenses';
-import Reports from './pages/Reports';
+
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Expenses = lazy(() => import('./pages/Expenses'));
+const Reports = lazy(() => import('./pages/Reports'));
 
 const ProtectedLayout = () => {
   const { user } = useAuth();
@@ -42,15 +44,19 @@ export default function App() {
               },
             }}
           />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route element={<ProtectedLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/expenses" element={<Expenses />} />
-              <Route path="/reports" element={<Reports />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <Suspense
+            fallback={<div className="p-6 text-slate-500">Loading page...</div>}
+          >
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route element={<ProtectedLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/expenses" element={<Expenses />} />
+                <Route path="/reports" element={<Reports />} />
+              </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>

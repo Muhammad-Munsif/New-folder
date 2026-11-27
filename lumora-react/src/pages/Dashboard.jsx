@@ -60,9 +60,17 @@ export default function Dashboard() {
         {loading ? <p className="text-slate-500">Loading dashboard...</p> : (
           <>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              <StatCard title="Total Revenue" value={`$${total.toFixed(2)}`} icon={DollarSign} />
+              <StatCard title="Total Expenses" value={`$${total.toFixed(2)}`} icon={DollarSign} />
               <StatCard title="Transactions" value={transactions.length} icon={ListOrdered} color="text-secondary" />
-              <StatCard title="Total Expenses" value={`$${total.toFixed(2)}`} icon={TrendingDown} color="text-red-500" />
+              <StatCard
+                title="Pending Expenses"
+                value={`$${transactions
+                  .filter((transaction) => transaction.status === 'pending')
+                  .reduce((sum, transaction) => sum + Number(transaction.amount), 0)
+                  .toFixed(2)}`}
+                icon={TrendingDown}
+                color="text-red-500"
+              />
             </div>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

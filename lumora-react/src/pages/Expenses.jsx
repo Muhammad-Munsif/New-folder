@@ -96,6 +96,7 @@ export default function Expenses() {
       amount: transaction.amount,
       category: transaction.category,
       status: transaction.status,
+      date: transaction.date,
     });
     setEditId(transaction._id);
     setIsModalOpen(true);
