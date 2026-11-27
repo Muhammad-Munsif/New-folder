@@ -2,22 +2,20 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-
-// ✅ Component Imports
-import { Sidebar } from './components/layout/Sidebar'; 
+import { Sidebar } from './components/layout/Sidebar';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Expenses from './pages/Expenses';
-import Reports from './pages/Reports'; // 👈 Added Reports import
+import Reports from './pages/Reports';
 
 const ProtectedLayout = () => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="flex min-h-screen bg-slate-50 transition-colors duration-300 dark:bg-slate-900">
       <Sidebar />
-      <div className="ml-64 flex-1">
+      <div className="min-w-0 flex-1 pb-20 md:ml-64 md:pb-0">
         <Outlet />
       </div>
     </div>
@@ -29,42 +27,30 @@ export default function App() {
     <ThemeProvider>
       <BrowserRouter>
         <AuthProvider>
-          {/* 🛠️ CUSTOMIZED TOAST PACKAGE */}
           <Toaster
             position="top-right"
             toastOptions={{
-              className: '!bg-white dark:!bg-slate-800 !text-slate-800 dark:!text-white !border !border-slate-200 dark:!border-slate-700 !shadow-lg !rounded-xl !text-sm !font-medium',
+              className:
+                '!rounded-xl !border !border-slate-200 !bg-white !text-sm !font-medium !text-slate-800 !shadow-lg dark:!border-slate-700 dark:!bg-slate-800 dark:!text-white',
               duration: 3000,
-              style: {
-                padding: '16px',
-              },
+              style: { padding: '16px' },
               success: {
-                iconTheme: {
-                  primary: '#10b981',
-                  secondary: '#fff',
-                },
+                iconTheme: { primary: '#10b981', secondary: '#fff' },
               },
               error: {
-                iconTheme: {
-                  primary: '#ef4444',
-                  secondary: '#fff',
-                },
+                iconTheme: { primary: '#ef4444', secondary: '#fff' },
               },
             }}
           />
-          
           <Routes>
-            {/* Public Route */}
             <Route path="/login" element={<Login />} />
-            
-            {/* Protected App Routes */}
             <Route element={<ProtectedLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/expenses" element={<Expenses />} />
-              <Route path="/reports" element={<Reports />} /> {/* 👈 Added Reports Route */}
+              <Route path="/reports" element={<Reports />} />
             </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>

@@ -5,6 +5,7 @@ import { DollarSign, ListOrdered, TrendingDown } from 'lucide-react';
 import api from '../api';
 import { StatCard } from '../components/common/StatCard';
 import { Header } from '../components/layout/Header';
+import toast from 'react-hot-toast';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -13,16 +14,33 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     api.get('/transactions')
-      .then(res => setTransactions(res.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .then((response) => {
+        if (isMounted) setTransactions(response.data);
+      })
+      .catch((error) => {
+        if (isMounted) {
+          toast.error(
+            error.response?.data?.message || 'Failed to load dashboard data',
+          );
+        }
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+  const total = transactions.reduce((sum, transaction) => sum + Number(transaction.amount), 0);
 
-  const grouped = transactions.reduce((acc, t) => {
-    acc[t.category] = (acc[t.category] || 0) + t.amount;
+  const grouped = transactions.reduce((acc, transaction) => {
+    acc[transaction.category] =
+      (acc[transaction.category] || 0) + Number(transaction.amount);
     return acc;
   }, {});
 
@@ -38,7 +56,7 @@ export default function Dashboard() {
   return (
     <div className="flex-1">
       <Header title="Overview" />
-      <main className="p-8 space-y-8">
+      <main className="space-y-8 p-4 sm:p-6 lg:p-8">
         {loading ? <p className="text-slate-500">Loading dashboard...</p> : (
           <>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -66,7 +84,7 @@ export default function Dashboard() {
                       {transactions.slice(0, 5).map(t => (
                         <tr key={t._id} className="border-b border-slate-50 dark:border-slate-700/50 last:border-0">
                           <td className="py-4 font-medium">{t.merchant}</td>
-                          <td className="py-4">${t.amount.toFixed(2)}</td>
+                          <td className="py-4">${Number(t.amount).toFixed(2)}</td>
                           <td className="py-4">
                             <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${t.status === 'paid' ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'}`}>{t.status}</span>
                           </td>

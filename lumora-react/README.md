@@ -1,16 +1,42 @@
-# React + Vite
+# Lumora
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Requirements
 
-Currently, two official plugins are available:
+- Node.js 20.19+ (or 22.12+) and npm
+- A reachable MongoDB instance
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Configure the backend
 
-## React Compiler
+Set `MONGO_URI` and `JWT_SECRET` in `server/.env`. `PORT` is optional and
+defaults to `5000`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From the repository root, install the backend dependencies and start the API:
 
-## Expanding the ESLint configuration
+```powershell
+cd server
+npm install
+npm start
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The API listens on `/api`; `/api/health` is available as a health check.
+
+## Run the frontend
+
+In a second terminal, from the repository root:
+
+```powershell
+cd lumora-react
+npm install
+npm run dev
+```
+
+The frontend uses `http://localhost:5000/api` by default. To use another API
+base URL, set `VITE_API_URL` in `lumora-react/.env`.
+
+## Validate
+
+```powershell
+cd lumora-react
+npm run lint
+npm run build
+```

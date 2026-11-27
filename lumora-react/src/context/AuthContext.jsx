@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       navigate("/");
       toast.success(`Welcome back, ${res.data.name}!`);
     } catch (err) {
-      toast.error(err.response?.data?.error || "Login failed");
+      toast.error(err.response?.data?.message || "Login failed");
       throw err;
     }
   };
@@ -42,4 +42,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// The provider and hook are intentionally colocated with their context.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

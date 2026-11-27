@@ -20,18 +20,14 @@ export default function Login() {
       if (isLogin) {
         await login(formData.email, formData.password);
       } else {
-        await toast.promise(
-          api.post('/register', formData),
-          {
-            loading: 'Creating account...',
-            success: 'Account created! Logging you in...',
-            error: (err) => err.response?.data?.error || 'Registration failed',
-          }
-        );
+        await api.post('/auth/register', formData);
+        toast.success('Account created! Logging you in...');
         await login(formData.email, formData.password);
       }
-    } catch (err) {
-      // Error handled in context or toast.promise
+    } catch (error) {
+      if (!isLogin && !error.config?.url?.endsWith('/auth/login')) {
+        toast.error(error.response?.data?.message || 'Registration failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -53,7 +49,7 @@ export default function Login() {
           
           <div className="relative">
             <Input label="Password" icon={Lock} type={showPassword ? 'text' : 'password'} required placeholder="••••••••" onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-[38px] text-slate-400 hover:text-slate-600">
+            <button type="button" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-[38px] text-slate-400 hover:text-slate-600">
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>

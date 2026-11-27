@@ -34,8 +34,8 @@ export default function Reports() {
       document.body.removeChild(link);
 
       toast.success('Report downloaded successfully!');
-    } catch (err) {
-      toast.error('Failed to generate report');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to generate report');
     } finally {
       setLoading(false);
     }

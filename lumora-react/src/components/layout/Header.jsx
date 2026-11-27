@@ -7,7 +7,7 @@ export function Header({ title }) {
   const { user } = useAuth();
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80 transition-colors duration-300">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900/80 sm:px-6 lg:px-8">
       <div>
         <h1 className="text-xl font-bold text-slate-900 dark:text-white">
           {title}

@@ -7,7 +7,7 @@ export function StatCard({ title, value, icon: Icon, color }) {
         </p>
         {Icon && <Icon className={color || "text-primary"} size={24} />}
       </div>
-      <p className="mt-2 text-3xl font-bold">{value}</p>
+      <p className="mt-2 break-words text-2xl font-bold sm:text-3xl">{value}</p>
     </div>
   );
 }

@@ -22,4 +22,6 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
+// The provider and hook are intentionally colocated with their context.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => useContext(ThemeContext);
