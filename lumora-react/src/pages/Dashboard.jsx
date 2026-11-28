@@ -6,16 +6,12 @@ import api from '../api';
 import { StatCard } from '../components/common/StatCard';
 import { Header } from '../components/layout/Header';
 import toast from 'react-hot-toast';
-
 ChartJS.register(ArcElement, Tooltip, Legend);
-
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     let isMounted = true;
-
     api.get('/transactions')
       .then((response) => {
         if (isMounted) setTransactions(response.data);
@@ -30,20 +26,16 @@ export default function Dashboard() {
       .finally(() => {
         if (isMounted) setLoading(false);
       });
-
     return () => {
       isMounted = false;
     };
   }, []);
-
   const total = transactions.reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-
   const grouped = transactions.reduce((acc, transaction) => {
     acc[transaction.category] =
       (acc[transaction.category] || 0) + Number(transaction.amount);
     return acc;
   }, {});
-
   const chartData = {
     labels: Object.keys(grouped).length ? Object.keys(grouped) : ['No Data'],
     datasets: [{
@@ -52,7 +44,6 @@ export default function Dashboard() {
       borderWidth: 0,
     }]
   };
-
   return (
     <div className="flex-1">
       <Header title="Overview" />
@@ -72,7 +63,6 @@ export default function Dashboard() {
                 color="text-red-500"
               />
             </div>
-
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
                 <h3 className="mb-4 font-bold">Expenses by Category</h3>
@@ -80,7 +70,6 @@ export default function Dashboard() {
                   <Doughnut data={chartData} options={{ cutout: '70%', plugins: { legend: { position: 'bottom' } } }} />
                 </div>
               </div>
-
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 overflow-hidden">
                 <h3 className="mb-4 font-bold">Recent Transactions</h3>
                 <div className="overflow-x-auto">

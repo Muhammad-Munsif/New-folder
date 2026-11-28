@@ -6,24 +6,20 @@ import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { Modal } from '../components/common/Modal';
 import toast from 'react-hot-toast';
-
 const emptyForm = {
   merchant: '',
   amount: '',
   category: 'Software',
   status: 'paid',
 };
-
 const loadTransactions = () =>
   api.get('/transactions').then((response) => response.data);
-
 export default function Expenses() {
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
-
   const fetchData = async () => {
     try {
       setTransactions(await loadTransactions());
@@ -31,10 +27,8 @@ export default function Expenses() {
       toast.error(error.response?.data?.message || 'Failed to load transactions');
     }
   };
-
   useEffect(() => {
     let isMounted = true;
-
     loadTransactions()
       .then((data) => {
         if (isMounted) setTransactions(data);
@@ -49,15 +43,12 @@ export default function Expenses() {
       .finally(() => {
         if (isMounted) setIsLoading(false);
       });
-
     return () => {
       isMounted = false;
     };
   }, []);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       if (editId) {
         await api.put(`/transactions/${editId}`, formData);
@@ -67,7 +58,6 @@ export default function Expenses() {
           date: new Date().toISOString().split('T')[0],
         });
       }
-
       toast.success(editId ? 'Expense updated!' : 'Expense added!');
       setIsModalOpen(false);
       setEditId(null);
@@ -77,10 +67,8 @@ export default function Expenses() {
       toast.error(error.response?.data?.message || 'Failed to save expense.');
     }
   };
-
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this record?')) return;
-
     try {
       await api.delete(`/transactions/${id}`);
       toast.success('Expense deleted successfully.');
@@ -89,7 +77,6 @@ export default function Expenses() {
       toast.error(error.response?.data?.message || 'Failed to delete expense.');
     }
   };
-
   const openEdit = (transaction) => {
     setFormData({
       merchant: transaction.merchant,
@@ -101,13 +88,11 @@ export default function Expenses() {
     setEditId(transaction._id);
     setIsModalOpen(true);
   };
-
   const openCreate = () => {
     setEditId(null);
     setFormData(emptyForm);
     setIsModalOpen(true);
   };
-
   return (
     <div className="min-w-0">
       <Header title="Expenses" />
@@ -117,7 +102,6 @@ export default function Expenses() {
             <Plus size={18} /> Add Expense
           </Button>
         </div>
-
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <table className="w-full min-w-[640px] text-left">
             <thead className="bg-slate-50 text-xs font-bold uppercase text-slate-500 dark:bg-slate-700/50">
@@ -191,7 +175,6 @@ export default function Expenses() {
           </table>
         </div>
       </main>
-
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
