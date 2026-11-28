@@ -16,5 +16,4 @@ const errorHandler = (err, req, res, next) => {
   if (statusCode >= 500) console.error(err);
   res.status(statusCode).json({ message: err.message });
 };
-
 module.exports = { notFound, errorHandler };
