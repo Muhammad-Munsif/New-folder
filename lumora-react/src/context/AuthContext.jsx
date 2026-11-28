@@ -2,9 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import toast from "react-hot-toast";
-
 const AuthContext = createContext();
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
     localStorage.getItem("token")
@@ -12,7 +10,6 @@ export const AuthProvider = ({ children }) => {
       : null,
   );
   const navigate = useNavigate();
-
   const login = async (email, password) => {
     try {
       const res = await api.post("/auth/login", { email, password });
@@ -26,7 +23,6 @@ export const AuthProvider = ({ children }) => {
       throw err;
     }
   };
-
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
@@ -34,14 +30,12 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
     toast.success("Logged out successfully");
   };
-
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
 // The provider and hook are intentionally colocated with their context.
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
