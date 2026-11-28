@@ -1,9 +1,7 @@
 import { cn } from "../../utils/cn";
-
 export function Input({ className, label, icon: Icon, ...props }) {
   const inputId =
     props.id || label?.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
   return (
     <div className="space-y-1.5">
       {label && (

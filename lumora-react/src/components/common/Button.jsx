@@ -1,5 +1,4 @@
 import { cn } from "../../utils/cn";
-
 export function Button({ className, variant = "primary", children, ...props }) {
   const variants = {
     primary: "bg-primary text-white hover:bg-indigo-700 shadow-md",
@@ -9,7 +8,6 @@ export function Button({ className, variant = "primary", children, ...props }) {
     ghost:
       "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
   };
-
   return (
     <button
       className={cn(
