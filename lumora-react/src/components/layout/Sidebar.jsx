@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Receipt, FileBarChart, LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-
 export function Sidebar() {
   const { logout } = useAuth();
   const links = [
@@ -9,8 +8,7 @@ export function Sidebar() {
     { path: "/expenses", icon: Receipt, label: "Expenses" },
     { path: "/reports", icon: FileBarChart, label: "Reports" },
   ];
-
-  return (
+ return (
     <aside className="fixed inset-x-0 bottom-0 z-30 flex h-16 items-stretch border-t border-slate-200 bg-white transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800 md:inset-y-0 md:right-auto md:h-screen md:w-64 md:flex-col md:border-r md:border-t-0">
       <div className="hidden h-16 items-center px-6 text-2xl font-bold text-primary md:flex">
         Lumora.

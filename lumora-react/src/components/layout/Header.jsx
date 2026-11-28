@@ -1,11 +1,9 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
-
 export function Header({ title }) {
   const { isDark, toggleTheme } = useTheme();
   const { user } = useAuth();
-
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900/80 sm:px-6 lg:px-8">
       <div>
